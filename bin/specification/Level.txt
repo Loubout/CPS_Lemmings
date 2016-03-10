@@ -1,0 +1,32 @@
+Service : Level
+Types : bool, int, enum Nature{EMPTY, DIRT, METAL}
+Observators :
+    const height: [Level] -> int
+    const width: [Level] -> int
+    editing: [Level] -> bool
+    nature: [Level] x int x int -> Nature
+Constructors :
+    init: int x int -> [Level]
+        pre init(x, y) require x > 0 ^ y > 0
+Operators :
+    setNature: [Level] x int x int x Nature -> [Level]
+        pre setNature(l, x, y, n) require editing(l) == false ^ 0 =< x < width ^ 0 =< y < height
+    goPlay: [Level] -> [Level]
+        pre goPlay(l) require editing(l) == true ^ \forall (x, y) x = 0 || x = width -1 || y = 0 || y = height - 1, nature(l, x, y) == METAL
+    remove: [Level] x int x int -> [Level]
+        pre remove(l, x, y) require editing(l) == false ^ nature(l, x, y) == DIRT ^ 0 =< x < width ^ 0 =< y < height
+    build: [Level] x int x int -> [Level]
+        pre build(l, x , y) require editing(l) == false ^ nature(l, x, y) == EMPTY ^ 0 =< x < width ^ 0 =< y < height
+Observations :
+    [invariants]
+    
+    [init]
+        editing(init(x, y)) == true
+    [setNature]
+        nature(setNature(l, x, y, n)) == n
+    [goPlay]
+        editing(goPlay(l)) == false
+    [remove]
+        nature(remove(l, x , y)) == EMPTY
+    [build]
+        nature(remove(l, x , y)) == DIRT
