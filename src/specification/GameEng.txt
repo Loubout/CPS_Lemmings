@@ -24,7 +24,7 @@ Operators :
     pre nextTurn(e) require not gameOver(e) 
 Observations :
     [invariants]
-    
+        
     [init]
         editing(init(x, y)) == true
     [setNature]
