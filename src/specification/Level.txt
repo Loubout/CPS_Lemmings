@@ -4,7 +4,15 @@ Observators :
     const height: [Level] -> int
     const width: [Level] -> int
     editing: [Level] -> bool
-    nature: [Level] x int x int -> Nature
+    getNature: [Level] x int x int -> Nature
+    getEntranceX: [Level] -> int
+        pre getEntranceX(l) require not editing(l)
+    getEntranceY: [Level] -> int
+        pre getEntranceX(l) require not editing(l)
+    getExitX: [Level] -> int
+        pre getEntranceX(l) require not editing(l)
+    getExitY: [Level] -> int 
+        pre getEntranceX(l) require not editing(l)
 Constructors :
     init: int x int -> [Level]
         pre init(x, y) require x > 0 ^ y > 0
@@ -17,6 +25,7 @@ Operators :
         pre remove(l, x, y) require editing(l) == false ^ nature(l, x, y) == DIRT ^ 0 =< x < width ^ 0 =< y < height
     build: [Level] x int x int -> [Level]
         pre build(l, x , y) require editing(l) == false ^ nature(l, x, y) == EMPTY ^ 0 =< x < width ^ 0 =< y < height
+    
 Observations :
     [invariants]
     
@@ -30,3 +39,10 @@ Observations :
         nature(remove(l, x , y)) == EMPTY
     [build]
         nature(remove(l, x , y)) == DIRT
+    [goPlay]
+        getNature(getEntranceX(goPlay(l)), getEntranceY(goPlay(l)) == EMPTY 
+        ^ getNature(getEntranceX(goPlay(l)), getEntranceY(goPlay(l) - 1) == EMPTY
+        ^ getNature(getEntranceX(goPlay(l)), getEntranceY(goPlay(l) + 1) == EMPTY
+        ^ getNature(getExitX(goPlay(l)), getExitY(goPlay(l)) == EMPTY 
+        ^ getNature(getExitX(goPlay(l)), getExitY(goPlay(l) - 1) == EMPTY
+        ^ getNature(getExitX(goPlay(l)), getExitY(goPlay(l) + 1) == METAL
