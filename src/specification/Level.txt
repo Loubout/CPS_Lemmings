@@ -15,12 +15,12 @@ Observators :
         pre getEntranceX(l) require not editing(l)
 Constructors :
     init: int x int -> [Level]
-        pre init(x, y) require x > 0 ^ y > 0
+        pre init(w, h) require w > 0 ^ h > 0
 Operators :
     setNature: [Level] x int x int x Nature -> [Level]
-        pre setNature(l, x, y, n) require editing(l) == false ^ 0 =< x < width ^ 0 =< y < height
+        pre setNature(l, x, y, n) require editing(l) == false ^ 0 < x < width - 1 ^ 0 < y < height - 1
     goPlay: [Level] -> [Level]
-        pre goPlay(l) require editing(l) == true ^ \forall (x, y) x = 0 || x = width -1 || y = 0 || y = height - 1, nature(l, x, y) == METAL
+        pre goPlay(l) require editing(l) == true 
     remove: [Level] x int x int -> [Level]
         pre remove(l, x, y) require editing(l) == false ^ nature(l, x, y) == DIRT ^ 0 =< x < width ^ 0 =< y < height
     build: [Level] x int x int -> [Level]
@@ -28,21 +28,32 @@ Operators :
     
 Observations :
     [invariants]
-    
+        \forall (x, y) x = 0 || x = width -1 || y = 0 || y = height - 1, nature(l, x, y) == METAL
     [init]
-        editing(init(x, y)) == true
+        editing(init(w, h)) == true
+        height(init(w, h)) == x
+        width(init(w, h)) == y
+        \forall (x, y) x = 0 || x = width -1 || y = 0 || y = height - 1, nature(l, x, y) == METAL
+        \forall (x, y) x != 0 ^ x != width -1 ^ y != 0 ^ y != height - 1, nature(l, x, y) == EMPTY
     [setNature]
-        nature(setNature(l, x, y, n)) == n
+        getNature(setNature(l, x, y, n)) == n
+        \forall (i, j) (i != x || j != y) ^ 0 < i < width ^ 0 < j < height, getNature(setNature(l,x ,y ,n), i, j) == getNature(l, i, j)
+        editing(setNature(l, x, y, n) == editing(l)
     [goPlay]
         editing(goPlay(l)) == false
+        \forall (i, j) 0 < i < width ^ 0 < j < height, getNature(goPlay(l), i, j) == getNature(l, i, j)
     [remove]
         nature(remove(l, x , y)) == EMPTY
+        \forall (i, j) (i != x || j != y) ^ 0 < i < width ^ 0 < j < height, getNature(setNature(l,x ,y ,n), i, j) == getNature(l, i, j)
     [build]
-        nature(remove(l, x , y)) == DIRT
+        nature(build(l, x , y)) == DIRT
+        \forall (i, j) (i != x || j != y) ^ 0 < i < width ^ 0 < j < height, getNature(setNature(l,x ,y ,n), i, j) == getNature(l, i, j)
     [goPlay]
+        editing(goPlay(l)) == FALSE
         getNature(getEntranceX(goPlay(l)), getEntranceY(goPlay(l)) == EMPTY 
-        ^ getNature(getEntranceX(goPlay(l)), getEntranceY(goPlay(l) - 1) == EMPTY
-        ^ getNature(getEntranceX(goPlay(l)), getEntranceY(goPlay(l) + 1) == EMPTY
-        ^ getNature(getExitX(goPlay(l)), getExitY(goPlay(l)) == EMPTY 
-        ^ getNature(getExitX(goPlay(l)), getExitY(goPlay(l) - 1) == EMPTY
-        ^ getNature(getExitX(goPlay(l)), getExitY(goPlay(l) + 1) == METAL
+        getNature(getEntranceX(goPlay(l)), getEntranceY(goPlay(l) - 1) == EMPTY
+        getNature(getEntranceX(goPlay(l)), getEntranceY(goPlay(l) + 1) == EMPTY
+        getNature(getExitX(goPlay(l)), getExitY(goPlay(l)) == EMPTY 
+        getNature(getExitX(goPlay(l)), getExitY(goPlay(l) - 1) == EMPTY
+        getNature(getExitX(goPlay(l)), getExitY(goPlay(l) + 1) == METAL
+        

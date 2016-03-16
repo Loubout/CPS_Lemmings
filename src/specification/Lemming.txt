@@ -4,6 +4,7 @@ Types : bool, int, enum Status{LIVING, DEAD, SAVED}, enum Direction {RIGHT, LEFT
 
 Observators:
     getDirection : [Lemming] -> Direction
+    getNumero : [Lemming] -> int
     getType : [Lemming] -> Type
     getStatus : [Lemming] -> Status
     getX : [Lemming] -> int
@@ -11,7 +12,7 @@ Observators:
     getFallTime : [Lemming] -> int
         pre getFallTime(l) require getType(l) == FALLER
 Constructors:
-    init : Type -> [Lemming]
+    init : Type x int -> [Lemming]
 Operators:
     step : [Lemming] -> [Lemming]
         pre step(lem) require getStatus(lem) == LIVING
@@ -21,7 +22,9 @@ Observations:
     [invariant]
         Level : getNature (getX(l),getY(l) - 1) -> EMPTY
     [init]
-        getDirection(init()) == RIGHT
+        getType(init(t, x)) == t
+        getDirection(init(t, x)) == RIGHT
+        getNumero(init(t, x)) == x
     [step]
         if getType(l) == WALKER ^ GameEng : isObstacle (getX(l),getY(l) + 1) == FALSE then :
             getType(step(l)) == FALLER ^ getFallTime(step(l)) == 0
