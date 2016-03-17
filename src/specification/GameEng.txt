@@ -22,7 +22,7 @@ Observators :
     active: [GameEng] x int  -> bool
         pre active(e, n) require 1 < n =< nbActif
     status: [GameEng] x int -> Status   
-        pre active(e, n) require 1 < n =< nbActif
+        pre status(e, n) require 1 < n =< nbSpawned
     
 Constructors :
     init: int x int -> [Level]
@@ -37,7 +37,7 @@ Operators :
 Observations :
     [invariants]
         nbSpawned(e) =< sizeColony(e)
-        nbTours(e) =< 0
+        nbTours(e) => 0
         nbActifs(e) =min= |getLemmingsNum(e)|
         lemmingExiste(e, n) =min= n \belongsto getLemmingsNum(e)
         gameOver(e) =min= (nbSpawned(e) == sizeColony(e)) ^ (nbActif(e) == 0)     
@@ -52,7 +52,7 @@ Observations :
         nbActif(init(x, y)) == 0
         getAllLemmings(init(x, y)) == Nil
     [nextTurn]
-        \forall n in getLemmingsNumeros(e) getLemming(nexTurn(e), n) == Lemming : step(getLemming(e, n))
+        \forall n in getLemmingsNum(e) getLemming(nexTurn(e), n) == Lemming : step(getLemming(e, n))
          
         if (spawnSpeed(e) - timeSinceLastSpawn(e)) > 0 then
             timeSinceLastSpawn(nextTurn(e)) = timeSinceLastSpawn(e) + 1

@@ -1,4 +1,4 @@
-package services;
+package enumeration;
 
 public enum Direction {
 	RIGHT,

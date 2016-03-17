@@ -1,5 +1,7 @@
 package services;
 
+import enumeration.Nature;
+
 public interface LevelService {
 
 	public int getWidth();
@@ -28,10 +30,22 @@ public interface LevelService {
     // 		\forall (x, y) x != 0 ^ x != width -1 ^ y != 0 ^ y != height - 1, getNature(l, x, y) == Nature.EMPTY
 	public void init(int w, int h);
 	
+	//PRE 	!editing()
+	//		0 < y < getHeight() - 1
+	//		0 < x < getWidth() - 1
+	//POST	getNature(setNature(x,y,n)) == n
+	//		\forall (i, j) (i != x || j != y) ^ 0 < i < width ^ 0 < j < height, getNature(setNature(x ,y ,n), i, j) == getNature(l, i, j)
+	public void setNature(int x, int y, Nature nat);
 	
 	//PRE editing()
 	//POST	!editing()
-	//		  \forall (i, j) 0 < i < getWidth() ^ 0 < j < getHeight(), getNature(i, j) == getNature(i, j)@pre	
+	//		\forall (i, j) 0 < i < getWidth() ^ 0 < j < getHeight(), getNature(i, j) == getNature(i, j)@pre	
+	//		getNature(getEntranceX(), getEntranceY() == EMPTY 
+    //		getNature(getEntranceX(), getEntranceY() - 1) == Nature.EMPTY
+    //		getNature(getEntranceX(), getEntranceY() + 1) == Nature.EMPTY
+    //		getNature(getExitX(), getExitY() == Nature.EMPTY 
+    //		getNature(getExitX(), getExitY() - 1) == Nature.EMPTY
+    //		getNature(getExitX(), getExitY() + 1) == Nature.METAL
 	public void goPlay();
 	
 	//PRE !editing()
