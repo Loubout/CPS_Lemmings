@@ -24,7 +24,7 @@ public interface LemmingService {
 	//POST	getType() = type
 	//		getNumber() = num
 	//		getDirection = Direction.RIGHT
-	public void init(Type type, int num);
+	public void init(int num);
 
 	/*Operators*/
 	//PRE	getStatus() = Status.LIVING
@@ -55,7 +55,7 @@ public interface LemmingService {
 	//    			else 
 	//        			getY(step()) == getY() + 1 ^ getFallTime(step()) == getFallTime() + 1
 	public void step();
-	public void bindEngine();
+	public void bindEngine(GameEngService eng);
 
 
 }

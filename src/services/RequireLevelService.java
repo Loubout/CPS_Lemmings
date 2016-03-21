@@ -1,5 +1,6 @@
 package services;
 
 public interface RequireLevelService {
-	void bindLevel(LevelService l);
+
+	public void bindLevel(LevelService level);
 }

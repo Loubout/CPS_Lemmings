@@ -24,9 +24,9 @@ public interface GameEngService {
 	public Set<Integer> getLemmingsNum();
 	public boolean lemmingExist(int i);
 	//PRE	lemmingExist(i)
-	public LemmingService getLemminng(int i);
+	public LemmingService getLemming(int i);
 	//PRE 1 < i < nbActive()
-	public boolean isAvtive(int i);
+	public boolean isActive(int i);
 	//PRE 1 < i < nbSpawned()
 	public Status getStatus(int i);
 	
@@ -53,7 +53,7 @@ public interface GameEngService {
 	public void init(int size, int speed);
 	
 	/*Operators*/	
-	public void bindLevel(LevelService level);
+	
 	//PRE	!gameOver()
 	//POST	if ( (getSpawnedSpeed() - timeSinceLastSpawn()) > 0) 
 	//			timeSinceLastSpawn() = timeSinceLastSpawn() + 1

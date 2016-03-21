@@ -5,9 +5,13 @@ import enumeration.Nature;
 public interface LevelService {
 
 	public int getWidth();
-	public int getHeigt();
+	public int getHeight();
 	public Nature getNature(int x, int y);
 	public boolean editing();
+	
+	/*	INVARIANTS
+	 *  	
+	 */
 	
 	//PRE !editing()
 	public int getEntranceX();
@@ -59,7 +63,7 @@ public interface LevelService {
 	//	  getNature(x, y) == Nature.EMPTY && 0 < x && x > getWidth() && 0 < y && y < getHeight()
 	//POST	getNature(x, y) == Nature.DIRT
 	//		\forall (i, j) (i != x || j != y) ^ 0 < i < getWidth() ^ 0 < j < getHeight(), getNature(i, j) == getNature(i, j)@pre
-	public void build();
+	public void build(int x, int y);
 	
 	
 	
