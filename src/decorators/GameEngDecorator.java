@@ -25,9 +25,6 @@ public class GameEngDecorator implements GameEngService {
 		return delegate.getSpawnSpeed();
 	}
 
-	public int getTimeSinceLastSpawn() {
-		return delegate.getTimeSinceLastSpawn();
-	}
 
 	public boolean isObstacle(int x, int y) {
 		return delegate.isObstacle(x, y);
@@ -41,8 +38,8 @@ public class GameEngDecorator implements GameEngService {
 		return delegate.getLevel();
 	}
 
-	public int nbTours() {
-		return delegate.nbTours();
+	public int getNbTours() {
+		return delegate.getNbTours();
 	}
 
 	public Double[] score() {
@@ -86,7 +83,7 @@ public class GameEngDecorator implements GameEngService {
 	}
 
 	public void bindLevel(LevelService level) {
-		delegate.bindLevel(level);
+		//delegate.bindLevel(level);
 	}
 
 	public void nextTurn() {

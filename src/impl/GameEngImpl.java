@@ -13,19 +13,25 @@ import services.RequireLevelService;
 
 public class GameEngImpl implements RequireLevelService, GameEngService {
 
-	private LevelService level;
-	private ArrayList<LemmingService> lemmings;
-	private int sizeColony;
-	private int spawnSpeed;
-	private int nbTours;
-	private boolean gameOver;
+	protected LevelService level;
+	protected ArrayList<LemmingService> lemmings;
+	protected int sizeColony;
+	protected int spawnSpeed;
+	protected int nbSpawned;
+	protected int nbSaved;
+	protected int nbTours;
+	protected boolean gameOver;
 	
+
+
 	public GameEngImpl(){}
-	
-	
+
+
 	@Override
 	public void bindLevel(LevelService l) {
+
 		this.level = l;
+
 	}
 
 	@Override
@@ -38,11 +44,6 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 		return spawnSpeed;
 	}
 
-	@Override
-	public int getTimeSinceLastSpawn() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 
 	@Override
 	public boolean isObstacle(int x, int y) {
@@ -60,7 +61,7 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 	}
 
 	@Override
-	public int nbTours() {
+	public int getNbTours() {
 		return this.nbTours;
 	}
 
@@ -72,14 +73,12 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 
 	@Override
 	public int nbSpawned() {
-		// TODO Auto-generated method stub
-		return 0;
+		return nbSpawned;
 	}
 
 	@Override
 	public int nbSaved() {
-		// TODO Auto-generated method stub
-		return 0;
+		return nbSaved;
 	}
 
 	@Override
@@ -105,7 +104,9 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 
 	@Override
 	public LemmingService getLemming(int i) {
-		// TODO Auto-generated method stub
+		for (LemmingService lemmy : lemmings){
+			if (lemmy.getNumber() == i) return lemmy;
+		}
 		return null;
 	}
 
@@ -125,12 +126,42 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 	public void init(int size, int speed) {
 		this.sizeColony = size;
 		this.spawnSpeed = speed;
-		
+		this.gameOver = false;
+		this.nbTours = 0;
+		this.lemmings = new ArrayList<LemmingService>();
+
 	}
+
 
 	@Override
 	public void nextTurn() {
-		// TODO Auto-generated method stub
+		System.out.println("NEXT TURN nbTours ="+nbTours);
+		System.out.println(getLemmingsNum());
+		
+		
+		Set<Integer> nums = getLemmingsNum();
+		for (Integer i : nums){
+			LemmingService lemmy = 	getLemming(i);
+			lemmy.step(); // INDEX IN ARRAYLIST NOT THE SAME AS LEMMING ID
+			if (lemmy.getx() == getLevel().getExitX() && lemmy.getY() == getLevel().getExitY()){
+				lemmings.remove(lemmy);
+				nbSaved += 1;
+			}
+			
+		}
+
+		if (getNbTours() % spawnSpeed == 0 && nbSpawned() < sizeColony){
+			System.out.println("SPAWN");
+			LemmingService lemmy = new LemmingImpl();
+			lemmy.bindEngine(this);
+			lemmy.init(nbSpawned() + 1);
+			lemmings.add(lemmy);
+			this.nbSpawned += 1;
+		} 
+
+		nbTours += 1;
+		
+		
 		
 	}
 

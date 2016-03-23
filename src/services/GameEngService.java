@@ -9,13 +9,12 @@ public interface GameEngService {
 	/*Observators*/
 	public int getSizeColony();
 	public int getSpawnSpeed();
-	public int getTimeSinceLastSpawn();
 	//PRE	0 < x < getLevel().getWidth()
 	// 		0 < y < getLevel().getHeight()
 	public boolean isObstacle(int x, int y);
 	public boolean gameOver();
 	public LevelService getLevel();
-	public int nbTours();
+	public int getNbTours();
 	//PRE	gameover()
 	public Double[] score();
 	public int nbSpawned();
@@ -54,12 +53,16 @@ public interface GameEngService {
 	
 	/*Operators*/	
 	
+	
+	// A REECRIRE BRAH
 	//PRE	!gameOver()
-	//POST	if ( (getSpawnedSpeed() - timeSinceLastSpawn()) > 0) 
-	//			timeSinceLastSpawn() = timeSinceLastSpawn() + 1
+	//POST	if ( (getSpawnedSpeed(e) - timeSinceLastSpawn()) > 0) 
+	//			timeSinceLastSpawn(e) = timeSinceLastSpawn() + 1
 	//		else 
-	//			timeSinceLastSpawn(nextTurn(e)) = 0 
-    //			nbSpawned((nextTurn(e)) = nbSpawned(e) + 1
-    //			getLemming(nbSpawned() + 1) = Lemming : init(FALLER, nbSpawned() +1)	
+	//			timeSinceLastSpawn(e, nextTurn(e)) = 0 
+    //			nbSpawned(e, (nextTurn(e)) = nbSpawned(e) + 1
+    //			getLemming(e, nbSpawned() + 1) = Lemming : init(FALLER, nbSpawned() +1)
+	//
+	//		\forAll i in getLemmingsNum(nextTurn(l)), getLemming(nextTurn(e), i) = Lemming : step(getLemming(e, i))
 	public void nextTurn();
 }

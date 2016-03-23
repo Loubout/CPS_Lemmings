@@ -13,9 +13,9 @@ public class LevelImpl implements LevelService {
 	private int entranceY;
 	private int exitX;
 	private int exitY;
-	
+
 	public LevelImpl (){}
-	
+
 	@Override
 	public int getWidth() {
 		return width;
@@ -61,21 +61,30 @@ public class LevelImpl implements LevelService {
 		this.width = w;
 		this.height = h;
 		this.matLevel = new Nature[w][h];
-		
+
 		this.editing = false;
-		
+
+		for(int i = 0; i < width; i++){
+			for(int j = 0; j < height; j++){
+				matLevel[i][j] = Nature.EMPTY;
+			}
+		}
 		// need some stuff here
 		for(int i = 0; i < width; i++){ 
 			matLevel[i][0] = Nature.METAL;
-			 matLevel[i][height - 1] = Nature.METAL;
+			matLevel[i][height - 1] = Nature.METAL;
 		}
-	
+
 		for(int j = 0; j < height; j++){
 			matLevel[0][j] = Nature.METAL;
 			matLevel[width - 1][j] = Nature.METAL;
 		}
 		
-		
+		// THIS SHOULDNT BE HERE 
+		this.entranceX = 1;
+		this.entranceY = height - 2;
+		this.exitX = width - 2;
+		this.exitY = height - 2;
 	}
 
 	@Override
@@ -96,7 +105,7 @@ public class LevelImpl implements LevelService {
 	@Override
 	public void build(int x, int y) {
 		this.matLevel[x][y] = Nature.DIRT;
-		
+
 	}
 
 }

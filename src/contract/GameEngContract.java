@@ -28,7 +28,7 @@ public class GameEngContract extends GameEngDecorator {
 		
 		if (super.nbSpawned() > super.getSizeColony()) throw new InvariantError("Invariant Error : nbSpawned > getSizeColony()");
 		
-		if (super.nbTours() < 0) throw new InvariantError("Invariant Error : nbTours < 0");
+		if (super.getNbTours() < 0) throw new InvariantError("Invariant Error : nbTours < 0");
 		
 		if (super.nbActive() != getLemmingsNum().size()) throw new InvariantError("Invariant Error : nbActive should be equal to |getLummingsNum()|");
 		
@@ -60,12 +60,7 @@ public class GameEngContract extends GameEngDecorator {
 		return super.getSpawnSpeed();
 	}
 
-	@Override
-	public int getTimeSinceLastSpawn() {
-		// TODO Auto-generated method stub
-		return super.getTimeSinceLastSpawn();
-	}
-
+	
 	@Override
 	public boolean isObstacle(int x, int y) {
 		// TODO Auto-generated method stub
@@ -85,9 +80,9 @@ public class GameEngContract extends GameEngDecorator {
 	}
 
 	@Override
-	public int nbTours() {
+	public int getNbTours() {
 		// TODO Auto-generated method stub
-		return super.nbTours();
+		return super.getNbTours();
 	}
 
 	@Override

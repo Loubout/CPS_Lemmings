@@ -5,6 +5,7 @@ import enumeration.Status;
 import enumeration.Type;
 import services.GameEngService;
 import services.LemmingService;
+import services.LevelService;
 import services.RequireGameEngineService;
 
 public class LemmingImpl implements RequireGameEngineService, LemmingService{
@@ -70,6 +71,7 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 
 	@Override
 	public void init(int num) {
+		LevelService level = this.eng.getLevel();
 		this.x = this.eng.getLevel().getEntranceX();
 		this.y = this.eng.getLevel().getEntranceY();
 		this.num = num;
