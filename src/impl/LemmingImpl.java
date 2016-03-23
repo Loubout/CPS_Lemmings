@@ -1,6 +1,7 @@
 package impl;
 
 import enumeration.Direction;
+import enumeration.Nature;
 import enumeration.Status;
 import enumeration.Type;
 import services.GameEngService;
@@ -17,14 +18,14 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 	private int num;
 	private int x;
 	private int y;
-	
-	
-	
+
+
+
 
 	@Override
 	public void bindEngine(GameEngService eng) {
 		this.eng = eng;
-		
+
 	}
 
 	@Override
@@ -45,7 +46,7 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 	@Override
 	public Status getStatus() {
 		return status;
-		
+
 	}
 
 	@Override
@@ -71,22 +72,33 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 
 	@Override
 	public void init(int num) {
-		LevelService level = this.eng.getLevel();
+		
 		this.x = this.eng.getLevel().getEntranceX();
 		this.y = this.eng.getLevel().getEntranceY();
 		this.num = num;
 		this.dir = Direction.RIGHT;
 		this.type = Type.WALKER; // pour implem minimale
-		
+
 	}
 
 	@Override
 	public void step() {
-		this.x = this.x + 1; // marcher vers a droite yo
-		
+
+		if (this.dir == Direction.RIGHT){
+			if (eng.getLevel().getNature(x + 1, y) == Nature.EMPTY)
+				this.x = this.x + 1; // marcher vers a droite yo
+			else
+				this.dir = Direction.LEFT;
+		}else{
+			if (eng.getLevel().getNature(x - 1, y) == Nature.EMPTY)
+				this.x = this.x - 1; // marcher vers a droite yo
+			else
+				this.dir = Direction.RIGHT;
+		}
+
 	}
 
 
-	
+
 
 }

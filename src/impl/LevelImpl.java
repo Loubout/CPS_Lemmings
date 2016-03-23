@@ -1,5 +1,7 @@
 package impl;
 
+import java.util.Scanner;
+
 import enumeration.Nature;
 import services.LevelService;
 
@@ -7,7 +9,7 @@ public class LevelImpl implements LevelService {
 
 	private int width;
 	private int height;
-	private Nature[][] matLevel;
+	protected Nature[][] matLevel;
 	private boolean editing;
 	private int entranceX;
 	private int entranceY;
@@ -79,7 +81,7 @@ public class LevelImpl implements LevelService {
 			matLevel[0][j] = Nature.METAL;
 			matLevel[width - 1][j] = Nature.METAL;
 		}
-		
+
 		// THIS SHOULDNT BE HERE 
 		this.entranceX = 1;
 		this.entranceY = height - 2;
@@ -94,7 +96,80 @@ public class LevelImpl implements LevelService {
 
 	@Override
 	public void goPlay() {
-		this.editing = true;
+		
+		System.out.println("Veuillez fournir les coordonées de l'entrée x,y");
+
+		
+		boolean checkEntrance = false;
+		boolean checkExit = false;
+		Scanner scanner = new Scanner(System.in);
+		while (!checkEntrance){
+			
+			String inputEntrance[] = scanner.nextLine().split(",");
+			while (inputEntrance.length != 2 || !isInteger(inputEntrance[0]) || !isInteger(inputEntrance[1])){
+				System.out.println("FORMAT ERROR BRO");
+				inputEntrance = scanner.nextLine().split(",");
+			}
+			
+			int eX = Integer.parseInt(inputEntrance[0]);
+			int eY = Integer.parseInt(inputEntrance[1]);
+			
+			// check out of bound
+			if (eX < 0 || eX > width - 1 || eY < 0 || eY > height - 1) {
+				System.out.println("OUT OF BOUND COORIDNATES");
+				continue;
+			}
+			// check entrance conditions
+			if (getNature(eX, eY) != Nature.EMPTY || getNature(eX, eY - 1) != Nature.EMPTY){
+				System.out.println("Entrance cell and cell above should be empty");
+				continue;
+			}
+			
+			this.entranceX = eX;
+			this.entranceY = height - eY;
+			checkEntrance = true;
+		}
+
+		System.out.println("Veuillez fournir les coordonées de la sortie x,y");
+		while (!checkExit){
+			String inputExit[] = scanner.nextLine().split(",");
+			
+			while (inputExit.length != 2 || !isInteger(inputExit[0]) || !isInteger(inputExit[1])){
+				System.out.println("FORMAT ERROR BRO");
+				inputExit = scanner.nextLine().split(",");
+			}
+			
+			int eX = Integer.parseInt(inputExit[0]);
+			int eY = Integer.parseInt(inputExit[1]);
+			
+			// check out of bound
+			
+			if (eX < 0 || eX > width - 1 || eY < 0 || eY > height - 1 || (eX == entranceX && eY == entranceY)) {
+				System.out.println("OUT OF BOUND COORIDNATES "+ eX + " " + eY);
+				continue;
+			}
+			// check entrance conditions
+			if (getNature(eX, eY) != Nature.EMPTY || getNature(eX, eY - 1) != Nature.EMPTY){
+				System.out.println("Exit cell and cell above should be empty");
+				continue;
+			}
+			
+			this.exitX = eX;
+			this.exitY = height - eY;
+			checkExit = true;
+		}
+		scanner.close();
+		
+		this.editing = false;
+	}
+
+	private boolean isInteger(String string) {
+		try {
+			Integer.valueOf(string);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
 	}
 
 	@Override

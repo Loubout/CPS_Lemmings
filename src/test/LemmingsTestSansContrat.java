@@ -6,7 +6,7 @@ import impl.GameEngImpl;
 import impl.LevelImpl;
 import services.LevelService;
 
-public class LemmingsTest {
+public class LemmingsTestSansContrat {
 
 	public static void main(String[] args) throws InterruptedException {
 		
@@ -18,12 +18,12 @@ public class LemmingsTest {
 		level.init(60, 10);
 		gameEng.init(10, 2);
 		gameEng.bindLevel(level);
-		LevelService l = gameEng.getLevel();
+		
 		display.bindEngine(gameEng);
 		
 		
-		
-		int nbTours = 60;
+		level.goPlay();
+		int nbTours = 100;
 		for (int i = 0 ; i < nbTours; i++){
 			gameEng.nextTurn();
 			display.displayLevel();

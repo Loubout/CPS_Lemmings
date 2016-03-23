@@ -10,7 +10,7 @@ public interface LevelService {
 	public boolean editing();
 	
 	/*	INVARIANTS
-	 *  	
+	 *  \forall (x, y) x = 0 || x = width -1 || y = 0 || y = height - 1, getNature(l, x, y) == Nature.METAL	
 	 */
 	
 	//PRE !editing()
@@ -26,7 +26,7 @@ public interface LevelService {
 	public int getExitY();
 	
 	
-	//PRE w > 0 ^ h > 0
+	//PRE w >= 4 ^ h >= 5
 	//POST !editing()
 	//		getHeight() == h
 	//		getWidth() == w
