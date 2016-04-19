@@ -67,13 +67,14 @@ Observations:
                         Level : remove(getX(l) + 1, getY(l) + 1)
          - else 
             if getType(l) == CLIMBER then :
-                if Level : getNature(getX(l), getY(l) - 1) == EMPTY ^ Level : getNature(getX(l), getY(l) - 2) == EMPTY then :
-                    getType(step(l)) == FALLER 
-                if Level : getNature(getX(l), getY(l) + 1) == METAL then :
-                    getType(step(l)) == WALKER
-                if Level : getNature(getX(l), getY(l) + 1) == DIRT then :
-                    Level : remove(getX(l), getY(l) + 1) 
-                    if getNature(getX(l) - 1, getY(l) + 1) == DIRT then :
-                        Level : remove(getX(l) - 1, getY(l) + 1)
-                    if getNature(getX(l) + 1, getY(l) + 1) == DIRT then :
-                        Level : remove(getX(l) + 1, getY(l) + 1)
+                if GameEng : isObstacle(getX(l)+1, getY(l)) ^ 
+                   GameEng : isObstacle(getX(l)+1, getY(l)-1) ^
+                   ! GameEng: isObstacle(getX(l), getY(l)-1) ^ 
+                   ! GameEng: isObstacle(getX(l), getY(l)-2) then :
+                    getY(step(l)) == getY(l) - 1
+                if GameEng : isObstacle(getX(l)-1, getY(l)) ^ 
+                   GameEng : isObstacle(getX(l)-1, getY(l)-1) ^
+                   ! GameEng: isObstacle(getX(l), getY(l)-1) ^ 
+                   ! GameEng: isObstacle(getX(l), getY(l)-2) then :
+                    getY(step(l)) == getY(l) - 1
+                

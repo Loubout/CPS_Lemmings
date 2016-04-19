@@ -83,10 +83,10 @@ public class LevelImpl implements LevelService {
 		}
 
 		// THIS SHOULDNT BE HERE 
-		this.entranceX = 1;
-		this.entranceY = height - 2;
-		this.exitX = width - 2;
-		this.exitY = height - 2;
+		//		this.entranceX = 1;
+		//		this.entranceY = height - 2;
+		//		this.exitX = width - 2;
+		//		this.exitY = height - 2;
 	}
 
 	@Override
@@ -96,24 +96,24 @@ public class LevelImpl implements LevelService {
 
 	@Override
 	public void goPlay() {
-		
-		System.out.println("Veuillez fournir les coordonées de l'entrée x,y");
+		editing = true; //on est en mode editing en entrée de jeu
+		System.out.println("Veuillez fournir les coordonées de l'entrée: x,y");
 
-		
+
 		boolean checkEntrance = false;
 		boolean checkExit = false;
 		Scanner scanner = new Scanner(System.in);
 		while (!checkEntrance){
-			
+
 			String inputEntrance[] = scanner.nextLine().split(",");
 			while (inputEntrance.length != 2 || !isInteger(inputEntrance[0]) || !isInteger(inputEntrance[1])){
 				System.out.println("FORMAT ERROR BRO");
 				inputEntrance = scanner.nextLine().split(",");
 			}
-			
+
 			int eX = Integer.parseInt(inputEntrance[0]);
 			int eY = Integer.parseInt(inputEntrance[1]);
-			
+
 			// check out of bound
 			if (eX < 0 || eX > width - 1 || eY < 0 || eY > height - 1) {
 				System.out.println("OUT OF BOUND COORIDNATES");
@@ -124,26 +124,26 @@ public class LevelImpl implements LevelService {
 				System.out.println("Entrance cell and cell above should be empty");
 				continue;
 			}
-			
+
 			this.entranceX = eX;
 			this.entranceY = height - eY;
 			checkEntrance = true;
 		}
 
-		System.out.println("Veuillez fournir les coordonées de la sortie x,y");
+		System.out.println("Veuillez fournir les coordonées de la sortie: x,y");
 		while (!checkExit){
 			String inputExit[] = scanner.nextLine().split(",");
-			
+
 			while (inputExit.length != 2 || !isInteger(inputExit[0]) || !isInteger(inputExit[1])){
 				System.out.println("FORMAT ERROR BRO");
 				inputExit = scanner.nextLine().split(",");
 			}
-			
+
 			int eX = Integer.parseInt(inputExit[0]);
 			int eY = Integer.parseInt(inputExit[1]);
-			
+
 			// check out of bound
-			
+
 			if (eX < 0 || eX > width - 1 || eY < 0 || eY > height - 1 || (eX == entranceX && eY == entranceY)) {
 				System.out.println("OUT OF BOUND COORIDNATES "+ eX + " " + eY);
 				continue;
@@ -153,16 +153,56 @@ public class LevelImpl implements LevelService {
 				System.out.println("Exit cell and cell above should be empty");
 				continue;
 			}
-			
+
 			this.exitX = eX;
 			this.exitY = height - eY;
 			checkExit = true;
 		}
-		scanner.close();
+
+		System.out.println("Veuillez fournir les coordonées et la nature de la case à éditer: x,y,NATURE (DIRT, METAL, EMPTY)");
+		System.out.println("Saisir goPlay si vous désirez quitter le mode editing");
 		
+		while (editing){
+			System.out.println("votre saisie :");
+			String inputEdit[] = scanner.nextLine().split(",");
+
+			while (inputEdit.length != 3 || !isInteger(inputEdit[0]) || !isInteger(inputEdit[1]) || !(inputEdit[2] instanceof String)){
+				if(inputEdit[0].compareTo("goPlay")==0){
+					editing = false;
+					break;
+				}else{
+					System.out.println("FORMAT ERROR BRO");
+					inputEdit = scanner.nextLine().split(",");
+				}
+			}
+			if(inputEdit.length == 3){
+				int eX = Integer.parseInt(inputEdit[0]);
+				int eY = Integer.parseInt(inputEdit[1]);
+				Nature nat = getNatureFromString(inputEdit[2]);
+
+				// check out of bound
+				if (eX < 0 || eX > width - 1 || eY < 0 || eY > height - 1 || (eX == entranceX && eY == entranceY)) {
+					System.out.println("OUT OF BOUND COORIDNATES "+ eX + " " + eY);
+					continue;
+				}
+
+				//edit the specified square
+				this.setNature(eX, eY, nat);
+			}
+		}
+		scanner.close();
 		this.editing = false;
 	}
 
+	private Nature getNatureFromString(String nat){
+		if(nat.compareTo("DIRT")==0)
+			return Nature.DIRT;
+		else if(nat.compareTo("EMPTY")==0)
+			return Nature.EMPTY;
+		else if(nat.compareTo("METAL")==0)
+			return Nature.METAL;
+		else return null;
+	}
 	private boolean isInteger(String string) {
 		try {
 			Integer.valueOf(string);

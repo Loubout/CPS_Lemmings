@@ -113,7 +113,6 @@ public class LemmingContract extends LemmingDecorator{
 		}	
 	}
 
-	
 	@Override
 	public Direction getDirection() {
 		// TODO Auto-generated method stub
@@ -163,8 +162,6 @@ public class LemmingContract extends LemmingDecorator{
 	}
 
 	
-
-
 	@Override
 	public void bindEngine(GameEngService eng) {
 		// TODO Auto-generated method stub

@@ -1,13 +1,12 @@
 package impl;
 
+import services.GameEngService;
+import services.LemmingService;
+import services.RequireGameEngineService;
 import enumeration.Direction;
 import enumeration.Nature;
 import enumeration.Status;
 import enumeration.Type;
-import services.GameEngService;
-import services.LemmingService;
-import services.LevelService;
-import services.RequireGameEngineService;
 
 public class LemmingImpl implements RequireGameEngineService, LemmingService{
 
@@ -125,10 +124,21 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 				else
 					this.dir = Direction.RIGHT;
 			}
-		default:
+		case DIGGER:
+			if(eng.getLevel().getNature(x, y + 1) == Nature.EMPTY){
+				this.setType(Type.FALLER);
+			}else if(eng.getLevel().getNature(x, y + 1) == Nature.METAL){
+				this.setType(Type.WALKER);
+			}else if(eng.getLevel().getNature(x, y + 1) == Nature.DIRT){
+				this.y = this.y + 1;
+				if(eng.getLevel().getNature(x - 1, y + 1) == Nature.DIRT){//down left
+					this.getGameEng().getLevel().remove(x - 1, y + 1);
+				} 
+				if(eng.getLevel().getNature(x + 1, y + 1) == Nature.DIRT){//down right
+					this.getGameEng().getLevel().remove(x + 1, y + 1);
+				} 
+			}
 			break;
-
 		}
-
 	}
 }

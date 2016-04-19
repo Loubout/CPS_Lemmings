@@ -34,7 +34,7 @@ public interface LevelService {
     // 		\forall (x, y) x != 0 ^ x != width -1 ^ y != 0 ^ y != height - 1, getNature(l, x, y) == Nature.EMPTY
 	public void init(int w, int h);
 	
-	//PRE 	!editing()
+	//PRE 	editing()
 	//		0 < y < getHeight() - 1
 	//		0 < x < getWidth() - 1
 	//POST	getNature(setNature(x,y,n)) == n
