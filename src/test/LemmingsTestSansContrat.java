@@ -21,7 +21,6 @@ public class LemmingsTestSansContrat {
 		
 		display.bindEngine(gameEng);
 		
-		
 		level.goPlay();
 		int nbTours = 100;
 		for (int i = 0 ; i < nbTours; i++){
@@ -29,9 +28,7 @@ public class LemmingsTestSansContrat {
 			display.displayLevel();
 			Thread.sleep(100);    
 		}
-	
-	
-		
+
 		
 		display.displayLevel();
 		

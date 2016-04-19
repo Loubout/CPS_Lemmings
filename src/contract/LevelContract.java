@@ -19,7 +19,6 @@ public class LevelContract extends LevelDecorator{
 			if (super.getNature(i, 0) != Nature.METAL || super.getNature(i, super.getHeight() - 1 ) != Nature.METAL)
 				throw new InvariantError("BORDERS SHOULD BE MADE OF HEAVY.METAL");
 		}
-
 		for(int j = 0; j < super.getHeight(); j++){
 			if (super.getNature(0, j) != Nature.METAL || super.getNature(super.getWidth() - 1,j) != Nature.METAL)
 				throw new InvariantError("BORDERS SHOULD BE MADE OF HEAVY.METAL");
@@ -263,34 +262,6 @@ public class LevelContract extends LevelDecorator{
 		}
 	}
 
-	@Override
-	public int hashCode() {
-		// TODO Auto-generated method stub
-		return super.hashCode();
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
-		return super.equals(obj);
-	}
-
-	@Override
-	protected Object clone() throws CloneNotSupportedException {
-		// TODO Auto-generated method stub
-		return super.clone();
-	}
-
-	@Override
-	public String toString() {
-		// TODO Auto-generated method stub
-		return super.toString();
-	}
-
-	@Override
-	protected void finalize() throws Throwable {
-		// TODO Auto-generated method stub
-		super.finalize();
-	}
+	
 
 }

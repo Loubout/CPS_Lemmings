@@ -40,7 +40,7 @@ public class DisplayImpl implements RequireGameEngineService, DisplayService {
 				boolean drawLemming = false;
 				for(Integer lemIndex: lemmings){
 					LemmingService lem = eng.getLemming(lemIndex);
-					if (i == lem.getx() && j == lem.getY()){
+					if (i == lem.getX() && j == lem.getY()){
 						if (lem.getDirection() == Direction.LEFT) display += "L";
 						if (lem.getDirection() == Direction.RIGHT) display += "R";
 						drawLemming = true;

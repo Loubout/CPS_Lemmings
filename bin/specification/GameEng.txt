@@ -2,42 +2,61 @@ Service : GameEng
 Types : bool, int, enum Nature{EMPTY, DIRT, METAL}, enum Status{LIVING, DEAD, SAVED}
 Observators :
     const sizeColony : [GameEng] -> int
-    spawnSpeed : [GameEng] -> int
-    obstacle: [GameEng] x int x int -> bool
+    const spawnSpeed : [GameEng] -> int
+    timeSinceLastSpawn: [GameEng] -> int
+    isObstacle: [GameEng] x int x int -> bool
+        pre isObstacle(e, x, y) require 0 < x < Level : width(getLevel(e)) ^ 0 < y < Level : height(getLevel(e))
     gameOver: [GameEng] -> bool
     getLevel: [GameEng] -> Level
     nbTours: [GameEng] -> int
     score: [GameEng] -> (int, int)
-    nbSauvés: [GameEng] -> int    
+        pre score(e) require gameOver(e)
+    nbSpawned: [GameEng -> int
+    nbSauves: [GameEng] -> int   
+    nbActif: [GameEng] -> int 
     
-    lemmings: [GameEng] -> Set<Lemming>
+    getLemmingsNum : [GameEng] -> Set<Int>
+    lemmingExiste: [GameEng] x int -> bool
+    getLemming: [GameEng] x int -> Lemming
+        pre getLemming(e, n) require lemmingExiste(e, n)
     active: [GameEng] x int  -> bool
-    status: [GameEng] x int -> Status
-    
-    
+        pre active(e, n) require 1 < n =< nbActif
+    status: [GameEng] x int -> Status   
+        pre status(e, n) require 1 < n =< nbSpawned
     
 Constructors :
     init: int x int -> [Level]
         pre init(size, sp) require size > 0 ^ sp > 0
+    
 Operators :
-    setNature: [Level] x int x int x Nature -> [Level]
-        pre setNature(l, x, y, n) require editing(l) == false ^ 0 =< x < width ^ 0 =< y < height
-    goPlay: [Level] -> [Level]
-        pre goPlay(l) require editing(l) == true ^ \forall (x, y) x = 0 || x = width -1 || y = 0 || y = height - 1, nature(l, x, y) == METAL
-    remove: [Level] x int x int -> [Level]
-        pre remove(l, x, y) require editing(l) == false ^ nature(l, x, y) == DIRT ^ 0 =< x < width ^ 0 =< y < height
-    build: [Level] x int x int -> [Level]
-        pre build(l, x , y) require editing(l) == false ^ nature(l, x, y) == EMPTY ^ 0 =< x < width ^ 0 =< y < height
+    bindLevel : [GameEng] x Level -> [GameEng]
+    nextTurn : [GameEng] ->  [GameEng]
+        pre nextTurn(e) require not gameOver(e)
+    
+
 Observations :
     [invariants]
-    
+        nbSpawned(e) =< sizeColony(e)
+        nbTours(e) => 0
+        nbActifs(e) =min= |getLemmingsNum(e)|
+        lemmingExiste(e, n) =min= n \belongsto getLemmingsNum(e)
+        gameOver(e) =min= (nbSpawned(e) == sizeColony(e)) ^ (nbActif(e) == 0)     
     [init]
-        editing(init(x, y)) == true
-    [setNature]
-        nature(setNature(l, x, y, n)) == n
-    [goPlay]
-        editing(goPlay(l)) == false
-    [remove]
-        nature(remove(l, x , y)) == EMPTY
-    [build]
-        nature(remove(l, x , y)) == DIRT
+        sizeColony(init(x,y)) == x
+        spawnSpeed(init(x,y)) == y
+        score(init(x, y)) == 0
+        gameOver(init(x,y)) == FALSE
+        nbTours(init(x, y)) == 0
+        nbSpawned(init(x, y)) == 0
+        nbSauves(init(x, y)) == 0
+        nbActif(init(x, y)) == 0
+        getAllLemmings(init(x, y)) == Nil
+    [nextTurn]
+        \forall n in getLemmingsNum(e) getLemming(nexTurn(e), n) == Lemming : step(getLemming(e, n))
+         
+        if (spawnSpeed(e) - timeSinceLastSpawn(e)) > 0 then
+            timeSinceLastSpawn(nextTurn(e)) = timeSinceLastSpawn(e) + 1
+        else 
+            timeSinceLastSpawn(nextTurn(e)) = 0 
+            ^ nbSpawned((nextTurn(e)) = nbSpawned(e) + 1
+            ^ getLemming(e, nbSpawned(e) + 1) == Lemming : init(FALLER, nbSpawned(e) +1)

@@ -1,0 +1,79 @@
+Service : Lemming
+
+Types : bool, int, enum Status{LIVING, DEAD, SAVED}, enum Direction {RIGHT, LEFT}, enum Type{WALKER, FALLER, DIGGER}
+
+Observators:
+    getDirection : [Lemming] -> Direction
+    getNumero : [Lemming] -> int
+    getType : [Lemming] -> Type
+    getStatus : [Lemming] -> Status
+    getX : [Lemming] -> int
+    getY : [Lemming] -> int
+    getFallTime : [Lemming] -> int
+        pre getFallTime(l) require getType(l) == FALLER
+Constructors:
+    init : Type x int -> [Lemming]
+Operators:
+    step : [Lemming] -> [Lemming]
+        pre step(lem) require getStatus(lem) == LIVING
+    bindEngine : [Lemming] -> [Lemming]
+    
+Observations:
+    [invariant]
+        Level : getNature (getX(l),getY(l) - 1) == EMPTY
+    [init]
+        getType(init(t, x)) == t
+        getDirection(init(t, x)) == RIGHT
+        getNumero(init(t, x)) == x
+    [step]   
+        - if getType(l) == WALKER then :  
+            if  GameEng : isObstacle (getX(l),getY(l) + 1) == FALSE then :
+                getType(step(l)) == FALLER ^ getFallTime(step(l)) == 0
+            else if getDirection(l) == RIGHT ^ GameEng : isObstacle (getX(l) + 1,getY(l) - 1) then :
+                getDirection(step(l)) == LEFT
+            else if getDirection(l) == LEFT ^ GameEng : isObstacle (getX(l) - 1,getY(l) - 1) then :
+                getDirection(step(l)) == RIGHT
+            else if getDirection(l) == RIGHT ^ GameEng : isObstacle (getX(l) + 1,getY(l)) ^ GameEng : isObstacle (getX(l) + 1,getY(l) - 2) then :
+                getDirection(step(l)) == LEFT
+            else if getDirection(l) == LEFT ^ GameEng : isObstacle (getX(l) - 1,getY(l)) ^ GameEng : isObstacle (getX(l) - 1,getY(l) - 2) then :
+                getDirection(step(l)) == RIGHT
+            else if getDirection(l) == RIGHT ^ GameEng : isObstacle (getX(l) + 1,getY(l)) ^ GameEng : isObstacle (getX(l) + 1,getY(l) - 1) == FALSE ^ GameEng : isObstacle (getX(l) + 1,getY(l) - 2) == FALSE  then :
+                getY(step(l)) == getY(l) - 1 ^  getX(step(l)) == getX(l) + 1
+            else if getDirection(l) == LEFT ^ GameEng : isObstacle (getX(l) - 1,getY(l)) ^ GameEng : isObstacle (getX(l) - 1,getY(l) - 1) == FALSE ^ GameEng : isObstacle (getX(l) - 1,getY(l) - 2) == FALSE   then :
+                getY(step(l)) == getY(l) - 1 ^  getX(step(l)) == getX(l) - 1
+            else if getDirection(l) == RIGHT ^ GameEng : isObstacle (getX(l) + 1,getY(l)) == FALSE ^ GameEng : isObstacle (getX(l) + 1,getY(l) - 1) == FALSE then
+                getDirection(step(l))  == RIGHT ^ getX(step(l)) == getX(l) + 1
+            else if getDirection(l) == LEFT ^ GameEng : isObstacle (getX(l) - 1,getY(l)) == FALSE ^ GameEng : isObstacle (getX(l) - 1,getY(l) - 1) == FALSE then
+                getDirection(step(l))  == LEFT ^ getX(step(l)) == getX(l) - 1
+        - else 
+            if getType(l) == FALLER then :
+                if GameEng : isObstacle(getX(l), getY(l) + 1) ^ getFallTime(l) < 8 then:
+                    getType(step(l)) == WALKER  
+                else if GameEng : isObstacle(getX(l), getY(l) + 1) ^ getFallTime(l) >= 8 then:
+                    getStatus(step(l)) == DEAD
+                else 
+                    getY(step(l)) == getY(l) + 1 ^ getFallTime(step(l)) == getFallTime(l) + 1
+        - else 
+            if getType(l) == DIGGER then :
+                if Level : getNature(getX(l), getY(l) + 1) == EMPTY then :
+                    getType(step(l)) == FALLER 
+                if Level : getNature(getX(l), getY(l) + 1) == METAL then :
+                    getType(step(l)) == WALKER
+                if Level : getNature(getX(l), getY(l) + 1) == DIRT then :
+                    Level : remove(getX(l), getY(l) + 1) 
+                    if getNature(getX(l) - 1, getY(l) + 1) == DIRT then :
+                        Level : remove(getX(l) - 1, getY(l) + 1)
+                    if getNature(getX(l) + 1, getY(l) + 1) == DIRT then :
+                        Level : remove(getX(l) + 1, getY(l) + 1)
+         - else 
+            if getType(l) == CLIMBER then :
+                if Level : getNature(getX(l), getY(l) - 1) == EMPTY ^ Level : getNature(getX(l), getY(l) - 2) == EMPTY then :
+                    getType(step(l)) == FALLER 
+                if Level : getNature(getX(l), getY(l) + 1) == METAL then :
+                    getType(step(l)) == WALKER
+                if Level : getNature(getX(l), getY(l) + 1) == DIRT then :
+                    Level : remove(getX(l), getY(l) + 1) 
+                    if getNature(getX(l) - 1, getY(l) + 1) == DIRT then :
+                        Level : remove(getX(l) - 1, getY(l) + 1)
+                    if getNature(getX(l) + 1, getY(l) + 1) == DIRT then :
+                        Level : remove(getX(l) + 1, getY(l) + 1)

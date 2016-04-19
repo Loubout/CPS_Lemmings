@@ -30,8 +30,8 @@ public class LemmingDecorator implements LemmingService {
 		return delegate.getStatus();
 	}
 
-	public int getx() {
-		return delegate.getx();
+	public int getX() {
+		return delegate.getX();
 	}
 
 	public int getY() {

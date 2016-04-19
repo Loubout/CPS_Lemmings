@@ -143,7 +143,7 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 		for (Integer i : nums){
 			LemmingService lemmy = 	getLemming(i);
 			lemmy.step(); // INDEX IN ARRAYLIST NOT THE SAME AS LEMMING ID
-			if (lemmy.getx() == getLevel().getExitX() && lemmy.getY() == getLevel().getExitY()){
+			if (lemmy.getX() == getLevel().getExitX() && lemmy.getY() == getLevel().getExitY()){
 				lemmings.remove(lemmy);
 				nbSaved += 1;
 			}

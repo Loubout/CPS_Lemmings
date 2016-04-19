@@ -10,7 +10,7 @@ public interface LemmingService {
 	public int getNumber();
 	public Type getType();
 	public Status getStatus();
-	public int getx();
+	public int getX();
 	public int getY();
 	//PRE	getType = Type.FALLER
 	public int getFallTime();
@@ -28,10 +28,11 @@ public interface LemmingService {
 
 	/*Operators*/
 	//PRE	getStatus() = Status.LIVING
-	//POST	if getType() == WALKER && getGameEng().isObstacle(getX(),getY() + 1) == FALSE then :
-	// 			getType(step()) == Type.FALLER && getFallTime(step()) == 0
-	//		if getType() == Type.WALKER then :  
-	//			if getDirection() == Direction.RIGHT && getGameEng().isObstacle (getX() + 1,getY() - 1) then :
+	//POST	
+	//		if getType() == Type.WALKER then : 
+	//			if getGameEng().isObstacle(getX(),getY() + 1)@pre == FALSE then :
+	//				getType() == Type.FALLER && getFallTime() == 0
+	//			else if getDirection() == Direction.RIGHT && getGameEng().isObstacle (getX() + 1,getY() - 1) then :
 	//				getDirection(step()) == Direction.LEFT
 	//			else if getDirection() == Direction.LEFT ^ getGameEng().isObstacle (getX() - 1,getY() - 1) then :
 	//	   			getDirection(step()) == Direction.RIGHT
@@ -54,6 +55,18 @@ public interface LemmingService {
 	//        			getStatus(step()) == Status.DEAD
 	//    			else 
 	//        			getY(step()) == getY() + 1 ^ getFallTime(step()) == getFallTime() + 1
+	//	 	else 
+	//        	if getType(l) == DIGGER then :
+	//            	if Level : getNature(getX(l), getY(l) + 1) == EMPTY then :
+	//                	getType(step(l)) == FALLER 
+	//            	if Level : getNature(getX(l), getY(l) + 1) == METAL then :
+	//                	getType(step(l)) == WALKER
+	//            	if Level : getNature(getX(l), getY(l) + 1) == DIRT then :
+	//                	Level : remove(getX(l), getY(l) + 1) 
+	//                	if getNature(getX(l) - 1, getY(l) + 1) == DIRT then :
+	//                    	Level : remove(getX(l) - 1, getY(l) + 1)
+	//                	if getNature(getX(l) + 1, getY(l) + 1) == DIRT then :
+	//                    	Level : remove(getX(l) + 1, getY(l) + 1)
 	public void step();
 	public void bindEngine(GameEngService eng);
 
