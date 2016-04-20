@@ -24,6 +24,7 @@ public interface LemmingService {
 	//POST	getType() = type
 	//		getNumber() = num
 	//		getDirection = Direction.RIGHT
+	// 		getStatus = Status.LIVING
 	public void init(int num);
 
 	/*Operators*/

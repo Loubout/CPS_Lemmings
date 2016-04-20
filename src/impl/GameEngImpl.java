@@ -29,7 +29,6 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 
 	@Override
 	public void bindLevel(LevelService l) {
-
 		this.level = l;
 
 	}
@@ -67,8 +66,12 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 
 	@Override
 	public Double[] score() {
-		// TODO Auto-generated method stub
-		return null;
+		Double score[] = new Double[2];
+		if (nbSpawned != 0) score[0] = (double) ((nbSaved/nbSpawned)*100);
+		else score[0] = 0.;
+		
+		score[1] = (double) nbTours;
+		return score;
 	}
 
 	@Override
@@ -83,8 +86,12 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 
 	@Override
 	public int nbActive() {
-		// TODO Auto-generated method stub
-		return 0;
+		int cpt = 0;
+		for (LemmingService lemmy: this.lemmings){
+			if (lemmy.getStatus() == Status.LIVING) cpt ++;
+		}
+		
+		return cpt;
 	}
 
 	@Override
@@ -129,6 +136,7 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 		this.gameOver = false;
 		this.nbTours = 0;
 		this.lemmings = new ArrayList<LemmingService>();
+		
 
 	}
 

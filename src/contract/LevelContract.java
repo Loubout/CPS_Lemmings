@@ -84,7 +84,7 @@ public class LevelContract extends LevelDecorator{
 		
 		checkInvariant();
 		
-		if(super.editing()) throw new PostconditionError("Level should be initialized in editing mode");
+		if(!super.editing()) throw new PostconditionError("Level should be initialized in editing mode");
 		if(super.getHeight() != h) throw new PostconditionError("Wrong initialization of Height");
 		if(super.getWidth() != w) throw new PostconditionError("Wrong initialization of Width");
 		
@@ -155,14 +155,18 @@ public class LevelContract extends LevelDecorator{
 		int[] cellNatureY_atpre = new int[10];
 		Nature[] cellNature_atpre = new Nature[10];
 		int i = 0;
+		
+		// we only check for 10 random cells
 		while (i < 10){
 			Random r = new Random();
 			int xr = r.nextInt(super.getWidth()-1);
 			int yr = r.nextInt(super.getHeight()-1);
 			
+			
 			cellNatureX_atpre[i] = xr;
 			cellNatureY_atpre[i] = yr;
 			cellNature_atpre[i] = super.getNature(xr, yr);
+			i++;
 		}
 		
 		if(!super.editing()) throw new PreconditionError("We should be in editing before calling goPlay op");

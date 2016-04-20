@@ -6,8 +6,9 @@ import enumeration.Status;
 import services.GameEngService;
 import services.LemmingService;
 import services.LevelService;
+import services.RequireLevelService;
 
-public class GameEngDecorator implements GameEngService {
+public class GameEngDecorator implements GameEngService, RequireLevelService{
 	
 	
 	public GameEngDecorator(GameEngService delegate) {
@@ -83,7 +84,7 @@ public class GameEngDecorator implements GameEngService {
 	}
 
 	public void bindLevel(LevelService level) {
-		//delegate.bindLevel(level);
+		((RequireLevelService) delegate).bindLevel(level);
 	}
 
 	public void nextTurn() {

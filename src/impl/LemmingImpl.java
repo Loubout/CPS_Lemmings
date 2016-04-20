@@ -69,10 +69,11 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 
 	@Override
 	public void init(int num) {
-
+//		System.out.println(eng.getLevel());
 		this.x = this.eng.getLevel().getEntranceX();
 		this.y = this.eng.getLevel().getEntranceY();
 		this.num = num;
+		this.status = Status.LIVING;
 		this.dir = Direction.RIGHT;
 		//this.type = Type.WALKER; // pour implem minimale
 		this.type = Type.FALLER;

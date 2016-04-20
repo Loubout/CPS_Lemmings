@@ -64,7 +64,7 @@ public class LevelImpl implements LevelService {
 		this.height = h;
 		this.matLevel = new Nature[w][h];
 
-		this.editing = false;
+		this.editing = true; // editing is on after init
 
 		for(int i = 0; i < width; i++){
 			for(int j = 0; j < height; j++){
@@ -163,7 +163,8 @@ public class LevelImpl implements LevelService {
 		System.out.println("Saisir goPlay si vous désirez quitter le mode editing");
 		
 		while (editing){
-			System.out.println("votre saisie :");
+			
+			System.out.println("Votre saisie :");
 			String inputEdit[] = scanner.nextLine().split(",");
 
 			while (inputEdit.length != 3 || !isInteger(inputEdit[0]) || !isInteger(inputEdit[1]) || !(inputEdit[2] instanceof String)){

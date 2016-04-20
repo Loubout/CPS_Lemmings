@@ -28,7 +28,8 @@ public class GameEngContract extends GameEngDecorator {
 		if (super.nbSpawned() > super.getSizeColony()) throw new InvariantError("Invariant Error : nbSpawned > getSizeColony()");
 		
 		if (super.getNbTours() < 0) throw new InvariantError("Invariant Error : nbTours < 0");
-		
+		System.out.println("GameEng contract nb active : "+ super.nbActive());
+		System.out.println("GameEng contract nums size " + super.getLemmingsNum().size());
 		if (super.nbActive() != getLemmingsNum().size()) throw new InvariantError("Invariant Error : nbActive should be equal to |getLummingsNum()|");
 		
 		
@@ -67,7 +68,7 @@ public class GameEngContract extends GameEngDecorator {
 			throw new PostconditionError("the number of saved lemmings should be 0 after initialization");
 		if(super.nbSpawned() != 0) 
 			throw new PostconditionError("the number of active lemmings should be 0 after initialization");
-		if(super.getLemmingsNum() != null)
+		if(!super.getLemmingsNum().isEmpty())
 			throw new PostconditionError("Lemmings list should be empty after initialization");
 
 	}
@@ -75,7 +76,7 @@ public class GameEngContract extends GameEngDecorator {
 
 	@Override
 	public void bindLevel(LevelService level) {
-		// TODO Auto-generated method stub
+		
 		super.bindLevel(level);
 	}
 
