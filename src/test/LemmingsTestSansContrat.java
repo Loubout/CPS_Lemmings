@@ -27,7 +27,6 @@ public class LemmingsTestSansContrat {
 			display.displayLevel();
 			Thread.sleep(300);    
 		}
-
 		
 		display.displayLevel();
 		

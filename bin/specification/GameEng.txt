@@ -33,7 +33,6 @@ Operators :
     nextTurn : [GameEng] ->  [GameEng]
         pre nextTurn(e) require not gameOver(e)
     
-
 Observations :
     [invariants]
         nbSpawned(e) =< sizeColony(e)
