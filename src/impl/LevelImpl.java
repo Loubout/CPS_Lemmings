@@ -203,6 +203,7 @@ public class LevelImpl implements LevelService {
 			return Nature.METAL;
 		else return null;
 	}
+	
 	private boolean isInteger(String string) {
 		try {
 			Integer.valueOf(string);
