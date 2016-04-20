@@ -1,6 +1,5 @@
 package test;
 
-
 import impl.DisplayImpl;
 import impl.GameEngImpl;
 import impl.LevelImpl;
@@ -26,7 +25,7 @@ public class LemmingsTestSansContrat {
 		for (int i = 0 ; i < nbTours; i++){
 			gameEng.nextTurn();
 			display.displayLevel();
-			Thread.sleep(400);    
+			Thread.sleep(300);    
 		}
 
 		
