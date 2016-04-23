@@ -26,6 +26,7 @@ public class Menu extends BasicGameState{
 	public Menu(int id){
 		this.id = id;
 	}
+	
 	@Override
 	public void init(GameContainer container, StateBasedGame game) throws SlickException {
 		this.container = container;
