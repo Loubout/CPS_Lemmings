@@ -2,9 +2,9 @@ package contract;
 
 import java.util.Random;
 
-import services.LevelService;
-import decorators.LevelDecorator;
+import decorator.LevelDecorator;
 import enumeration.Nature;
+import services.LevelService;
 
 public class LevelContract extends LevelDecorator{
 

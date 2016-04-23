@@ -1,12 +1,12 @@
 package contract;
 
-import services.GameEngService;
-import services.LemmingService;
-import decorators.LemmingDecorator;
+import decorator.LemmingDecorator;
 import enumeration.Direction;
 import enumeration.Nature;
 import enumeration.Status;
 import enumeration.Type;
+import services.GameEngService;
+import services.LemmingService;
 
 public class LemmingContract extends LemmingDecorator{
 

@@ -5,7 +5,7 @@ import java.util.Set;
 import services.GameEngService;
 import services.LemmingService;
 import services.LevelService;
-import decorators.GameEngDecorator;
+import decorator.GameEngDecorator;
 import enumeration.Status;
 
 public class GameEngContract extends GameEngDecorator {
