@@ -82,13 +82,13 @@ public class GameEngContract extends GameEngDecorator {
 
 	@Override
 	public void nextTurn() {
-		
-		
 		if(super.gameOver()) throw new PreconditionError("Game should not be over ");
 		
 		checkInvariant();
 		super.nextTurn();
 		checkInvariant();
+//		if (super.getNbTours() % super.getSpawnSpeed())
+		
 		//POST	if ( (getSpawnedSpeed(e) - timeSinceLastSpawn()) > 0) 
 		//			timeSinceLastSpawn(e) = timeSinceLastSpawn() + 1
 		//		else 

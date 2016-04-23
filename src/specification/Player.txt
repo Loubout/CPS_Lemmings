@@ -1,0 +1,15 @@
+Service Player
+Types : bool, int, enum Class{...}
+Observators :
+	getJetons : [Player] -> Map<Class, int>
+	getNbJetonsFor : [Player] x Class -> int
+	
+Constructors :
+	init : int x int x int x int .. -> [Level]
+		pre init(j1, j2 ... jn ) require j1, j2 ... jn > 0
+Operators : 
+	transform : [Player] x Class x int -> [Player]
+		pre transform(i) require i \belongs GameLevel : getLemmingsNums
+Observations : 
+	
+		

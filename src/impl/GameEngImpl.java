@@ -21,7 +21,7 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 	protected int nbSaved;
 	protected int nbTours;
 	protected boolean gameOver;
-	
+
 
 
 	public GameEngImpl(){}
@@ -69,7 +69,7 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 		Double score[] = new Double[2];
 		if (nbSpawned != 0) score[0] = (double) ((nbSaved/nbSpawned)*100);
 		else score[0] = 0.;
-		
+
 		score[1] = (double) nbTours;
 		return score;
 	}
@@ -90,7 +90,7 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 		for (LemmingService lemmy: this.lemmings){
 			if (lemmy.getStatus() == Status.LIVING) cpt ++;
 		}
-		
+
 		return cpt;
 	}
 
@@ -136,8 +136,6 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 		this.gameOver = false;
 		this.nbTours = 0;
 		this.lemmings = new ArrayList<LemmingService>();
-		
-
 	}
 
 
@@ -145,8 +143,7 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 	public void nextTurn() {
 		System.out.println("NEXT TURN nbTours ="+nbTours);
 		System.out.println(getLemmingsNum());
-		
-		
+
 		Set<Integer> nums = getLemmingsNum();
 		for (Integer i : nums){
 			LemmingService lemmy = 	getLemming(i);
@@ -155,7 +152,6 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 				lemmings.remove(lemmy);
 				nbSaved += 1;
 			}
-			
 		}
 
 		if (getNbTours() % spawnSpeed == 0 && nbSpawned() < sizeColony){
@@ -166,11 +162,10 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 			lemmings.add(lemmy);
 			this.nbSpawned += 1;
 		} 
-
 		nbTours += 1;
 		
-		
-		
+		// test for game over
+		if (nbSpawned() == sizeColony && nbActive() == 0) this.gameOver = true;
 	}
 
 }
