@@ -1,15 +1,21 @@
-Service Player
+Service Player	
 Types : bool, int, enum Class{...}
 Observators :
+	getClasses : [Player] -> Set<Class>
 	getJetons : [Player] -> Map<Class, int>
 	getNbJetonsFor : [Player] x Class -> int
-	
+
 Constructors :
 	init : int x int x int x int .. -> [Level]
 		pre init(j1, j2 ... jn ) require j1, j2 ... jn > 0
 Operators : 
-	transform : [Player] x Class x int -> [Player]
-		pre transform(i) require i \belongs GameLevel : getLemmingsNums
+	transform : [Player] x [GameEng] x Class x int -> [Player]
+		pre transform(p, eng, c, i) require i \belongs GameLevel : getLemmingsNum(eng)
 Observations : 
-	
+	[invariants]
+		\forall c in getClasses getNbJetonsFor(c) > 0
+	[transform]
+		getNbJetonsFor(transform(p, eng, c, i)) == getNbJetonsFor(p) - 1
+		\forall d in (gcetClasses(p) - {c}) getNbJetonsFor(transform(p, eng, c, i)) == getNbJetonsFor(p, d)
+		
 		

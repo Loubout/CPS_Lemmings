@@ -19,6 +19,9 @@ public class Grid extends QWidget{
 	
 	boolean placeEntrance = false;
 	boolean placeExit = false;
+	
+	int selectedLemming;
+	
 	public Grid(QWidget parent){
 		super(parent);
 		this.parent= parent;

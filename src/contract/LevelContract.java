@@ -162,7 +162,6 @@ public class LevelContract extends LevelDecorator{
 			int xr = r.nextInt(super.getWidth()-1);
 			int yr = r.nextInt(super.getHeight()-1);
 			
-			
 			cellNatureX_atpre[i] = xr;
 			cellNatureY_atpre[i] = yr;
 			cellNature_atpre[i] = super.getNature(xr, yr);

@@ -5,10 +5,11 @@ import java.util.Set;
 import services.GameEngService;
 import services.LemmingService;
 import services.LevelService;
+import services.RequireLevelService;
 import decorator.GameEngDecorator;
 import enumeration.Status;
 
-public class GameEngContract extends GameEngDecorator {
+public class GameEngContract extends GameEngDecorator implements RequireLevelService {
 
 	
 	public GameEngContract(GameEngService delegate) {
@@ -74,11 +75,7 @@ public class GameEngContract extends GameEngDecorator {
 	}
 	
 
-	@Override
-	public void bindLevel(LevelService level) {
-		
-		super.bindLevel(level);
-	}
+
 
 	@Override
 	public void nextTurn() {

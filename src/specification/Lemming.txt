@@ -11,6 +11,7 @@ Observators:
     getY : [Lemming] -> int
     getFallTime : [Lemming] -> int
         pre getFallTime(l) require getType(l) == FALLER
+    getClasses : [Lemming] -> Set<Class>    
 Constructors:
     init : Type x int -> [Lemming]
 Operators:

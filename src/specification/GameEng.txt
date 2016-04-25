@@ -13,8 +13,7 @@ Observators :
         pre score(e) require gameOver(e)
     nbSpawned: [GameEng -> int
     nbSauves: [GameEng] -> int   
-    nbActif: [GameEng] -> int 
-    
+    nbActif: [GameEng] -> int    
     getLemmingsNum : [GameEng] -> Set<Int>
     lemmingExiste: [GameEng] x int -> bool
     getLemming: [GameEng] x int -> Lemming
@@ -23,6 +22,7 @@ Observators :
         pre active(e, n) require 1 < n =< nbActif
     status: [GameEng] x int -> Status   
         pre status(e, n) require 1 < n =< nbSpawned
+    
     
 Constructors :
     init: int x int -> [Level]

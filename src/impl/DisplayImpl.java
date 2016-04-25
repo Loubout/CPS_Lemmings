@@ -21,6 +21,8 @@ public class DisplayImpl implements RequireGameEngineService, DisplayService {
 	@Override
 	public String getASCIIDisplay() {
 		LevelService level = eng.getLevel();
+		System.out.println("eng getascii " + eng);
+		System.out.println("level getascii " + level);
 		Set<Integer> lemmings = eng.getLemmingsNum();
 		String display = "";
 

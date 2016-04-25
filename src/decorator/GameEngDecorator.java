@@ -83,7 +83,7 @@ public class GameEngDecorator implements GameEngService {
 	}
 
 	public void bindLevel(LevelService level) {
-		//delegate.bindLevel(level);
+		((GameEngDecorator) delegate).bindLevel(level);
 	}
 
 	public void nextTurn() {
