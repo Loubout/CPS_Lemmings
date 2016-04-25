@@ -1,6 +1,9 @@
 package decorator;
 
+import java.util.Set;
+
 import enumeration.Direction;
+import enumeration.Specialty;
 import enumeration.Status;
 import enumeration.Type;
 import services.GameEngService;
@@ -63,6 +66,11 @@ public class LemmingDecorator implements LemmingService {
 	public void init(int num) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Set<Specialty> getSpecials() {
+		return delegate.getSpecials();
 	}
 
 }

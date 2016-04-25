@@ -1,6 +1,9 @@
 package services;
 
+import java.util.Set;
+
 import enumeration.Direction;
+import enumeration.Specialty;
 import enumeration.Status;
 import enumeration.Type;
 
@@ -15,7 +18,8 @@ public interface LemmingService {
 	//PRE	getType = Type.FALLER
 	public int getFallTime();
 	public GameEngService getGameEng();
-
+	public Set<Specialty> getSpecials();
+	
 	/*	INVARIANTS
 	 * 	getGameEng().getLevel().getNature(getX(),getY()-1) = Nature.EMPTY
 	 */

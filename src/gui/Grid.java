@@ -12,26 +12,27 @@ import services.GameEngService;
 import services.LemmingService;
 
 public class Grid extends QWidget{
-
 	private QWidget parent;
 	private GameEngService eng;
 	private int tileSize = 16;
-	
+
 	boolean placeEntrance = false;
 	boolean placeExit = false;
-	
+
 	int selectedLemming;
-	
+	boolean paused = false;
 	public Grid(QWidget parent){
 		super(parent);
 		this.parent= parent;
-		this.setGeometry(0, 0, 2000, 2000);
+
 	}
 	
+	public Signal1<Boolean> pauseSignal = new Signal1<Boolean>();
+
 	public void bindEngine(GameEngService eng){
 		this.eng = eng;
 	}
-	
+
 	protected void paintEvent(QPaintEvent e){
 		QPainter painter = new QPainter(this);
 
@@ -41,9 +42,9 @@ public class Grid extends QWidget{
 		QColor dirt = QColor.darkRed;
 		QColor empty = QColor.white;
 		QColor metal = QColor.gray;
-		
-		
-		
+
+
+
 		// drawing level
 		for (int i = 0; i < eng.getLevel().getWidth(); i++){
 			for (int j = 0; j < eng.getLevel().getHeight(); j++){
@@ -62,18 +63,18 @@ public class Grid extends QWidget{
 			}
 		}
 		// drawing entrance & exit
-		
+
 		if (!eng.getLevel().editing()){
 			painter.setBrush(QColor.black); // entrance
 			painter.drawRect(eng.getLevel().getEntranceX()*tileSize, eng.getLevel().getEntranceY()*tileSize, tileSize, tileSize);
 			painter.setBrush(QColor.red); // sortie
 			painter.drawRect(eng.getLevel().getExitX()*tileSize, eng.getLevel().getExitY()*tileSize, tileSize, tileSize);
 		}
-		
+
 		// drawing lemmings
-		
+
 		for (int num : eng.getLemmingsNum()){
-			
+
 			LemmingService lemmy = eng.getLemming(num);
 			painter.setBrush(QColor.darkGreen);
 			painter.drawRect(lemmy.getX()*tileSize, (lemmy.getY()-1)*tileSize, tileSize, tileSize);
@@ -82,36 +83,48 @@ public class Grid extends QWidget{
 		}
 		painter.end();
 	}
-	
+
 	@Override
 	protected void mouseReleaseEvent(QMouseEvent e){
 		System.out.println(e.x() + "," + e.y());
+
 		int coordX = e.x() / tileSize;
 		int coordY = e.y() / tileSize;
-//		int coordY = (tileSize * eng.getLevel().getHeight() - e.y()) / tileSize;
+		//int coordY = (tileSize * eng.getLevel().getHeight() - e.y()) / tileSize;
 		System.out.println("result : " + coordX + "," + coordY);
-		e.accept();
-		
-		
-		
-		// edit this tile
-		Nature next = null;
-		switch (eng.getLevel().getNature(coordX, coordY)){
-		case EMPTY:
-			next = Nature.DIRT;
-			break;
-		case DIRT:
-			next = Nature.METAL;
-			break;
-		case METAL:
-			next = Nature.EMPTY;
-			break;
+
+		if (eng.getLevel().editing()){
+			// edit this tile
+			Nature next = null;
+			switch (eng.getLevel().getNature(coordX, coordY)){
+			case EMPTY:
+				next = Nature.DIRT;
+				break;
+			case DIRT:
+				next = Nature.METAL;
+				break;
+			case METAL:
+				next = Nature.EMPTY;
+				break;
+			}
+			eng.getLevel().setNature(coordX, coordY, next);
+			this.repaint();
+		}else{
+			System.out.println("click lemmings !! ");
+			// lemming selection
+			for (int num : eng.getLemmingsNum()){
+				LemmingService lemmy = eng.getLemming(num);
+				if (coordX == lemmy.getX() && coordY == lemmy.getY()){
+					System.out.println("lemming selected id " + lemmy.getNumber());
+					this.paused = true;
+					
+					break;
+				}
+			}
 		}
-		
-		eng.getLevel().setNature(coordX, coordY, next);
-		this.repaint();
 	}
-	
-	
-	
+	public boolean isPaused(){
+		return this.paused;
+	}
+
 }

@@ -1,7 +1,7 @@
 Service Player	
 Types : bool, int, enum Class{...}
 Observators :
-	getClasses : [Player] -> Set<Class>
+	getSpecials : [Player] -> Set<Specialty>
 	getJetons : [Player] -> Map<Class, int>
 	getNbJetonsFor : [Player] x Class -> int
 
@@ -17,5 +17,3 @@ Observations :
 	[transform]
 		getNbJetonsFor(transform(p, eng, c, i)) == getNbJetonsFor(p) - 1
 		\forall d in (gcetClasses(p) - {c}) getNbJetonsFor(transform(p, eng, c, i)) == getNbJetonsFor(p, d)
-		
-		

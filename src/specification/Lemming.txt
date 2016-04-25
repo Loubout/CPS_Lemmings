@@ -11,7 +11,7 @@ Observators:
     getY : [Lemming] -> int
     getFallTime : [Lemming] -> int
         pre getFallTime(l) require getType(l) == FALLER
-    getClasses : [Lemming] -> Set<Class>    
+    getSpecials : [Lemming] -> Set<Specialty>    
 Constructors:
     init : Type x int -> [Lemming]
 Operators:
@@ -26,6 +26,7 @@ Observations:
         getType(init(t, x)) == t
         getDirection(init(t, x)) == RIGHT
         getNumero(init(t, x)) == x
+        getSpecials(init(t,x)) == emptySet
     [step]   
         - if getType(l) == WALKER then :  
             if  GameEng : isObstacle (getX(l),getY(l) + 1) == FALSE then :
