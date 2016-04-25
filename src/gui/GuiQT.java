@@ -13,7 +13,7 @@ import services.LevelService;
 
 public class GuiQT {
 	
-	public GuiQT() throws InterruptedException{
+	public GuiQT(){
 		DisplayImpl display = new DisplayImpl();
 		GameEngImpl gameEng = new GameEngImpl();
 		LevelService level = new LevelImpl();		
@@ -35,7 +35,12 @@ public class GuiQT {
 		for (int i = 0 ; i < nbTours; i++){
 			gameEng.nextTurn();
 			w.repaint();
-			Thread.sleep(300);    
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}    
 		}
 	}
 	public static void main(String[] args) throws InterruptedException {
