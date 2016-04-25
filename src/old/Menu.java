@@ -1,4 +1,4 @@
-package gui;
+package old;
 
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
@@ -90,14 +90,25 @@ public class Menu extends BasicGameState{
 	private boolean isCollision(float x, float y) {
 		int tileW = this.map.getTileWidth();
 		int tileH = this.map.getTileHeight();
-		int logicLayer = this.map.getLayerIndex("collision");
+		int logicLayer = this.map.getLayerIndex("Obstacle");
 		Image tile = this.map.getTileImage((int) x / tileW, (int) y / tileH, logicLayer);
 		boolean collision = tile != null;
 		if (collision) {
-			Color color = tile.getColor((int) x % tileW, (int) y % tileH);
-			collision = color.getAlpha() > 0;
+			//Color color = tile.getColor((int) x % tileW, (int) y % tileH);
+			//collision = color.getAlpha() > 0;
+			collision = tile.getAlpha()>0;
 		}
 		return collision;
+	}
+	
+	private boolean isCollisionBis(float x, float y){
+		int ObstacleLayer = map.getLayerIndex("Obstacle");
+		int metalTile = map.getTileId(0, 0, ObstacleLayer);
+		int dirtTile = map.getTileId(1, 1, ObstacleLayer);
+		
+		return (map.getTileId((int)x+1, (int)y, ObstacleLayer)== metalTile || map.getTileId((int)x+1, (int)y, ObstacleLayer)== dirtTile);
+		
+		
 	}
 
 	private float getFuturX(int delta) {

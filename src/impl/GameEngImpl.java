@@ -141,8 +141,8 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 
 	@Override
 	public void nextTurn() {
-		System.out.println("NEXT TURN nbTours ="+nbTours);
-		System.out.println(getLemmingsNum());
+		//System.out.println("NEXT TURN nbTours ="+nbTours);
+		//System.out.println(getLemmingsNum());
 
 		Set<Integer> nums = getLemmingsNum();
 		for (Integer i : nums){
@@ -155,7 +155,7 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 		}
 
 		if (getNbTours() % spawnSpeed == 0 && nbSpawned() < sizeColony){
-			System.out.println("SPAWN");
+			//System.out.println("SPAWN");
 			LemmingService lemmy = new LemmingImpl();
 			lemmy.bindEngine(this);
 			lemmy.init(nbSpawned() + 1);

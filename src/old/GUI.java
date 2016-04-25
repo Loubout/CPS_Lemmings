@@ -1,4 +1,4 @@
-package gui;
+package old;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
@@ -7,8 +7,8 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class GUI extends StateBasedGame{
 
-	public static final int MENU = 0;
-	public static final int GAME = 1;
+	public static final int MENU = 1;
+	public static final int GAME = 0;
 	
 	public GUI(String title) {
 		super(title);
@@ -17,8 +17,9 @@ public class GUI extends StateBasedGame{
 	
 	@Override
 	public void initStatesList(GameContainer container) throws SlickException {
-		this.addState(new Menu(MENU));
 		this.addState(new Game(GAME));
+		this.addState(new Menu(MENU));
+		
 	}
 
 	
