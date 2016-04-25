@@ -1,10 +1,13 @@
 package impl;
 
+import java.util.Set;
+
 import services.GameEngService;
 import services.LemmingService;
 import services.RequireGameEngineService;
 import enumeration.Direction;
 import enumeration.Nature;
+import enumeration.Specialty;
 import enumeration.Status;
 import enumeration.Type;
 
@@ -18,6 +21,7 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 	private int x;
 	private int y;
 	private int fallTime;
+	private Set<Specialty> specials;
 
 
 	@Override
@@ -115,14 +119,25 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 			if (eng.getLevel().getNature(x, y + 1) == Nature.EMPTY){ // turn into faller
 				this.setType(Type.FALLER);
 			}else if (this.dir == Direction.RIGHT){
-				if (eng.getLevel().getNature(x + 1, y) == Nature.EMPTY)
-					this.x = this.x + 1; // marcher vers la droite 
-				else
+				if (eng.getLevel().getNature(x + 1, y) == Nature.EMPTY){//cas simple aucun obstacle
+					this.x = this.x + 1; // marcher vers la droite
+				}else if(eng.isObstacle(x+1, y) && 
+						(eng.getLevel().getNature(x + 1, y-1) == Nature.EMPTY 
+						&& eng.getLevel().getNature(x + 1, y-2) == Nature.EMPTY)){ //cas ou il y a un obstacle à sa droite
+					this.x = x + 1;
+					this.y = y - 1 ;
+				}else
 					this.dir = Direction.LEFT;
-			}else{
-				if (eng.getLevel().getNature(x - 1, y) == Nature.EMPTY)
+			}else if (this.dir == Direction.LEFT){
+				if (eng.getLevel().getNature(x - 1, y) == Nature.EMPTY){
 					this.x = this.x - 1; // marcher vers la droite 
-				else
+				}
+				else if (eng.isObstacle(x - 1, y) && 
+						(eng.getLevel().getNature(x - 1, y-1) == Nature.EMPTY 
+						&& eng.getLevel().getNature(x - 1, y-2) == Nature.EMPTY)){ //cas ou il y a un obstacle à sa gauche{
+					this.x = x - 1;
+					this.y = y - 1 ;
+				}else
 					this.dir = Direction.RIGHT;
 			}
 		case DIGGER:
@@ -140,6 +155,21 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 				} 
 			}
 			break;
+		case CLIMBER:
+			if(eng.isObstacle(x+1, y) && eng.isObstacle(x+1, y+1)){
+				climb();
+			}else{
+				this.setType(Type.WALKER);
+			}
 		}
+	}
+	
+	private void climb(){
+		this.y = y - 1;
+	}
+
+	@Override
+	public Set<Specialty> getSpecials() {
+		return this.specials;
 	}
 }

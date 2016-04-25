@@ -3,5 +3,6 @@ package enumeration;
 public enum Type {
 	WALKER,
 	FALLER,
-	DIGGER
+	DIGGER,
+	CLIMBER
 }

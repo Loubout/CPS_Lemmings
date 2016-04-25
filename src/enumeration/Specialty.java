@@ -1,7 +1,10 @@
 package enumeration;
 
-public enum Class {
+public enum Specialty {
 	CLIMBER,
 	DIGGER,
+	STOPPER,
+	FLOATER,
+	BOMBER
 	
 }
