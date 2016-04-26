@@ -6,6 +6,7 @@ import java.util.TreeSet;
 
 import enumeration.Nature;
 import enumeration.Status;
+import enumeration.Type;
 import services.GameEngService;
 import services.LemmingService;
 import services.LevelService;
@@ -46,7 +47,12 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 
 	@Override
 	public boolean isObstacle(int x, int y) {
-		return (this.level.getNature(x, y) == Nature.DIRT || this.level.getNature(x, y) == Nature.METAL);
+		boolean lemmyStopper = false;
+		for(LemmingService lemmy : this.lemmings){
+			lemmyStopper = (lemmy.getType() == Type.STOPPER && ((lemmy.getX()== x && lemmy.getY() == y)||(lemmy.getX() == x && lemmy.getY() == y+1)));
+			break;
+		}
+		return (this.level.getNature(x, y) == Nature.DIRT || this.level.getNature(x, y) == Nature.METAL || lemmyStopper);
 	}
 
 	@Override
@@ -135,6 +141,7 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 		this.gameOver = false;
 		this.nbTours = 0;
 		this.lemmings = new ArrayList<LemmingService>();
+		//lemmings.add(new LemmingImpl().lemmyStopper()); //pour tester le stopper
 	}
 
 
@@ -163,6 +170,13 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 		} 
 		nbTours += 1;
 		
+		// remove dead lemmings
+		for (Integer i : nums){
+			LemmingService lemmy = 	getLemming(i);
+			if (lemmy != null && lemmy.getStatus() == Status.DEAD){
+				this.lemmings.remove(lemmy);
+			}
+		}
 		// test for game over
 		if (nbSpawned() == sizeColony && nbActive() == 0) this.gameOver = true;
 	}

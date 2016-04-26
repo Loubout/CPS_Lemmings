@@ -64,13 +64,17 @@ public class LemmingDecorator implements LemmingService {
 
 	@Override
 	public void init(int num) {
-		// TODO Auto-generated method stub
-		
+		delegate.init(num);
 	}
 
 	@Override
 	public Set<Specialty> getSpecials() {
 		return delegate.getSpecials();
+	}
+
+	@Override
+	public int getNbStep() {
+		return delegate.getNbStep();
 	}
 
 }

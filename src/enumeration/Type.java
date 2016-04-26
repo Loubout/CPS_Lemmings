@@ -4,5 +4,6 @@ public enum Type {
 	WALKER,
 	FALLER,
 	DIGGER,
-	CLIMBER
+	STOPPER,
+	BASHER
 }

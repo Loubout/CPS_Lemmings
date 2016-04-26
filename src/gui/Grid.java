@@ -23,14 +23,12 @@ public class Grid extends QWidget{
 	private GameEngService eng;
 	private int tileSize = 16;
 
-
-
 	int entranceX = -1;
 	int entranceY = -1;
 	int exitX = -1;
 	int exitY = -1;
-
-
+	Signal1<Integer> transformSignal = new Signal1<Integer>();
+	
 	int selectedLemming;
 	boolean paused = false;
 	public Grid(QWidget parent){
@@ -39,7 +37,7 @@ public class Grid extends QWidget{
 		//	pauseSignal.connect(parent, "waitPlayer()");
 	}
 
-	public Signal1<Boolean> pauseSignal = new Signal1<Boolean>();
+//	public Signal1<Boolean> pauseSignal = new Signal1<Boolean>();
 
 	public void bindEngine(GameEngService eng){
 		this.eng = eng;
@@ -153,8 +151,9 @@ public class Grid extends QWidget{
 				LemmingService lemmy = eng.getLemming(num);
 				if (coordX == lemmy.getX() && coordY == lemmy.getY()){
 					System.out.println("lemming selected id " + lemmy.getNumber());
-					this.paused = true;
-					pauseSignal.emit(true); 
+//					this.paused = true;
+					transformSignal.emit(lemmy.getNumber());
+//					pauseSignal.emit(true); 
 					break;
 				}
 			}

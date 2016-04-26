@@ -97,15 +97,12 @@ public class LevelImpl implements LevelService {
 	@Override
 	public void goPlay(int x1, int y1, int x2, int y2) {
 		editing = true; //on est en mode editing en entrée de jeu
-
-//		boolean checkEntrance = false;
-//		boolean checkExit = false;
-//		Scanner scanner = new Scanner(System.in);
 		
 		this.entranceX = x1;
 		this.entranceY = y1;
 		this.exitX = x2;
 		this.exitY = y2;
+		
 //		while (!checkEntrance){
 //
 //			String inputEntrance[] = scanner.nextLine().split(",");
@@ -162,6 +159,7 @@ public class LevelImpl implements LevelService {
 //			checkExit = true;
 //		}
 
+
 //		System.out.println("Veuillez fournir les coordonées et la nature de la case à éditer: x,y,NATURE (DIRT, METAL, EMPTY)");
 //		System.out.println("Saisir goPlay si vous désirez quitter le mode editing");
 //		
@@ -194,7 +192,9 @@ public class LevelImpl implements LevelService {
 //				this.setNature(eX, eY, nat);
 //			}
 //		}
+
 //		scanner.close();
+
 		this.editing = false;
 	}
 
