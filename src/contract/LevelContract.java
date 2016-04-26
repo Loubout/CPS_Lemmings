@@ -140,7 +140,7 @@ public class LevelContract extends LevelDecorator{
 	}
 
 	@Override
-	public void goPlay() {
+	public void goPlay(int x1, int y1, int x2, int y2) {
 		//PRE editing()
 		//POST	!editing()
 		//		\forall (i, j) 0 < i < getWidth() ^ 0 < j < getHeight(), getNature(i, j) == getNature(i, j)@pre	
@@ -171,7 +171,7 @@ public class LevelContract extends LevelDecorator{
 		if(!super.editing()) throw new PreconditionError("We should be in editing before calling goPlay op");
 		
 		checkInvariant();
-		super.goPlay();
+		super.goPlay(x1, y1, x2, y2);
 		checkInvariant();
 		
 		for (int k = 0; k < 10; k++){

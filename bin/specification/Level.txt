@@ -19,7 +19,7 @@ Constructors :
 Operators :
     setNature: [Level] x int x int x Nature -> [Level]
         pre setNature(l, x, y, n) require editing(l) == false ^ 0 < x < width - 1 ^ 0 < y < height - 1
-    goPlay: [Level] -> [Level]
+    goPlay: [Level] x int x int x int x int -> [Level] 
         pre goPlay(l) require editing(l) == true 
     remove: [Level] x int x int -> [Level]
         pre remove(l, x, y) require editing(l) == false ^ nature(l, x, y) == DIRT ^ 0 =< x < width ^ 0 =< y < height
@@ -50,6 +50,10 @@ Observations :
         \forall (i, j) (i != x || j != y) ^ 0 < i < width ^ 0 < j < height, getNature(setNature(l,x ,y ,n), i, j) == getNature(l, i, j)
     [goPlay]
         editing(goPlay(l)) == FALSE
+        getEntranceX(goPlay(l, x1, y1, x2, y2) == x1
+        getEntranceY(goPlay(l, x1, y1, x2, y2) == y1
+        getExitX(goPlay(l, x1, y1, x2, y2) == x2
+        getExitY(goPlay(l, x1, y1, x2, y2) == y2
         getNature(getEntranceX(goPlay(l)), getEntranceY(goPlay(l)) == EMPTY 
         getNature(getEntranceX(goPlay(l)), getEntranceY(goPlay(l) - 1) == EMPTY
         getNature(getEntranceX(goPlay(l)), getEntranceY(goPlay(l) + 1) == EMPTY

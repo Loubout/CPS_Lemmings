@@ -50,7 +50,7 @@ public interface LevelService {
     //		getNature(getExitX(), getExitY() == Nature.EMPTY 
     //		getNature(getExitX(), getExitY() - 1) == Nature.EMPTY
     //		getNature(getExitX(), getExitY() + 1) == Nature.METAL
-	public void goPlay();
+	public void goPlay(int x1, int y1, int x2, int y2);
 	
 	//PRE !editing()
 	//	  getNature(x, y) == Nature.DIRT && 0 < x && x > getWidth() && 0 < y && y < getHeight()
