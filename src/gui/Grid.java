@@ -1,5 +1,9 @@
 package gui;
 
+import impl.DisplayImpl;
+import impl.GameEngImpl;
+import impl.LevelImpl;
+
 import com.trolltech.qt.gui.QColor;
 import com.trolltech.qt.gui.QMouseEvent;
 import com.trolltech.qt.gui.QPaintEvent;
@@ -10,6 +14,7 @@ import com.trolltech.qt.gui.QWidget;
 import enumeration.Nature;
 import services.GameEngService;
 import services.LemmingService;
+import services.LevelService;
 
 public class Grid extends QWidget{
 	private QWidget parent;
@@ -24,7 +29,7 @@ public class Grid extends QWidget{
 	public Grid(QWidget parent){
 		super(parent);
 		this.parent= parent;
-
+	//	pauseSignal.connect(parent, "waitPlayer()");
 	}
 	
 	public Signal1<Boolean> pauseSignal = new Signal1<Boolean>();
@@ -117,7 +122,7 @@ public class Grid extends QWidget{
 				if (coordX == lemmy.getX() && coordY == lemmy.getY()){
 					System.out.println("lemming selected id " + lemmy.getNumber());
 					this.paused = true;
-					
+					pauseSignal.emit(true); 
 					break;
 				}
 			}
@@ -126,5 +131,5 @@ public class Grid extends QWidget{
 	public boolean isPaused(){
 		return this.paused;
 	}
-
+	
 }

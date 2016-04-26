@@ -99,6 +99,9 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 		this.status = status;
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public void step() {
 		switch (this.type) {
@@ -119,27 +122,30 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 			if (eng.getLevel().getNature(x, y + 1) == Nature.EMPTY){ // turn into faller
 				this.setType(Type.FALLER);
 			}else if (this.dir == Direction.RIGHT){
-				if (eng.getLevel().getNature(x + 1, y) == Nature.EMPTY){//cas simple aucun obstacle
-					this.x = this.x + 1; // marcher vers la droite
-				}else if(eng.isObstacle(x+1, y) && 
-						(eng.getLevel().getNature(x + 1, y-1) == Nature.EMPTY 
-						&& eng.getLevel().getNature(x + 1, y-2) == Nature.EMPTY)){ //cas ou il y a un obstacle à sa droite
-					this.x = x + 1;
-					this.y = y - 1 ;
-				}else
+				if(eng.isObstacle(x+1, y-1) ){
 					this.dir = Direction.LEFT;
-			}else if (this.dir == Direction.LEFT){
-				if (eng.getLevel().getNature(x - 1, y) == Nature.EMPTY){
-					this.x = this.x - 1; // marcher vers la droite 
+				}else if ((eng.isObstacle(x+1, y) && eng.isObstacle(x+1, y-2))){
+					this.dir = Direction.LEFT;
+				}else if (eng.isObstacle(x+1, y) && !eng.isObstacle(x+1, y-1) && !eng.isObstacle(x+1, y-2)){
+					this.y = this.y - 1;
+					this.x = this.x + 1;
+				}else if (!eng.isObstacle(x+1, y) && !eng.isObstacle(x+1, y-1)){
+					
+					this.x = this.x + 1;	
 				}
-				else if (eng.isObstacle(x - 1, y) && 
-						(eng.getLevel().getNature(x - 1, y-1) == Nature.EMPTY 
-						&& eng.getLevel().getNature(x - 1, y-2) == Nature.EMPTY)){ //cas ou il y a un obstacle à sa gauche{
-					this.x = x - 1;
-					this.y = y - 1 ;
-				}else
+			}else{ // LEFT DIRECTION CASE
+				if(eng.isObstacle(x-1, y-1)){
 					this.dir = Direction.RIGHT;
+				}else if((eng.isObstacle(x-1, y) && eng.isObstacle(x-1, y-2))){
+					this.dir = Direction.RIGHT;
+				}else if (eng.isObstacle(x-1, y) && !eng.isObstacle(x-1, y-1) && !eng.isObstacle(x-1, y-2)){
+					this.x = this.x - 1;
+					this.y = this.y - 1;
+				}else if (!eng.isObstacle(x-1, y) && !eng.isObstacle(x-1, y-1)){
+					this.x = x - 1;
+				}
 			}
+			break;
 		case DIGGER:
 			if(eng.getLevel().getNature(x, y + 1) == Nature.EMPTY){
 				this.setType(Type.FALLER);
@@ -161,6 +167,7 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 			}else{
 				this.setType(Type.WALKER);
 			}
+			break;
 		}
 	}
 	
