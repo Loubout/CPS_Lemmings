@@ -97,16 +97,15 @@ public class LevelImpl implements LevelService {
 	@Override
 	public void goPlay(int x1, int y1, int x2, int y2) {
 		editing = true; //on est en mode editing en entrée de jeu
-		System.out.println("Veuillez fournir les coordonées de l'entrée: x,y");
 
 //		boolean checkEntrance = false;
 //		boolean checkExit = false;
 //		Scanner scanner = new Scanner(System.in);
 		
 		this.entranceX = x1;
-		this.entranceY = height - y1;
+		this.entranceY = y1;
 		this.exitX = x2;
-		this.exitY = height - y2;
+		this.exitY = y2;
 //		while (!checkEntrance){
 //
 //			String inputEntrance[] = scanner.nextLine().split(",");

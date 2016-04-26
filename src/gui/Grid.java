@@ -76,14 +76,12 @@ public class Grid extends QWidget{
 		}
 		// drawing entrance & exit
 
-
+	
 		if (entranceX != -1 && entranceY != -1){
-			System.out.println("DRAW ENTRANCE");
 			painter.setBrush(QColor.black); // entrance
 			painter.drawRect(entranceX*tileSize, entranceY*tileSize, tileSize, tileSize);
 		}
 		if (exitX != -1 && exitY != -1){
-			System.out.println("DRAW EXIT");
 			painter.setBrush(QColor.red); // sortie
 			painter.drawRect(exitX*tileSize, exitY*tileSize, tileSize, tileSize);
 		}
