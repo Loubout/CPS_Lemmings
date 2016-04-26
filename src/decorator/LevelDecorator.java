@@ -53,8 +53,8 @@ public class LevelDecorator implements LevelService{
 		delegate.setNature(x, y, nat);
 	}
 
-	public void goPlay() {
-		delegate.goPlay();
+	public void goPlay(int x1, int y1, int x2, int y2) {
+		delegate.goPlay(x1, y1, x2, y2);
 	}
 
 	public void remove(int x, int y) {

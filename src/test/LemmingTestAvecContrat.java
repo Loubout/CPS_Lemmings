@@ -37,36 +37,36 @@ public class LemmingTestAvecContrat {
 		display.displayLevel();
 		
 		Scanner scanner = new Scanner(System.in);
-		while (level.editing()){
-			
-			System.out.println("Votre saisie :");
-			String inputEdit[] = scanner.nextLine().split(",");
-
-			while (inputEdit.length != 3 || !isInteger(inputEdit[0]) || !isInteger(inputEdit[1]) || !(inputEdit[2] instanceof String)){
-				if(inputEdit[0].compareTo("goPlay")==0){
-					level.goPlay();
-					break;
-				}else{
-					System.out.println("FORMAT ERROR BRO");
-					inputEdit = scanner.nextLine().split(",");
-				}
-			}
-			if(inputEdit.length == 3){
-				int eX = Integer.parseInt(inputEdit[0]);
-				int eY = Integer.parseInt(inputEdit[1]);
-				Nature nat = getNatureFromString(inputEdit[2]);
-
-				// check out of bound
-				if (eX < 0 || eX > level.getWidth()- 1 || eY < 0 || eY > level.getHeight()- 1 || (eX == level.getEntranceX() && eY == level.getEntranceY())) {
-					System.out.println("OUT OF BOUND COORIDNATES "+ eX + " " + eY);
-					continue;
-				}
-
-				//edit the specified square
-				level.setNature(eX, eY, nat);
-			}	
-		}
-		scanner.close();
+//		while (level.editing()){
+//			
+//			System.out.println("Votre saisie :");
+//			String inputEdit[] = scanner.nextLine().split(",");
+//
+//			while (inputEdit.length != 3 || !isInteger(inputEdit[0]) || !isInteger(inputEdit[1]) || !(inputEdit[2] instanceof String)){
+//				if(inputEdit[0].compareTo("goPlay")==0){
+//					level.goPlay();
+//					break;
+//				}else{
+//					System.out.println("FORMAT ERROR BRO");
+//					inputEdit = scanner.nextLine().split(",");
+//				}
+//			}
+//			if(inputEdit.length == 3){
+//				int eX = Integer.parseInt(inputEdit[0]);
+//				int eY = Integer.parseInt(inputEdit[1]);
+//				Nature nat = getNatureFromString(inputEdit[2]);
+//
+//				// check out of bound
+//				if (eX < 0 || eX > level.getWidth()- 1 || eY < 0 || eY > level.getHeight()- 1 || (eX == level.getEntranceX() && eY == level.getEntranceY())) {
+//					System.out.println("OUT OF BOUND COORIDNATES "+ eX + " " + eY);
+//					continue;
+//				}
+//
+//				//edit the specified square
+//				level.setNature(eX, eY, nat);
+//			}	
+//		}
+//		scanner.close();
 
 
 

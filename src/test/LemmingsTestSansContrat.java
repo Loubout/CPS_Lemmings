@@ -20,13 +20,13 @@ public class LemmingsTestSansContrat {
 		
 		display.bindEngine(gameEng);
 		
-		level.goPlay();
-		int nbTours = 100;
-		for (int i = 0 ; i < nbTours; i++){
-			gameEng.nextTurn();
-			display.displayLevel();
-			Thread.sleep(300);    
-		}
+//		level.goPlay();
+//		int nbTours = 100;
+//		for (int i = 0 ; i < nbTours; i++){
+//			gameEng.nextTurn();
+//			display.displayLevel();
+//			Thread.sleep(300);    
+//		}
 		
 		display.displayLevel();
 		

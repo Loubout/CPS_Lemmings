@@ -4,6 +4,8 @@ import impl.DisplayImpl;
 import impl.GameEngImpl;
 import impl.LevelImpl;
 
+import com.trolltech.qt.core.Qt;
+import com.trolltech.qt.core.Global.QtMsgType;
 import com.trolltech.qt.gui.QColor;
 import com.trolltech.qt.gui.QMouseEvent;
 import com.trolltech.qt.gui.QPaintEvent;
@@ -21,17 +23,22 @@ public class Grid extends QWidget{
 	private GameEngService eng;
 	private int tileSize = 16;
 
-	boolean placeEntrance = false;
-	boolean placeExit = false;
+
+
+	int entranceX = -1;
+	int entranceY = -1;
+	int exitX = -1;
+	int exitY = -1;
+
 
 	int selectedLemming;
 	boolean paused = false;
 	public Grid(QWidget parent){
 		super(parent);
 		this.parent= parent;
-	//	pauseSignal.connect(parent, "waitPlayer()");
+		//	pauseSignal.connect(parent, "waitPlayer()");
 	}
-	
+
 	public Signal1<Boolean> pauseSignal = new Signal1<Boolean>();
 
 	public void bindEngine(GameEngService eng){
@@ -69,12 +76,18 @@ public class Grid extends QWidget{
 		}
 		// drawing entrance & exit
 
-		if (!eng.getLevel().editing()){
+
+		if (entranceX != -1 && entranceY != -1){
+			//System.out.println("DRAW ENTRANCE");
 			painter.setBrush(QColor.black); // entrance
-			painter.drawRect(eng.getLevel().getEntranceX()*tileSize, eng.getLevel().getEntranceY()*tileSize, tileSize, tileSize);
-			painter.setBrush(QColor.red); // sortie
-			painter.drawRect(eng.getLevel().getExitX()*tileSize, eng.getLevel().getExitY()*tileSize, tileSize, tileSize);
+			painter.drawRect(entranceX*tileSize, entranceY*tileSize, tileSize, tileSize);
 		}
+		if (exitX != -1 && exitY != -1){
+			//System.out.println("DRAW EXIT");
+			painter.setBrush(QColor.red); // sortie
+			painter.drawRect(exitX*tileSize, exitY*tileSize, tileSize, tileSize);
+		}
+
 
 		// drawing lemmings
 
@@ -92,28 +105,49 @@ public class Grid extends QWidget{
 	@Override
 	protected void mouseReleaseEvent(QMouseEvent e){
 		System.out.println(e.x() + "," + e.y());
-
+		System.out.println(e.button().toString());
 		int coordX = e.x() / tileSize;
 		int coordY = e.y() / tileSize;
 		//int coordY = (tileSize * eng.getLevel().getHeight() - e.y()) / tileSize;
 		System.out.println("result : " + coordX + "," + coordY);
 
 		if (eng.getLevel().editing()){
-			// edit this tile
-			Nature next = null;
-			switch (eng.getLevel().getNature(coordX, coordY)){
-			case EMPTY:
-				next = Nature.DIRT;
-				break;
-			case DIRT:
-				next = Nature.METAL;
-				break;
-			case METAL:
-				next = Nature.EMPTY;
-				break;
+			if (e.button() == Qt.MouseButton.LeftButton){
+				// edit this tile
+				Nature next = null;
+				switch (eng.getLevel().getNature(coordX, coordY)){
+				case EMPTY:
+					next = Nature.DIRT;
+					break;
+				case DIRT:
+					next = Nature.METAL;
+					break;
+				case METAL:
+					next = Nature.EMPTY;
+					break;
+				}
+				eng.getLevel().setNature(coordX, coordY, next);
+			}else if (e.button() == Qt.MouseButton.RightButton){
+				System.out.println("rightbutton click");
+				if (coordX == entranceX && coordY == entranceY){ // entrance bcomes exit
+					entranceX = -1;
+					entranceY = -1;				
+				}else if (coordX == exitX && coordY == exitY){ // reset 
+					exitX = -1;
+					exitY = -1;
+				}else{ // if it's a new cell
+					if (entranceX != -1 && entranceY != -1){
+						exitX = coordX;
+						exitY = coordY;
+					}else{
+						entranceX = coordX;
+						entranceY = coordY;
+					}
+				}
 			}
-			eng.getLevel().setNature(coordX, coordY, next);
 			this.repaint();
+			System.out.println("entrance " + entranceX + "," + entranceY);
+			System.out.println("exit " + exitX + "," + exitY);
 		}else{
 			System.out.println("click lemmings !! ");
 			// lemming selection
@@ -131,5 +165,5 @@ public class Grid extends QWidget{
 	public boolean isPaused(){
 		return this.paused;
 	}
-	
+
 }

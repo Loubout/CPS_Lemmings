@@ -96,7 +96,6 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 		for (LemmingService lemmy: this.lemmings){
 			if (lemmy.getStatus() == Status.LIVING) cpt ++;
 		}
-
 		return cpt;
 	}
 
