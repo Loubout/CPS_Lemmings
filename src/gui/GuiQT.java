@@ -24,13 +24,11 @@ public class GuiQT extends QMainWindow{
 	private GameEngImpl gameEng;
 	private LevelService level;
 	private Grid w;
-	private boolean paused;
+	private boolean paused= false;
 	public GuiQT() throws InterruptedException{
 		
 		QWidget mainWidget = new QWidget();
 		mainWidget.resize(1600, 1600);
-		
-
 		
 //		DisplayImpl display = new DisplayImpl();
 		gameEng = new GameEngImpl();
@@ -87,7 +85,6 @@ public class GuiQT extends QMainWindow{
 			this.gameEng = s;
 			this.g = g;
 		}
-		
 		@Override
 		public void run() {
 			while(gameEng.getLevel().editing());
@@ -111,8 +108,7 @@ public class GuiQT extends QMainWindow{
 					e.printStackTrace();
 				}    
 			}
-			
-		}
+		}	
 	}
 	
 	public void transform(){
