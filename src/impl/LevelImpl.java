@@ -159,38 +159,38 @@ public class LevelImpl implements LevelService {
 			checkExit = true;
 		}
 
-		System.out.println("Veuillez fournir les coordonées et la nature de la case à éditer: x,y,NATURE (DIRT, METAL, EMPTY)");
-		System.out.println("Saisir goPlay si vous désirez quitter le mode editing");
-		
-		while (editing){
-			
-			System.out.println("Votre saisie :");
-			String inputEdit[] = scanner.nextLine().split(",");
-
-			while (inputEdit.length != 3 || !isInteger(inputEdit[0]) || !isInteger(inputEdit[1]) || !(inputEdit[2] instanceof String)){
-				if(inputEdit[0].compareTo("goPlay")==0){
-					editing = false;
-					break;
-				}else{
-					System.out.println("FORMAT ERROR BRO");
-					inputEdit = scanner.nextLine().split(",");
-				}
-			}
-			if(inputEdit.length == 3){
-				int eX = Integer.parseInt(inputEdit[0]);
-				int eY = Integer.parseInt(inputEdit[1]);
-				Nature nat = getNatureFromString(inputEdit[2]);
-
-				// check out of bound
-				if (eX < 0 || eX > width - 1 || eY < 0 || eY > height - 1 || (eX == entranceX && eY == entranceY)) {
-					System.out.println("OUT OF BOUND COORIDNATES "+ eX + " " + eY);
-					continue;
-				}
-
-				//edit the specified square
-				this.setNature(eX, eY, nat);
-			}
-		}
+//		System.out.println("Veuillez fournir les coordonées et la nature de la case à éditer: x,y,NATURE (DIRT, METAL, EMPTY)");
+//		System.out.println("Saisir goPlay si vous désirez quitter le mode editing");
+//		
+//		while (editing){
+//			
+//			System.out.println("Votre saisie :");
+//			String inputEdit[] = scanner.nextLine().split(",");
+//
+//			while (inputEdit.length != 3 || !isInteger(inputEdit[0]) || !isInteger(inputEdit[1]) || !(inputEdit[2] instanceof String)){
+//				if(inputEdit[0].compareTo("goPlay")==0){
+//					editing = false;
+//					break;
+//				}else{
+//					System.out.println("FORMAT ERROR BRO");
+//					inputEdit = scanner.nextLine().split(",");
+//				}
+//			}
+//			if(inputEdit.length == 3){
+//				int eX = Integer.parseInt(inputEdit[0]);
+//				int eY = Integer.parseInt(inputEdit[1]);
+//				Nature nat = getNatureFromString(inputEdit[2]);
+//
+//				// check out of bound
+//				if (eX < 0 || eX > width - 1 || eY < 0 || eY > height - 1 || (eX == entranceX && eY == entranceY)) {
+//					System.out.println("OUT OF BOUND COORIDNATES "+ eX + " " + eY);
+//					continue;
+//				}
+//
+//				//edit the specified square
+//				this.setNature(eX, eY, nat);
+//			}
+//		}
 		scanner.close();
 		this.editing = false;
 	}
