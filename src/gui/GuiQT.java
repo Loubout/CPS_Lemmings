@@ -1,9 +1,12 @@
 package gui;
 
 
+import com.trolltech.qt.QSignalEmitter;
 import com.trolltech.qt.QThread;
+import com.trolltech.qt.core.QSignalMapper;
 import com.trolltech.qt.core.Qt.ConnectionType;
 import com.trolltech.qt.gui.QApplication;
+import com.trolltech.qt.gui.QButtonGroup;
 import com.trolltech.qt.gui.QHBoxLayout;
 import com.trolltech.qt.gui.QMainWindow;
 import com.trolltech.qt.gui.QPushButton;
@@ -22,7 +25,8 @@ public class GuiQT extends QMainWindow{
 	private Grid w;
 
 	public Signal0 repaintSig = new Signal0();
-	public Signal0 pauseSig = new Signal0();
+	public Signal1<Boolean> pauseSig = new Signal1<Boolean>();
+	public GameRunnable r;
 	public QThread gameThread;
 	public boolean paused = false;
 
@@ -35,11 +39,12 @@ public class GuiQT extends QMainWindow{
 		gameEng = new GameEngImpl();
 		level = new LevelImpl();		
 
+
 		level.init(60, 10);
 		gameEng.init(1, 2);
 		gameEng.bindLevel(level);
 
-		w = new Grid(mainWidget);
+		w = new Grid(mainWidget, pauseSig);
 		w.resize(1024, 1024);
 
 		QPushButton playBtn = new QPushButton(mainWidget);
@@ -67,6 +72,66 @@ public class GuiQT extends QMainWindow{
 
 		vlayout.addLayout(hlayout);
 
+		// class pick buttons
+		QButtonGroup specialsButtonGroup = new QButtonGroup();
+		//  FLOATER
+		//  DIGGER,
+		//	STOPPER,
+		//	BASHER,
+		//	BUILDER,
+		//	MINER
+		QPushButton floaterButton = new QPushButton(mainWidget);
+		QPushButton diggerButton = new QPushButton(mainWidget);
+		QPushButton stopperButton = new QPushButton(mainWidget);
+		QPushButton basherButton = new QPushButton(mainWidget);
+		QPushButton builderButton = new QPushButton(mainWidget);
+		QPushButton minerButton = new QPushButton(mainWidget);
+
+		specialsButtonGroup.addButton(floaterButton);
+		specialsButtonGroup.addButton(diggerButton);
+		specialsButtonGroup.addButton(stopperButton);
+		specialsButtonGroup.addButton(basherButton);
+		specialsButtonGroup.addButton(builderButton);
+		specialsButtonGroup.addButton(minerButton);
+
+		floaterButton.setText("Floater");
+		diggerButton.setText("Digger");
+		stopperButton.setText("Stopper");
+		basherButton.setText("Basher");
+		builderButton.setText("Builder");
+		minerButton.setText("Miner");
+
+		QSignalMapper classMapper = new QSignalMapper(this);
+		classMapper.setMapping(floaterButton, "floater");
+		classMapper.setMapping(diggerButton, "digger");
+		classMapper.setMapping(stopperButton, "stopper");
+		classMapper.setMapping(basherButton, "basher");
+		classMapper.setMapping(builderButton, "builder");
+		classMapper.setMapping(minerButton, "miner");
+
+		classMapper.mappedString.connect(this, "setLemmingClass(String)");
+
+
+		floaterButton.clicked.connect(classMapper, "map()");
+		diggerButton.clicked.connect(classMapper, "map()");
+		stopperButton.clicked.connect(classMapper, "map()");
+		basherButton.clicked.connect(classMapper, "map()");
+		builderButton.clicked.connect(classMapper, "map()");
+		minerButton.clicked.connect(classMapper, "map()");
+
+
+		QHBoxLayout specialsButtonLayout = new QHBoxLayout();
+
+		specialsButtonLayout.addWidget(floaterButton);
+		specialsButtonLayout.addWidget(diggerButton);
+		specialsButtonLayout.addWidget(stopperButton);
+		specialsButtonLayout.addWidget(basherButton);
+		specialsButtonLayout.addWidget(builderButton);
+		specialsButtonLayout.addWidget(minerButton);
+
+
+
+		vlayout.addLayout(specialsButtonLayout);
 		mainWidget.setLayout(vlayout);
 		this.setCentralWidget(mainWidget);
 		this.repaintSig.connect(this.w, "repaint()");
@@ -75,6 +140,26 @@ public class GuiQT extends QMainWindow{
 
 		mainWidget.show();
 	}
+
+	public void setLemmingClass(String name){
+		System.out.println(name);
+		switch (name){
+		case "floater":
+			break;
+		case "digger":
+			break;
+		case "stopper":
+			break;
+		case "basher":
+			break;
+		case "builder":
+			break;
+		case "miner":
+			break;
+		}
+
+	}
+
 
 	public class GameRunnable implements Runnable{
 		GameEngService gameEng;
@@ -100,18 +185,17 @@ public class GuiQT extends QMainWindow{
 						synchronized (Thread.currentThread()) {
 							Thread.currentThread().wait();
 						}
-						System.out.println("notify?");
+						//						System.out.println("notify?");
 						paused = false;
 					} catch (InterruptedException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}
-
 				gameEng.nextTurn();
 				this.repaintsig.emit();
 				try {
-					Thread.sleep(200);
+					Thread.sleep(300);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}    
@@ -119,8 +203,8 @@ public class GuiQT extends QMainWindow{
 			System.out.println("end run");
 		}
 
-		public void pause() throws InterruptedException{
-			this.paused = !this.paused;
+		public void pause(boolean p) throws InterruptedException{
+			this.paused = p;
 		}
 	}
 
@@ -131,9 +215,9 @@ public class GuiQT extends QMainWindow{
 	public void transform() throws InterruptedException{
 		System.out.println("TRANSFORM");
 		if (!paused){
-			this.pauseSig.emit();
+			this.pauseSig.emit(true);
 		}else{
-//			this.pauseSig.emit();
+			//			this.pauseSig.emit();
 			System.out.println("before notify");
 			synchronized (this.gameThread) {
 				this.gameThread.notify();
@@ -145,15 +229,24 @@ public class GuiQT extends QMainWindow{
 	}
 
 	public void game(){
-		if (this.gameThread != null) this.gameThread.start();
-		else {
-			GameRunnable r = new GameRunnable(this.gameEng, this.w, this.repaintSig);
-			this.gameThread = new QThread(r);
-			this.gameThread.setDaemon(true);
-			this.gameThread.start();
-			this.pauseSig.connect(r, "pause()", ConnectionType.QueuedConnection);
+		this.r = new GameRunnable(this.gameEng, this.w, this.repaintSig);
+		this.gameThread = new QThread(r);
+		this.gameThread.setDaemon(true);
+		this.gameThread.start();
+		this.pauseSig.connect(this, "pause(boolean)");//, ConnectionType.QueuedConnection);
+	}
+	
+	public void pause(boolean p) throws InterruptedException{
+		System.out.println("PAUSE");
+		if(p) this.r.pause(true);
+		else{
+			synchronized (this.gameThread) {
+				this.r.pause(false);
+				this.gameThread.notify();
+			}
 		}
 	}
+
 
 	public static void main(String[] args) throws InterruptedException {
 		QApplication.initialize(args);

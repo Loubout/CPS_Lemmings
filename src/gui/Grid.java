@@ -13,6 +13,7 @@ import com.trolltech.qt.gui.QPainter;
 import com.trolltech.qt.gui.QPen;
 import com.trolltech.qt.gui.QWidget;
 
+import enumeration.Direction;
 import enumeration.Nature;
 import services.GameEngService;
 import services.LemmingService;
@@ -27,12 +28,14 @@ public class Grid extends QWidget{
 	int entranceY = -1;
 	int exitX = -1;
 	int exitY = -1;
-	Signal1<Integer> transformSignal = new Signal1<Integer>();
+	
+	Signal1<Boolean> pauseSignal;
 	
 	int selectedLemming;
 	boolean paused = false;
-	public Grid(QWidget parent){
+	public Grid(QWidget parent, Signal1<Boolean> pauseSig){
 		super(parent);
+		this.pauseSignal = pauseSig;
 		this.parent= parent;
 		//	pauseSignal.connect(parent, "waitPlayer()");
 	}
@@ -88,12 +91,35 @@ public class Grid extends QWidget{
 		// drawing lemmings
 
 		for (int num : eng.getLemmingsNum()){
-
 			LemmingService lemmy = eng.getLemming(num);
+			// highlight selected lemming
+			if (num == this.selectedLemming){
+				QPen pen = new QPen(QColor.yellow);
+				pen.setWidth(2);
+				painter.setPen(pen);
+			}else{
+				painter.setPen(QColor.white);
+			}
+			
 			painter.setBrush(QColor.darkGreen);
 			painter.drawRect(lemmy.getX()*tileSize, (lemmy.getY()-1)*tileSize, tileSize, tileSize);
 			painter.setBrush(QColor.green);
 			painter.drawRect(lemmy.getX()*tileSize, lemmy.getY()*tileSize, tileSize, tileSize);
+			
+			switch(lemmy.getType()){
+				case WALKER:
+					if(lemmy.getDirection() == Direction.RIGHT) 
+						painter.drawText(lemmy.getX()*tileSize + 2, lemmy.getY()*tileSize, "R");
+					else
+						painter.drawText(lemmy.getX()*tileSize + 2, lemmy.getY()*tileSize, "L");
+					break;
+				case FALLER:
+					painter.drawText(lemmy.getX()*tileSize + 2, lemmy.getY()*tileSize, "F");
+					break;
+				default:
+					break;
+			}
+			
 		}
 		painter.end();
 	}
@@ -149,13 +175,16 @@ public class Grid extends QWidget{
 			// lemming selection
 			for (int num : eng.getLemmingsNum()){
 				LemmingService lemmy = eng.getLemming(num);
-				if (coordX == lemmy.getX() && coordY == lemmy.getY()){
+				if ((coordX == lemmy.getX() && coordY == lemmy.getY()) 
+					|| coordX == lemmy.getX() && coordY == lemmy.getY() - 1){
 					System.out.println("lemming selected id " + lemmy.getNumber());
-//					this.paused = true;
-					transformSignal.emit(lemmy.getNumber());
-//					pauseSignal.emit(true); 
-					break;
+					this.selectedLemming = lemmy.getNumber();
+					this.repaint();
+					pauseSignal.emit(true); 
+					break;				
 				}
+				this.selectedLemming = -1;
+				pauseSignal.emit(false);
 			}
 		}
 	}

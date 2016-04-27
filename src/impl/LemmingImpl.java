@@ -104,7 +104,7 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 
 		//Provisoir pour test
 		this.specials = new HashSet<Specialty>();
-		specials.add(Specialty.BOMBER);
+//		specials.add(Specialty.BOMBER);
 
 		this.nbSteps = 0;
 	}

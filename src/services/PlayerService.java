@@ -14,6 +14,10 @@ public interface PlayerService {
 	
 	public int getNbJetonsFor(Class c);
 	
+	// OPERATION
+	
+	
+	
 	
 	public void init();
 }
