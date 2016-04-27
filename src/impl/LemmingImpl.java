@@ -25,6 +25,7 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 	private Set<Specialty> specials;
 	private int nbSteps;
 	private int nbBash = 0;
+	private int nbBuild = 0;
 
 
 	@Override
@@ -73,7 +74,7 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 	public GameEngService getGameEng() {
 		return eng;
 	}
-	//	//----------TEMPORARY-------------------//
+	//	//------------------TEMPORARY----------------------//
 	//	public LemmingImpl lemmyStopper(){
 	//		LemmingImpl stopper = new LemmingImpl();
 	//		stopper.setType(Type.STOPPER);
@@ -103,7 +104,7 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 
 		//Provisoir pour test
 		this.specials = new HashSet<Specialty>();
-		specials.add(Specialty.CLIMBER);
+		specials.add(Specialty.BOMBER);
 
 		this.nbSteps = 0;
 	}
@@ -141,9 +142,15 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 				}else{
 					this.setType(Type.WALKER);
 				}
-
-				//this.incrementNbStep();
-			}else{ 
+				
+			}
+			
+			if(specials.contains(Specialty.BOMBER)){
+				this.activateBomber();
+			}
+			
+			
+			else{ 
 				if (!eng.isObstacle(x , y + 1)){
 					this.y = y + 1; //tomber d'une case
 					this.incrementFallTime();
@@ -161,7 +168,7 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 								this.dir = Direction.RIGHT;
 						}
 						this.resetFallTime();
-						this.setType(Type.BASHER);//TEMPORARY
+//						this.setType(Type.MINER);//TEMPORARY
 					}
 				}
 			}	
@@ -169,6 +176,9 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 			break;
 
 		case WALKER:
+			if(specials.contains(Specialty.BOMBER)){
+				this.activateBomber();
+			}
 			if(this.dir == Direction.RIGHT && specials.contains(Specialty.CLIMBER) 
 			&& (eng.isObstacle(x+1, y) && eng.isObstacle(x+1, y+1))
 			&& (eng.getLevel().getNature(x, y - 1) == Nature.EMPTY && eng.getLevel().getNature(x, y - 2) == Nature.EMPTY)){
@@ -216,6 +226,9 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 			break;
 
 		case DIGGER:
+			if(specials.contains(Specialty.BOMBER)){
+				this.activateBomber();
+			}
 			if(eng.getLevel().getNature(x, y + 1) == Nature.EMPTY){
 				this.setType(Type.FALLER);
 			}else if(eng.getLevel().getNature(x, y + 1) == Nature.METAL){
@@ -235,46 +248,212 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 
 		case STOPPER:
 			//do nothing
-			this.incrementNbStep();
-			break;
-
-		case BASHER:
-			//System.out.println("BASHER");
-			if(!eng.isObstacle(x, y+1)){
-				this.setType(Type.FALLER);
-			}else if(this.dir == Direction.RIGHT){
-				if (!eng.isObstacle(x+1, y) && !eng.isObstacle(x+1, y-1)){
-					this.setType(Type.WALKER);
-					this.incrementNbStep();
-					break;
-				}else{	
-					if(eng.getLevel().getNature(x+1, y)==Nature.METAL
-							|| eng.getLevel().getNature(x+1, y-1)==Nature.METAL
-							|| eng.getLevel().getNature(x+1, y-2)==Nature.METAL){
-						this.setType(Type.WALKER);
-						//						this.specials.remove(Specialty.)
-					}else{
-						if (nbBash < 20){ // nb de creusage > 20
-							this.getGameEng().getLevel().remove(x + 1, y );
-							this.getGameEng().getLevel().remove(x + 1, y - 1);
-							this.getGameEng().getLevel().remove(x + 1, y - 2);
-							this.nbBash++;
-							this.x++;
-						}
-					}
-				}
+			if(specials.contains(Specialty.BOMBER)){
+				this.activateBomber();
 			}
 			this.incrementNbStep();
 			break;
 
-			default:
-				break;
+		case BASHER:
+			if(specials.contains(Specialty.BOMBER)){
+				this.activateBomber();
+			}
+			if(!eng.isObstacle(x, y+1)){
+				this.setType(Type.FALLER);
+			}else if(this.dir == Direction.RIGHT){
+				if(eng.getLevel().getNature(x+1, y)==Nature.METAL
+						|| eng.getLevel().getNature(x+1, y-1)==Nature.METAL
+						|| eng.getLevel().getNature(x+1, y-2)==Nature.METAL){
+					this.setType(Type.WALKER);
+				}else{
+					if(nbBash > 20){
+						this.setType(Type.WALKER);
+					}else{
+						this.getGameEng().getLevel().remove(x + 1, y );
+						this.getGameEng().getLevel().remove(x + 1, y - 1);
+						this.getGameEng().getLevel().remove(x + 1, y - 2);
+						this.nbBash++;
+						this.x++;
+					}
+				}
+			}else if(this.dir == Direction.LEFT){
+				if(eng.getLevel().getNature(x-1, y)==Nature.METAL
+						|| eng.getLevel().getNature(x-1, y-1)==Nature.METAL
+						|| eng.getLevel().getNature(x-1, y-2)==Nature.METAL){
+					this.setType(Type.WALKER);
+				}else{
+					if(nbBash > 20){
+						this.setType(Type.WALKER);
+					}else{
+						this.getGameEng().getLevel().remove(x - 1, y );
+						this.getGameEng().getLevel().remove(x - 1, y - 1);
+						this.getGameEng().getLevel().remove(x - 1, y - 2);
+						this.nbBash++;
+						this.x--;
+					}
+				}
+			}
+
+			this.incrementNbStep();
+			break;
+		case BUILDER:
+			if(specials.contains(Specialty.BOMBER)){
+				this.activateBomber();
+			}
+			if(!eng.isObstacle(x, y+1)){
+				this.setType(Type.FALLER);
+			}else if(this.dir == Direction.RIGHT){
+
+				if(eng.getNbTours()%3 == 0){
+					if(eng.getLevel().getNature(x+1, y)==Nature.EMPTY
+							&& eng.getLevel().getNature(x+2, y)==Nature.EMPTY
+							&& eng.getLevel().getNature(x+3, y)==Nature.EMPTY
+							&& !eng.isObstacle(x+1, y-1) 	//obstacle en face 
+							&& !eng.isObstacle(x+1, y-2)){ //obstacle en haut a droite
+
+						if(eng.isObstacle(x+2, y-1)){
+							//cas ou il y a un obstacle où il est
+							//sensé etre apres construction,
+							//on contruit quand meme mais il devient WALKER apres
+							if(this.nbBuild < 12){
+								eng.getLevel().setNature(x+1, y, Nature.DIRT);
+								eng.getLevel().setNature(x+2, y, Nature.DIRT);
+								eng.getLevel().setNature(x+3, y, Nature.DIRT);
+								this.nbBuild += 3;
+								this.setType(Type.WALKER);
+							}else
+								this.setType(Type.WALKER);
+
+						}else{
+							if(this.nbBuild < 12){
+								eng.getLevel().setNature(x+1, y, Nature.DIRT);
+								eng.getLevel().setNature(x+2, y, Nature.DIRT);
+								eng.getLevel().setNature(x+3, y, Nature.DIRT);
+								this.nbBuild += 3;
+								this.x += 2;
+								this.y--;
+							}else 
+								this.setType(Type.WALKER);
+						}
+					}else{
+						this.setType(Type.WALKER);
+					}
+				}
+			}else if(this.dir == Direction.LEFT){
+
+				if(eng.getNbTours()%3 == 0){
+					if(eng.getLevel().getNature(x-1, y)==Nature.EMPTY
+							&& eng.getLevel().getNature(x-2, y)==Nature.EMPTY
+							&& eng.getLevel().getNature(x-3, y)==Nature.EMPTY
+							&& !eng.isObstacle(x-1, y-1) 	//obstacle en face 
+							&& !eng.isObstacle(x-1, y-2)){ //obstacle en haut a droite
+
+						if(eng.isObstacle(x-2, y-1)){
+							//cas ou il y a un obstacle où il est
+							//sensé etre apres construction,
+							//on contruit quand meme mais il devient WALKER apres
+							if(this.nbBuild < 12){
+								eng.getLevel().setNature(x-1, y, Nature.DIRT);
+								eng.getLevel().setNature(x-2, y, Nature.DIRT);
+								eng.getLevel().setNature(x-3, y, Nature.DIRT);
+								this.nbBuild += 3;
+								this.setType(Type.WALKER);
+							}else
+								this.setType(Type.WALKER);
+
+						}else{
+							if(this.nbBuild < 12){
+								eng.getLevel().setNature(x-1, y, Nature.DIRT);
+								eng.getLevel().setNature(x-2, y, Nature.DIRT);
+								eng.getLevel().setNature(x-3, y, Nature.DIRT);
+								this.nbBuild += 3;
+								this.x -= 2;
+								this.y--;
+							}else 
+								this.setType(Type.WALKER);
+						}
+					}else{
+						this.setType(Type.WALKER);
+					}
+				}
+			}
+
+			this.incrementNbStep();
+			break;
+			
+		case MINER:
+			if(specials.contains(Specialty.BOMBER)){
+				this.activateBomber();
+			}
+			if(!eng.isObstacle(x, y+1)){
+				this.setType(Type.FALLER);
+			}else if(this.dir == Direction.RIGHT){
+				if(eng.getLevel().getNature(x+1, y-1)==Nature.DIRT
+						&& eng.getLevel().getNature(x+1, y-2)==Nature.DIRT
+						&& eng.getLevel().getNature(x+1, y-3)==Nature.DIRT){
+					this.getGameEng().getLevel().remove(x + 1, y - 1);
+					this.getGameEng().getLevel().remove(x + 1, y - 2);
+					this.getGameEng().getLevel().remove(x + 1, y - 3);
+					this.x++;
+					this.y--;
+				}else{
+					this.setType(Type.WALKER);
+				}
+			}else if(this.dir == Direction.LEFT){
+				if(eng.getLevel().getNature(x-1, y-1)==Nature.DIRT
+						&& eng.getLevel().getNature(x-1, y-2)==Nature.DIRT
+						&& eng.getLevel().getNature(x-1, y-3)==Nature.DIRT){
+					this.getGameEng().getLevel().remove(x - 1, y - 1);
+					this.getGameEng().getLevel().remove(x - 1, y - 2);
+					this.getGameEng().getLevel().remove(x - 1, y - 3);
+					this.x--;
+					this.y--;
+				}else{
+					this.setType(Type.WALKER);
+				}
+			}
+
+			this.incrementNbStep();
+			break;
+		default:
+			break;
+
 		}
-
 	}
-
-	private void climb(){
-		this.y = y - 1;
+	
+	private void activateBomber(){
+		if(this.getNbStep() == 5){
+			if(eng.getLevel().getNature(x, y+1) == Nature.DIRT) 
+				this.getGameEng().getLevel().remove(x, y+1);
+			if(eng.getLevel().getNature(x-1, y+1) == Nature.DIRT) 
+				this.getGameEng().getLevel().remove(x-1, y+1);
+			if(eng.getLevel().getNature(x-1, y) == Nature.DIRT) 
+				this.getGameEng().getLevel().remove(x-1, y);
+			if(eng.getLevel().getNature(x-2, y) == Nature.DIRT) 
+				this.getGameEng().getLevel().remove(x-2, y);
+			if(eng.getLevel().getNature(x-1, y-1) == Nature.DIRT) 
+				this.getGameEng().getLevel().remove(x-1, y-1);
+			if(eng.getLevel().getNature(x-2, y-1) == Nature.DIRT) 
+				this.getGameEng().getLevel().remove(x-2, y-1);
+			if(eng.getLevel().getNature(x-1, y-2) == Nature.DIRT) 
+				this.getGameEng().getLevel().remove(x-1, y-2);
+			if(eng.getLevel().getNature(x, y-2) == Nature.DIRT) 
+				this.getGameEng().getLevel().remove(x, y-2);
+			if(eng.getLevel().getNature(x+1, y-2) == Nature.DIRT) 
+				this.getGameEng().getLevel().remove(x+1, y-2);
+			if(eng.getLevel().getNature(x+1, y-1) == Nature.DIRT) 
+				this.getGameEng().getLevel().remove(x+1, y-1);
+			if(eng.getLevel().getNature(x+2, y-1) == Nature.DIRT) 
+				this.getGameEng().getLevel().remove(x+2, y-1);
+			if(eng.getLevel().getNature(x+1, y) == Nature.DIRT) 
+				this.getGameEng().getLevel().remove(x+1, y);
+			if(eng.getLevel().getNature(x+2, y) == Nature.DIRT) 
+				this.getGameEng().getLevel().remove(x+2, y);
+			if(eng.getLevel().getNature(x+1, y+1) == Nature.DIRT) 
+				this.getGameEng().getLevel().remove(x+1, y+1);
+			
+			this.setStatus(Status.DEAD);
+		}
 	}
 
 	@Override

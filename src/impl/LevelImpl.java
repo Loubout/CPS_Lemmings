@@ -1,9 +1,7 @@
 package impl;
 
-import java.util.Scanner;
-
-import enumeration.Nature;
 import services.LevelService;
+import enumeration.Nature;
 
 public class LevelImpl implements LevelService {
 
@@ -198,24 +196,24 @@ public class LevelImpl implements LevelService {
 		this.editing = false;
 	}
 
-	private Nature getNatureFromString(String nat){
-		if(nat.compareTo("DIRT")==0)
-			return Nature.DIRT;
-		else if(nat.compareTo("EMPTY")==0)
-			return Nature.EMPTY;
-		else if(nat.compareTo("METAL")==0)
-			return Nature.METAL;
-		else return null;
-	}
-	
-	private boolean isInteger(String string) {
-		try {
-			Integer.valueOf(string);
-			return true;
-		} catch (NumberFormatException e) {
-			return false;
-		}
-	}
+//	private Nature getNatureFromString(String nat){
+//		if(nat.compareTo("DIRT")==0)
+//			return Nature.DIRT;
+//		else if(nat.compareTo("EMPTY")==0)
+//			return Nature.EMPTY;
+//		else if(nat.compareTo("METAL")==0)
+//			return Nature.METAL;
+//		else return null;
+//	}
+//	
+//	private boolean isInteger(String string) {
+//		try {
+//			Integer.valueOf(string);
+//			return true;
+//		} catch (NumberFormatException e) {
+//			return false;
+//		}
+//	}
 
 	@Override
 	public void remove(int x, int y) {

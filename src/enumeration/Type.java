@@ -5,5 +5,7 @@ public enum Type {
 	FALLER,
 	DIGGER,
 	STOPPER,
-	BASHER
+	BASHER,
+	BUILDER,
+	MINER
 }
