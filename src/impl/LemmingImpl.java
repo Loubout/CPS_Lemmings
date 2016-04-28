@@ -317,8 +317,8 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 					if(eng.getLevel().getNature(x+1, y)==Nature.EMPTY
 							&& eng.getLevel().getNature(x+2, y)==Nature.EMPTY
 							&& eng.getLevel().getNature(x+3, y)==Nature.EMPTY
-							&& !eng.isObstacle(x+1, y-1) 	//obstacle en face 
-							&& !eng.isObstacle(x+1, y-2)){ //obstacle en haut a droite
+							&& !eng.isObstacle(x+1, y-1)   // obstacle en face 
+							&& !eng.isObstacle(x+1, y-2)){ // obstacle en haut a droite
 
 						if(eng.isObstacle(x+2, y-1)){
 							//cas ou il y a un obstacle où il est

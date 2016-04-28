@@ -1,6 +1,6 @@
 Service Player	
-Types : bool, int, enum Class{...}
-				 , enum Specialty{CLIMBER, DIGGER, STOPPER,	BASHER,	BUILDER, MINER, FLOATER, BOMBER}
+Types : bool, int, enum Status{LIVING, DEAD, SAVED},
+				   enum Specialty{CLIMBER, DIGGER, STOPPER,	BASHER,	BUILDER, MINER, FLOATER, BOMBER}
 Observators :
 	getSpecials : [Player] -> Set<Specialty>
 	getJetons : [Player] -> Map<Class, int>
@@ -11,7 +11,7 @@ Constructors :
 		pre init(j1, j2 ... jn ) require j1, j2 ... jn > 0
 Operators : 
 	transform : [Player] x [Lemming] x Specialty  -> [Player]
-		pre transform(p, lem, sp) require Lemming : getStatus(lem) == ALIVE
+		pre transform(p, lem, sp) require Lemming : getStatus(lem) == LIVING
 Observations : 
 	[invariants]
 		\forall c in getClasses getNbJetonsFor(c) > 0
