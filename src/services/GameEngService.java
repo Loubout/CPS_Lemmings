@@ -2,6 +2,7 @@ package services;
 
 import java.util.Set;
 
+import enumeration.Specialty;
 import enumeration.Status;
 
 public interface GameEngService {
@@ -22,6 +23,10 @@ public interface GameEngService {
 	public int nbActive();
 	public Set<Integer> getLemmingsNum();
 	public boolean lemmingExist(int i);
+	//PRE 0 < x && x < getLevel().getWidth() && 0 < y && y < getLevel().getHeight()
+	public boolean isThereLemming(int x, int y);
+	//PRE isThereLemming(x, y)
+	public LemmingService getLemmingAtPosition(int x, int y);
 	//PRE	lemmingExist(i)
 	public LemmingService getLemming(int i);
 	//PRE 1 < i < nbActive()
@@ -52,8 +57,7 @@ public interface GameEngService {
 	public void init(int size, int speed);
 	
 	/*Operators*/	
-	
-	
+		
 	// A REECRIRE BRAH
 	//PRE	!gameOver()
 	//POST	if ( (getSpawnedSpeed(e) - timeSinceLastSpawn()) > 0) 

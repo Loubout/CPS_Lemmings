@@ -13,15 +13,20 @@ import com.trolltech.qt.gui.QPushButton;
 import com.trolltech.qt.gui.QVBoxLayout;
 import com.trolltech.qt.gui.QWidget;
 
+import enumeration.Specialty;
 import impl.GameEngImpl;
 import impl.LevelImpl;
+import impl.PlayerImpl;
 import services.GameEngService;
+import services.LemmingService;
 import services.LevelService;
+import services.PlayerService;
 
 public class GuiQT extends QMainWindow{
 
 	private GameEngImpl gameEng;
 	private LevelService level;
+	private PlayerImpl player;
 	private Grid w;
 
 	public Signal0 repaintSig = new Signal0();
@@ -37,11 +42,13 @@ public class GuiQT extends QMainWindow{
 
 		//		DisplayImpl display = new DisplayImpl();
 		gameEng = new GameEngImpl();
-		level = new LevelImpl();		
-
-
+		level = new LevelImpl();
+		player = new PlayerImpl();
+	
+		player.bindEngine(gameEng);
+		
 		level.init(60, 10);
-		gameEng.init(1, 2);
+		gameEng.init(10, 2);
 		gameEng.bindLevel(level);
 
 		w = new Grid(mainWidget, pauseSig);
@@ -143,20 +150,28 @@ public class GuiQT extends QMainWindow{
 
 	public void setLemmingClass(String name){
 		System.out.println(name);
+		LemmingService lemmy = this.w.selectedLemming;
 		switch (name){
 		case "floater":
+			player.transformLemming(lemmy, Specialty.FLOATER);
 			break;
 		case "digger":
+			player.transformLemming(lemmy, Specialty.DIGGER);
 			break;
 		case "stopper":
+			player.transformLemming(lemmy, Specialty.STOPPER);
 			break;
 		case "basher":
+			player.transformLemming(lemmy, Specialty.BASHER);
 			break;
 		case "builder":
+			player.transformLemming(lemmy, Specialty.BUILDER);
 			break;
 		case "miner":
+			player.transformLemming(lemmy, Specialty.MINER);
 			break;
 		}
+		pauseSig.emit(false);
 
 	}
 

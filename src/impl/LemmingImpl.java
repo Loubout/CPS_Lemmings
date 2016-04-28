@@ -130,6 +130,15 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 	 */
 	@Override
 	public void step() {
+		
+		// if the lemming was recently given a type
+		if (this.specials.contains(Specialty.STOPPER)){
+			this.setType(Type.STOPPER);
+		}else if (this.specials.contains(Specialty.BUILDER)){
+			this.setType(Type.BUILDER);
+		}
+		
+		
 		switch (this.type) {
 
 		case FALLER:
@@ -467,5 +476,10 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 	}
 	private void incrementNbStep(){
 		this.nbSteps ++;
+	}
+
+	@Override
+	public void transform(Specialty sp) {
+		this.specials.add(sp);
 	}
 }

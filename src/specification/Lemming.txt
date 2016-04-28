@@ -1,7 +1,10 @@
 Service : Lemming
 
-Types : bool, int, enum Status{LIVING, DEAD, SAVED}, enum Direction {RIGHT, LEFT}, enum Type{WALKER, FALLER, DIGGER}
-
+Types : bool, int, enum Status{LIVING, DEAD, SAVED}, 
+				   enum Direction {RIGHT, LEFT}, 
+				   enum Type{WALKER, FALLER, DIGGER}
+				   enum Specialty{CLIMBER, DIGGER, STOPPER,	BASHER,	BUILDER, MINER, FLOATER, BOMBER}
+				   
 Observators:
     getDirection : [Lemming] -> Direction
     getNumero : [Lemming] -> int
@@ -16,10 +19,10 @@ Observators:
 Constructors:
     init : Type x int -> [Lemming]
 Operators:
+	transform [Lemming] x Specialty -> [Lemming]
+		pre transform(lem, sp) require getStatus(lem) == LIVING ^ not sp \belongs getSpecials(lem)
     step : [Lemming] -> [Lemming]
-        pre step(lem) require getStatus(lem) == LIVING
-    bindEngine : [Lemming] -> [Lemming]
-    
+        pre step(lem) require getStatus(lem) == LIVING 
 Observations:
     [invariant]
         Level : getNature (getX(l),getY(l) - 1) == EMPTY
@@ -29,6 +32,8 @@ Observations:
         getNumero(init(t, x)) == x
         getSpecials(init(t,x)) == emptySet
         getNbStep(init(t,x)) == 0
+    [transform]
+    	getSpecials(transform(l, sp)) == getSpecials(l) + sp
     [step]   
         - if getType(l) == WALKER then :  
             if  GameEng : isObstacle (getX(l),getY(l) + 1) == FALSE then :

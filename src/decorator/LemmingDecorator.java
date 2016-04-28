@@ -77,4 +77,10 @@ public class LemmingDecorator implements LemmingService {
 		return delegate.getNbStep();
 	}
 
+	@Override
+	public void transform(Specialty sp) {
+		delegate.transform(sp);
+		
+	}
+
 }

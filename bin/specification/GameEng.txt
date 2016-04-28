@@ -1,5 +1,7 @@
 Service : GameEng
-Types : bool, int, enum Nature{EMPTY, DIRT, METAL}, enum Status{LIVING, DEAD, SAVED}
+Types : bool, int, enum Nature{EMPTY, DIRT, METAL},
+				   enum Status{LIVING, DEAD, SAVED},
+				   enum Specialty{CLIMBER, DIGGER, STOPPER,	BASHER,	BUILDER, MINER, FLOATER, BOMBER}
 Observators :
     const sizeColony : [GameEng] -> int
     const spawnSpeed : [GameEng] -> int
@@ -18,6 +20,10 @@ Observators :
     lemmingExiste: [GameEng] x int -> bool
     getLemming: [GameEng] x int -> Lemming
         pre getLemming(e, n) require lemmingExiste(e, n)
+    isThereLemming : [GameEng] x int x int -> bool
+    	pre isThereLemming(e, x, y) require 0 < x < Level : width(getLevel(e)) ^ 0 < y < Level : height(getLevel(e)) 
+    getLemmingAtPosition : [GameEng] x int x int -> [Lemming]
+    	pre getLemmingAtPosition(e, x, y) require isThereLemming(e, x, y)
     active: [GameEng] x int  -> bool
         pre active(e, n) require 1 < n =< nbActif
     status: [GameEng] x int -> Status   
@@ -29,7 +35,6 @@ Constructors :
         pre init(size, sp) require size > 0 ^ sp > 0
     
 Operators :
-    bindLevel : [GameEng] x Level -> [GameEng]
     nextTurn : [GameEng] ->  [GameEng]
         pre nextTurn(e) require not gameOver(e)
     

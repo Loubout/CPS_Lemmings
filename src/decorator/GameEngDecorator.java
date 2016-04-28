@@ -89,4 +89,14 @@ public class GameEngDecorator implements GameEngService {
 	public void nextTurn() {
 		delegate.nextTurn();
 	}
+
+	@Override
+	public boolean isThereLemming(int x, int y) {
+		return delegate.isThereLemming(x, y);
+	}
+
+	@Override
+	public LemmingService getLemmingAtPosition(int x, int y) {
+		return delegate.getLemmingAtPosition(x, y);
+	}
 }

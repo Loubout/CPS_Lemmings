@@ -3,21 +3,22 @@ package services;
 import java.util.Map;
 import java.util.Set;
 
+import enumeration.Specialty;
+
 public interface PlayerService {
 	
 	
-	public Set<Class> getAvailableClasses();
+	public Set<Specialty> getAvailableClasses();
 	
 	
-	public Map<Class, Integer> getJetons();
+	public Map<Specialty, Integer> getJetons();
 	
 	
-	public int getNbJetonsFor(Class c);
-	
-	// OPERATION
-	
-	
-	
+	public int getNbJetonsFor(Specialty c);
 	
 	public void init();
+	
+	// OPERATION
+	// PRE lemmy.getStatus() == Status.LIVING
+	public void transformLemming(LemmingService lemmy, Specialty sp);
 }

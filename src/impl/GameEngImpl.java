@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import enumeration.Nature;
+import enumeration.Specialty;
 import enumeration.Status;
 import enumeration.Type;
 import services.GameEngService;
@@ -22,8 +23,6 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 	protected int nbSaved;
 	protected int nbTours;
 	protected boolean gameOver;
-
-
 
 	public GameEngImpl(){}
 
@@ -143,6 +142,9 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 		this.lemmings = new ArrayList<LemmingService>();
 		//lemmings.add(new LemmingImpl().lemmyStopper()); //pour tester le stopper
 	}
+	
+	
+	
 
 	
 	
@@ -182,4 +184,22 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 		if (nbSpawned() == sizeColony && nbActive() == 0) this.gameOver = true;
 	}
 
+	@Override
+	public boolean isThereLemming(int x, int y) {
+		for (int num : getLemmingsNum()){
+			LemmingService lemmy = getLemming(num);
+			if (lemmy.getX() == x && lemmy.getY() == y) return true;
+		}
+		return false;
+	}
+
+
+	@Override
+	public LemmingService getLemmingAtPosition(int x, int y) {
+		for (int num : getLemmingsNum()){
+			LemmingService lemmy = getLemming(num);
+			if (lemmy.getX() == x && lemmy.getY() == y) return lemmy;
+		}
+		return null;
+	}
 }

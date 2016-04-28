@@ -33,6 +33,13 @@ public interface LemmingService {
 	public void init(int num);
 
 	/*Operators*/
+	
+	// PRE getStatus == Status.LIVING
+	// 	   !getSpecials().contains(sp)
+	// + compatibilité entre les special
+	public void transform(Specialty sp);
+	
+	
 	//PRE	getStatus() = Status.LIVING
 	//POST	
 	//		if getType() == Type.WALKER then : 

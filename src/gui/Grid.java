@@ -15,6 +15,8 @@ import com.trolltech.qt.gui.QWidget;
 
 import enumeration.Direction;
 import enumeration.Nature;
+import enumeration.Specialty;
+import enumeration.Type;
 import services.GameEngService;
 import services.LemmingService;
 import services.LevelService;
@@ -28,10 +30,10 @@ public class Grid extends QWidget{
 	int entranceY = -1;
 	int exitX = -1;
 	int exitY = -1;
-	
+
 	Signal1<Boolean> pauseSignal;
-	
-	int selectedLemming;
+
+	LemmingService selectedLemming;
 	boolean paused = false;
 	public Grid(QWidget parent, Signal1<Boolean> pauseSig){
 		super(parent);
@@ -40,7 +42,7 @@ public class Grid extends QWidget{
 		//	pauseSignal.connect(parent, "waitPlayer()");
 	}
 
-//	public Signal1<Boolean> pauseSignal = new Signal1<Boolean>();
+	//	public Signal1<Boolean> pauseSignal = new Signal1<Boolean>();
 
 	public void bindEngine(GameEngService eng){
 		this.eng = eng;
@@ -77,7 +79,7 @@ public class Grid extends QWidget{
 		}
 		// drawing entrance & exit
 
-	
+
 		if (entranceX != -1 && entranceY != -1){
 			painter.setBrush(QColor.black); // entrance
 			painter.drawRect(entranceX*tileSize, entranceY*tileSize, tileSize, tileSize);
@@ -93,9 +95,9 @@ public class Grid extends QWidget{
 		for (int num : eng.getLemmingsNum()){
 			LemmingService lemmy = eng.getLemming(num);
 			// highlight selected lemming
-			if (num == this.selectedLemming){
+			if (lemmy == this.selectedLemming){
 				QPen pen = new QPen(QColor.yellow);
-				pen.setWidth(2);
+				pen.setWidth(3);
 				painter.setPen(pen);
 			}else{
 				painter.setPen(QColor.white);
@@ -103,23 +105,43 @@ public class Grid extends QWidget{
 			
 			painter.setBrush(QColor.darkGreen);
 			painter.drawRect(lemmy.getX()*tileSize, (lemmy.getY()-1)*tileSize, tileSize, tileSize);
-			painter.setBrush(QColor.green);
-			painter.drawRect(lemmy.getX()*tileSize, lemmy.getY()*tileSize, tileSize, tileSize);
 			
-			switch(lemmy.getType()){
-				case WALKER:
-					if(lemmy.getDirection() == Direction.RIGHT) 
-						painter.drawText(lemmy.getX()*tileSize + 2, lemmy.getY()*tileSize, "R");
-					else
-						painter.drawText(lemmy.getX()*tileSize + 2, lemmy.getY()*tileSize, "L");
-					break;
-				case FALLER:
-					painter.drawText(lemmy.getX()*tileSize + 2, lemmy.getY()*tileSize, "F");
-					break;
-				default:
-					break;
+
+			//			CLIMBER,
+			//			DIGGER,
+			//			STOPPER,
+			//			BASHER,
+			//			BUILDER,
+			//			MINER,
+			//			FLOATER,
+			//			BOMBER
+			
+			if (lemmy.getSpecials().contains(Specialty.BOMBER)){
+				painter.setBrush(QColor.darkYellow);
+			}else if(lemmy.getType() == Type.BUILDER){
+				painter.setBrush(QColor.darkMagenta);
+			}else if(lemmy.getType() == Type.STOPPER){
+				painter.setBrush(QColor.darkCyan);
+			}else{
+				painter.setBrush(QColor.green);
 			}
 			
+			painter.drawRect(lemmy.getX()*tileSize, lemmy.getY()*tileSize, tileSize, tileSize);
+
+			switch(lemmy.getType()){
+			case WALKER:
+				if(lemmy.getDirection() == Direction.RIGHT) 
+					painter.drawText(lemmy.getX()*tileSize + 2, lemmy.getY()*tileSize, "R");
+				else
+					painter.drawText(lemmy.getX()*tileSize + 2, lemmy.getY()*tileSize, "L");
+				break;
+			case FALLER:
+				painter.drawText(lemmy.getX()*tileSize + 2, lemmy.getY()*tileSize, "F");
+				break;
+			default:
+				break;
+			}
+
 		}
 		painter.end();
 	}
@@ -168,24 +190,17 @@ public class Grid extends QWidget{
 				}
 			}
 			this.repaint();
-			System.out.println("entrance " + entranceX + "," + entranceY);
-			System.out.println("exit " + exitX + "," + exitY);
 		}else{
 			System.out.println("click lemmings !! ");
 			// lemming selection
-			for (int num : eng.getLemmingsNum()){
-				LemmingService lemmy = eng.getLemming(num);
-				if ((coordX == lemmy.getX() && coordY == lemmy.getY()) 
-					|| coordX == lemmy.getX() && coordY == lemmy.getY() - 1){
-					System.out.println("lemming selected id " + lemmy.getNumber());
-					this.selectedLemming = lemmy.getNumber();
-					this.repaint();
-					pauseSignal.emit(true); 
-					break;				
-				}
-				this.selectedLemming = -1;
+			if (eng.isThereLemming(coordX, coordY)){
+				this.selectedLemming = eng.getLemmingAtPosition(coordX, coordY);
+				pauseSignal.emit(true); 
+			}else{
+				this.selectedLemming = null;
 				pauseSignal.emit(false);
 			}
+
 		}
 	}
 	public boolean isPaused(){
