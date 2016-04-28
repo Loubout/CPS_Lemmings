@@ -1,10 +1,8 @@
 package gui;
 
 
-import com.trolltech.qt.QSignalEmitter;
 import com.trolltech.qt.QThread;
 import com.trolltech.qt.core.QSignalMapper;
-import com.trolltech.qt.core.Qt.ConnectionType;
 import com.trolltech.qt.gui.QApplication;
 import com.trolltech.qt.gui.QButtonGroup;
 import com.trolltech.qt.gui.QHBoxLayout;
