@@ -2,7 +2,6 @@ package test;
 
 import java.util.Scanner;
 
-import services.GameEngService;
 import contract.GameEngContract;
 import contract.LevelContract;
 import enumeration.Nature;

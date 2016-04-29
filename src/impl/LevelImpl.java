@@ -1,7 +1,7 @@
 package impl;
 
-import services.LevelService;
 import enumeration.Nature;
+import services.LevelService;
 
 public class LevelImpl implements LevelService {
 

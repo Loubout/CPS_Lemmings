@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import enumeration.Nature;
-import enumeration.Specialty;
 import enumeration.Status;
 import enumeration.Type;
 import services.GameEngService;

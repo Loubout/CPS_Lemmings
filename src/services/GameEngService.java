@@ -2,7 +2,6 @@ package services;
 
 import java.util.Set;
 
-import enumeration.Specialty;
 import enumeration.Status;
 
 public interface GameEngService {

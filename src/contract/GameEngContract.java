@@ -2,12 +2,12 @@ package contract;
 
 import java.util.Set;
 
+import decorator.GameEngDecorator;
+import enumeration.Status;
 import services.GameEngService;
 import services.LemmingService;
 import services.LevelService;
 import services.RequireLevelService;
-import decorator.GameEngDecorator;
-import enumeration.Status;
 
 public class GameEngContract extends GameEngDecorator implements RequireLevelService {
 

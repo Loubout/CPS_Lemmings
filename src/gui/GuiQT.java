@@ -18,7 +18,6 @@ import impl.PlayerImpl;
 import services.GameEngService;
 import services.LemmingService;
 import services.LevelService;
-import services.PlayerService;
 
 public class GuiQT extends QMainWindow{
 
@@ -46,7 +45,7 @@ public class GuiQT extends QMainWindow{
 		player.bindEngine(gameEng);
 		
 		level.init(60, 10);
-		gameEng.init(10, 2);
+		gameEng.init(1, 1);
 		gameEng.bindLevel(level);
 
 		w = new Grid(mainWidget, pauseSig);
@@ -208,7 +207,7 @@ public class GuiQT extends QMainWindow{
 				gameEng.nextTurn();
 				this.repaintsig.emit();
 				try {
-					Thread.sleep(300);
+					Thread.sleep(400);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}    

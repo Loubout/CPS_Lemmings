@@ -1,11 +1,6 @@
 package gui;
 
-import impl.DisplayImpl;
-import impl.GameEngImpl;
-import impl.LevelImpl;
-
 import com.trolltech.qt.core.Qt;
-import com.trolltech.qt.core.Global.QtMsgType;
 import com.trolltech.qt.gui.QColor;
 import com.trolltech.qt.gui.QMouseEvent;
 import com.trolltech.qt.gui.QPaintEvent;
@@ -19,7 +14,6 @@ import enumeration.Specialty;
 import enumeration.Type;
 import services.GameEngService;
 import services.LemmingService;
-import services.LevelService;
 
 public class Grid extends QWidget{
 	private QWidget parent;
