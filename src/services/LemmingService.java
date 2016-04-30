@@ -19,7 +19,7 @@ public interface LemmingService {
 	public int getFallTime();
 	public GameEngService getGameEng();
 	public Set<Specialty> getSpecials();
-	public int getNbStep();
+	public int getBombCounter();
 	
 	/*	INVARIANTS
 	 * 	getGameEng().getLevel().getNature(getX(),getY()-1) = Nature.EMPTY

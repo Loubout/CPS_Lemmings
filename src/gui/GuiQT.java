@@ -44,8 +44,8 @@ public class GuiQT extends QMainWindow{
 	
 		player.bindEngine(gameEng);
 		
-		level.init(60, 10);
-		gameEng.init(1, 1);
+		level.init(60, 20);
+		gameEng.init(5, 2);
 		gameEng.bindLevel(level);
 
 		w = new Grid(mainWidget, pauseSig);
@@ -90,6 +90,8 @@ public class GuiQT extends QMainWindow{
 		QPushButton basherButton = new QPushButton(mainWidget);
 		QPushButton builderButton = new QPushButton(mainWidget);
 		QPushButton minerButton = new QPushButton(mainWidget);
+		QPushButton climberButton = new QPushButton(mainWidget);
+		QPushButton bomberButton = new QPushButton(mainWidget);
 
 		specialsButtonGroup.addButton(floaterButton);
 		specialsButtonGroup.addButton(diggerButton);
@@ -97,6 +99,8 @@ public class GuiQT extends QMainWindow{
 		specialsButtonGroup.addButton(basherButton);
 		specialsButtonGroup.addButton(builderButton);
 		specialsButtonGroup.addButton(minerButton);
+		specialsButtonGroup.addButton(climberButton);
+		specialsButtonGroup.addButton(bomberButton);
 
 		floaterButton.setText("Floater");
 		diggerButton.setText("Digger");
@@ -104,6 +108,8 @@ public class GuiQT extends QMainWindow{
 		basherButton.setText("Basher");
 		builderButton.setText("Builder");
 		minerButton.setText("Miner");
+		climberButton.setText("Climber");
+		bomberButton.setText("Bomber");
 
 		QSignalMapper classMapper = new QSignalMapper(this);
 		classMapper.setMapping(floaterButton, "floater");
@@ -112,6 +118,8 @@ public class GuiQT extends QMainWindow{
 		classMapper.setMapping(basherButton, "basher");
 		classMapper.setMapping(builderButton, "builder");
 		classMapper.setMapping(minerButton, "miner");
+		classMapper.setMapping(climberButton, "climber");
+		classMapper.setMapping(bomberButton, "bomber");
 
 		classMapper.mappedString.connect(this, "setLemmingClass(String)");
 
@@ -122,6 +130,8 @@ public class GuiQT extends QMainWindow{
 		basherButton.clicked.connect(classMapper, "map()");
 		builderButton.clicked.connect(classMapper, "map()");
 		minerButton.clicked.connect(classMapper, "map()");
+		climberButton.clicked.connect(classMapper, "map()");
+		bomberButton.clicked.connect(classMapper, "map()");
 
 
 		QHBoxLayout specialsButtonLayout = new QHBoxLayout();
@@ -132,6 +142,8 @@ public class GuiQT extends QMainWindow{
 		specialsButtonLayout.addWidget(basherButton);
 		specialsButtonLayout.addWidget(builderButton);
 		specialsButtonLayout.addWidget(minerButton);
+		specialsButtonLayout.addWidget(climberButton);
+		specialsButtonLayout.addWidget(bomberButton);
 
 
 
@@ -167,9 +179,15 @@ public class GuiQT extends QMainWindow{
 		case "miner":
 			player.transformLemming(lemmy, Specialty.MINER);
 			break;
+		case "climber":
+			player.transformLemming(lemmy, Specialty.CLIMBER);
+			break;
+		case "bomber":
+			player.transformLemming(lemmy, Specialty.BOMBER);
+			break;
+		
 		}
 		pauseSig.emit(false);
-
 	}
 
 
@@ -207,7 +225,7 @@ public class GuiQT extends QMainWindow{
 				gameEng.nextTurn();
 				this.repaintsig.emit();
 				try {
-					Thread.sleep(400);
+					Thread.sleep(500);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}    
@@ -258,7 +276,6 @@ public class GuiQT extends QMainWindow{
 			}
 		}
 	}
-
 
 	public static void main(String[] args) throws InterruptedException {
 		QApplication.initialize(args);

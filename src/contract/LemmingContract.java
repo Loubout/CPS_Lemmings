@@ -32,7 +32,7 @@ public class LemmingContract extends LemmingDecorator{
 		if (super.getType() != type) throw new PostconditionError("type should be t");
 		if (super.getType() != type) throw new PostconditionError("leemmings should spawn with direction == right");
 		if (super.getNumber() != num) throw new PostconditionError("number at initialization is wrong");
-		if(super.getNbStep() != 0) throw new PostconditionError("number of lemming steps should be 0 after init");
+		if(super.getBombCounter() != 0) throw new PostconditionError("number of lemming steps should be 0 after init");
 		
 	}
 	

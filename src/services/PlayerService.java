@@ -7,9 +7,7 @@ import enumeration.Specialty;
 
 public interface PlayerService {
 	
-	
 	public Set<Specialty> getAvailableClasses();
-	
 	
 	public Map<Specialty, Integer> getJetons();
 	

@@ -23,7 +23,7 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 	private int y;
 	private int fallTime;
 	private Set<Specialty> specials;
-	private int nbSteps;
+	private int bombCounter;
 	private int nbBash = 0;
 	private int nbBuild = 0;
 
@@ -74,39 +74,19 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 	public GameEngService getGameEng() {
 		return eng;
 	}
-	//	//------------------TEMPORARY----------------------//
-	//	public LemmingImpl lemmyStopper(){
-	//		LemmingImpl stopper = new LemmingImpl();
-	//		stopper.setType(Type.STOPPER);
-	//		stopper.setX(20);
-	//		stopper.setY(18);
-	//		
-	//		return stopper;
-	//	}
-	//	
-	//	public void setX(int x){
-	//		this.x = x;
-	//	}
-	//	public void setY(int y){
-	//		this.y = y;
-	//	}
-	////---------------------------------------------------//
+
 	@Override
 	public void init(int num) {
-		//		System.out.println(eng.getLevel());
 		this.x = this.eng.getLevel().getEntranceX();
 		this.y = this.eng.getLevel().getEntranceY();
 		this.num = num;
 		this.status = Status.LIVING;
 		this.dir = Direction.RIGHT;
-		//this.type = Type.WALKER; // pour implem minimale
 		this.type = Type.FALLER;
 
-		//Provisoir pour test
 		this.specials = new HashSet<Specialty>();
-		specials.add(Specialty.BOMBER);
 
-		this.nbSteps = 0;
+		this.bombCounter = 0;
 	}
 
 	private void setType(Type t){
@@ -130,88 +110,62 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 	 */
 	@Override
 	public void step() {
-		this.incrementNbStep();
 		// if the lemming was recently given a type
 		if (this.specials.contains(Specialty.STOPPER)){
 			this.setType(Type.STOPPER);
 		}else if (this.specials.contains(Specialty.BUILDER)){
 			this.setType(Type.BUILDER);
+		}else if(this.specials.contains(Specialty.DIGGER)){
+			this.setType(Type.DIGGER);
+		}else if(this.specials.contains(Specialty.CLIMBER) && this.type == Type.WALKER ){
+			this.setType(Type.CLIMBER);
+		}else if(this.specials.contains(Specialty.FLOATER)){
+			this.setType(Type.FLOATER);
+		}else if(this.specials.contains(Specialty.BASHER)){
+			this.setType(Type.BASHER);
+		}else if(this.specials.contains(Specialty.MINER)){
+			this.setType(Type.MINER);
+		}else if(this.specials.contains(Specialty.BOMBER)){
+			this.activateBomber();
 		}
-		
-		
+
 		switch (this.type) {
 
 		case FALLER:
-			if(specials.contains(Specialty.FLOATER)){
-				this.goFloat();
-			}
-			
-			if(specials.contains(Specialty.BOMBER)){
-				this.activateBomber();
-			}
-			
-			else{ 
 				this.fall();
-			}	
-			
 			break;
 
+		case FLOATER:
+			this.goFloat();
+			break;
+			
 		case WALKER:
-			if(specials.contains(Specialty.BOMBER)){
-				this.activateBomber();
-			}
-			
-			if(specials.contains(Specialty.CLIMBER)){
-				climb();
-			}
-			else{
-				
 				this.walk();
-			}
 			break;
 
-		case DIGGER:
-			if(specials.contains(Specialty.BOMBER)){
-				this.activateBomber();
-			}else{
-				this.dig();
-			}
+		case CLIMBER:
+			this.climb();
+			break;
 			
+		case DIGGER:
+				this.dig();
 			break;
 
 		case STOPPER:
-			//do nothing
-			if(specials.contains(Specialty.BOMBER)){
-				this.activateBomber();
-			}
 			break;
 
 		case BASHER:
-			if(specials.contains(Specialty.BOMBER)){
-				this.activateBomber();
-			}else {
 				this.bash();
-			}
-
 			break;
 			
 		case BUILDER:
-			if(specials.contains(Specialty.BOMBER)){
-				this.activateBomber();
-			}else {
 				this.build();
-			}
-			
 			break;
 			
 		case MINER:
-			if(specials.contains(Specialty.BOMBER)){
-				this.activateBomber();
-			}else{
 				this.mine();
-			}
-			
 			break;
+		
 		default:
 			break;
 
@@ -236,7 +190,6 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 						this.dir = Direction.RIGHT;
 				}
 				this.resetFallTime();
-//				this.setType(Type.MINER);//TEMPORARY
 			}
 		}
 	}
@@ -249,12 +202,14 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 			this.incrementFallTime();
 		}else{
 			this.setType(Type.WALKER);
+			this.walk();
 		}	
 	}
 
 	private void walk(){
 		if (eng.getLevel().getNature(x, y + 1) == Nature.EMPTY){ // turn into faller
 			this.setType(Type.FALLER);
+			this.fall();
 		}else if (this.dir == Direction.RIGHT){
 			if(eng.isObstacle(x+1, y-1) ){
 				this.dir = Direction.LEFT;
@@ -282,7 +237,6 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 	}
 	
 	private void climb(){
-		
 		if(this.dir == Direction.RIGHT 
 				&& (eng.isObstacle(x+1, y) && eng.isObstacle(x+1, y+1))
 				&& (eng.getLevel().getNature(x, y - 1) == Nature.EMPTY 
@@ -305,43 +259,58 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 					&& eng.getLevel().getNature(x-1, y-1)==Nature.EMPTY) 
 				x--;
 		
-		}else this.walk(); //if can't climb just walk
+		}else{
+			this.setType(Type.WALKER);
+			this.walk(); //if can't climb just walk
+		}
 
 	}
 	
 	private void dig(){
 		if(eng.getLevel().getNature(x, y + 1) == Nature.EMPTY){
+			this.specials.remove(Specialty.DIGGER);//if fall not a digger anymore
 			this.setType(Type.FALLER);
-		}else if(eng.getLevel().getNature(x, y + 1) == Nature.METAL){
-			this.setType(Type.WALKER);
+			this.fall();
 		}else if(eng.getLevel().getNature(x, y + 1) == Nature.DIRT){
 			this.getGameEng().getLevel().remove(x, y + 1);//down
-			this.y = this.y + 1;
 			if(eng.getLevel().getNature(x - 1, y + 1) == Nature.DIRT){//down left
 				this.getGameEng().getLevel().remove(x - 1, y + 1);
 			} 
 			if(eng.getLevel().getNature(x + 1, y + 1) == Nature.DIRT){//down right
 				this.getGameEng().getLevel().remove(x + 1, y + 1);
-			} 
+			}
+			this.y = this.y + 1;
+		}else{
+			this.specials.remove(Specialty.DIGGER);//if walk not a digger anymore
+			this.setType(Type.WALKER);
+			this.walk();
 		}
 	}
 	
 	private void bash(){
 		if(!eng.isObstacle(x, y+1)){
 			this.setType(Type.FALLER);
+			this.fall();
 		}else if(this.dir == Direction.RIGHT){
 			if(eng.getLevel().getNature(x+1, y)==Nature.METAL
 					|| eng.getLevel().getNature(x+1, y-1)==Nature.METAL
 					|| eng.getLevel().getNature(x+1, y-2)==Nature.METAL){
 				this.setType(Type.WALKER);
+				this.walk();
 			}else{
-				if(nbBash > 20){
+				if(nbBash > 10){
+					this.specials.remove(Specialty.BASHER);//if bash limit reach remove the specialty
 					this.setType(Type.WALKER);
+					this.walk();
 				}else{
-					this.getGameEng().getLevel().remove(x + 1, y );
-					this.getGameEng().getLevel().remove(x + 1, y - 1);
-					this.getGameEng().getLevel().remove(x + 1, y - 2);
-					this.nbBash++;
+					if(eng.getLevel().getNature(x+1, y)==Nature.DIRT
+							|| eng.getLevel().getNature(x+1, y-1)==Nature.DIRT
+							|| eng.getLevel().getNature(x+1, y-2)==Nature.DIRT){
+						this.getGameEng().getLevel().remove(x + 1, y );
+						this.getGameEng().getLevel().remove(x + 1, y - 1);
+						this.getGameEng().getLevel().remove(x + 1, y - 2);
+						this.nbBash++;
+					}
 					this.x++;
 				}
 			}
@@ -350,14 +319,21 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 					|| eng.getLevel().getNature(x-1, y-1)==Nature.METAL
 					|| eng.getLevel().getNature(x-1, y-2)==Nature.METAL){
 				this.setType(Type.WALKER);
+				this.walk();
 			}else{
 				if(nbBash > 20){
+					this.specials.remove(Specialty.BASHER);//if bash limit reach remove the specialty
 					this.setType(Type.WALKER);
+					this.walk();
 				}else{
-					this.getGameEng().getLevel().remove(x - 1, y );
-					this.getGameEng().getLevel().remove(x - 1, y - 1);
-					this.getGameEng().getLevel().remove(x - 1, y - 2);
-					this.nbBash++;
+					if(eng.getLevel().getNature(x-1, y)==Nature.DIRT
+							|| eng.getLevel().getNature(x-1, y-1)==Nature.DIRT
+							|| eng.getLevel().getNature(x-1, y-2)==Nature.DIRT){
+						this.getGameEng().getLevel().remove(x - 1, y );
+						this.getGameEng().getLevel().remove(x - 1, y - 1);
+						this.getGameEng().getLevel().remove(x - 1, y - 2);
+						this.nbBash++;
+					}
 					this.x--;
 				}
 			}
@@ -367,6 +343,7 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 	private void build(){
 		if(!eng.isObstacle(x, y+1)){
 			this.setType(Type.FALLER);
+			this.fall();
 		}else if(this.dir == Direction.RIGHT){
 
 			if(eng.getNbTours()%3 == 0){
@@ -385,10 +362,14 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 							eng.getLevel().setNature(x+2, y, Nature.DIRT);
 							eng.getLevel().setNature(x+3, y, Nature.DIRT);
 							this.nbBuild += 3;
+							this.specials.remove(Specialty.BUILDER);
 							this.setType(Type.WALKER);
-						}else
+							this.walk();
+						}else{
+							this.specials.remove(Specialty.BUILDER); //if build limit reach remove specialty
 							this.setType(Type.WALKER);
-
+							this.walk();
+						}
 					}else{
 						if(this.nbBuild < 12){
 							eng.getLevel().setNature(x+1, y, Nature.DIRT);
@@ -397,11 +378,16 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 							this.nbBuild += 3;
 							this.x += 2;
 							this.y--;
-						}else 
+						}else{ 
+							this.specials.remove(Specialty.BUILDER);//if build limit reach remove specialty
 							this.setType(Type.WALKER);
+							this.walk();
+						}
 					}
 				}else{
+					this.specials.remove(Specialty.BUILDER); //if build limit reach remove specialty
 					this.setType(Type.WALKER);
+					this.walk();
 				}
 			}
 		}else if(this.dir == Direction.LEFT){
@@ -422,10 +408,14 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 							eng.getLevel().setNature(x-2, y, Nature.DIRT);
 							eng.getLevel().setNature(x-3, y, Nature.DIRT);
 							this.nbBuild += 3;
+							this.specials.remove(Specialty.BUILDER); //if build limit reach remove specialty
 							this.setType(Type.WALKER);
-						}else
+							this.walk();
+						}else{
+							this.specials.remove(Specialty.BUILDER); //if build limit reach remove specialty
 							this.setType(Type.WALKER);
-
+							this.walk();
+						}
 					}else{
 						if(this.nbBuild < 12){
 							eng.getLevel().setNature(x-1, y, Nature.DIRT);
@@ -434,11 +424,16 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 							this.nbBuild += 3;
 							this.x -= 2;
 							this.y--;
-						}else 
+						}else {
+							this.specials.remove(Specialty.BUILDER); //if build limit reach remove specialty
 							this.setType(Type.WALKER);
+							this.walk();
+						}
 					}
 				}else{
+					this.specials.remove(Specialty.BUILDER); //if build limit reach remove specialty
 					this.setType(Type.WALKER);
+					this.walk();
 				}
 			}
 		}
@@ -447,6 +442,7 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 	private void mine(){
 		if(!eng.isObstacle(x, y+1)){
 			this.setType(Type.FALLER);
+			this.fall();
 		}else if(this.dir == Direction.RIGHT){
 			if(eng.getLevel().getNature(x+1, y-1)==Nature.DIRT
 					&& eng.getLevel().getNature(x+1, y-2)==Nature.DIRT
@@ -458,6 +454,7 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 				this.y--;
 			}else{
 				this.setType(Type.WALKER);
+				this.walk();
 			}
 		}else if(this.dir == Direction.LEFT){
 			if(eng.getLevel().getNature(x-1, y-1)==Nature.DIRT
@@ -470,12 +467,13 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 				this.y--;
 			}else{
 				this.setType(Type.WALKER);
+				this.walk();
 			}
 		}
 	}
 	
-	private void activateBomber(){
-		if(this.getNbStep() == 10){
+	private void activateBomber(){		
+		if(this.getBombCounter() == 5){
 			if(eng.getLevel().getNature(x, y+1) == Nature.DIRT) 
 				this.getGameEng().getLevel().remove(x, y+1);
 			if(eng.getLevel().getNature(x-1, y+1) == Nature.DIRT) 
@@ -506,33 +504,8 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 				this.getGameEng().getLevel().remove(x+1, y+1);
 			
 			this.setStatus(Status.DEAD);
-		}else{
-			switch (this.type) {
-			case FALLER:
-				this.fall();
-				break;
-			case WALKER:
-				this.walk();
-				break;
-			case BASHER:
-				this.bash();
-				break;
-			case BUILDER:
-				this.build();
-				break;
-			case DIGGER:
-				this.dig();
-				break;
-			case MINER:
-				this.mine();
-				break;
-			case STOPPER:
-				//do nothing
-				break;
-			default:
-				break;
-			}
 		}
+		this.incrementBombCounter();
 	}
 
 	@Override
@@ -541,11 +514,11 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 	}
 
 	@Override
-	public int getNbStep() {
-		return nbSteps;
+	public int getBombCounter() {
+		return bombCounter;
 	}
-	private void incrementNbStep(){
-		this.nbSteps ++;
+	private void incrementBombCounter(){
+		this.bombCounter ++;
 	}
 
 	@Override

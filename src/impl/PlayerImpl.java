@@ -1,5 +1,4 @@
 package impl;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -17,20 +16,17 @@ public class PlayerImpl implements PlayerService, RequireGameEngineService{
 	
 	@Override
 	public Set<Specialty> getAvailableClasses() {
-		// TODO Auto-generated method stub
-		return null;
+		return chips.keySet();
 	}
 
 	@Override
 	public Map<Specialty, Integer> getJetons() {
-		// TODO Auto-generated method stub
-		return null;
+		return chips;
 	}
 
 	@Override
 	public int getNbJetonsFor(Specialty c) {
-		// TODO Auto-generated method stub
-		return 0;
+		return chips.get(c);
 	}
 	
 	@Override
@@ -41,15 +37,11 @@ public class PlayerImpl implements PlayerService, RequireGameEngineService{
 	@Override
 	public void init() {
 		chips = new HashMap<Specialty, Integer>();
-		
 	}
-	
 		
-	/// unlimited transform for now
+	// unlimited transform for now
 	@Override
 	public void transformLemming(LemmingService lemmy, Specialty sp) {
 		lemmy.transform(sp);	
 	}
-
-	
 }

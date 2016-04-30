@@ -73,8 +73,8 @@ public class LemmingDecorator implements LemmingService {
 	}
 
 	@Override
-	public int getNbStep() {
-		return delegate.getNbStep();
+	public int getBombCounter() {
+		return delegate.getBombCounter();
 	}
 
 	@Override

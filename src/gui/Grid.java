@@ -132,6 +132,12 @@ public class Grid extends QWidget{
 			case FALLER:
 				painter.drawText(lemmy.getX()*tileSize + 2, lemmy.getY()*tileSize, "F");
 				break;
+			case CLIMBER:
+				painter.drawText(lemmy.getX()*tileSize + 2, lemmy.getY()*tileSize, "C");
+				break;
+			case MINER:
+				painter.drawText(lemmy.getX()*tileSize + 2, lemmy.getY()*tileSize, "M");
+				break;	
 			default:
 				break;
 			}

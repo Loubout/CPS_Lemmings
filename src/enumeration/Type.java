@@ -7,5 +7,8 @@ public enum Type {
 	STOPPER,
 	BASHER,
 	BUILDER,
-	MINER
+	MINER,
+	CLIMBER,
+	FLOATER,
+	BOMBER
 }

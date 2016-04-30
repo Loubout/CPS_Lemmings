@@ -86,4 +86,37 @@ Observations:
                    ! GameEng: isObstacle(getX(l), getY(l)-1) ^ 
                    ! GameEng: isObstacle(getX(l), getY(l)-2) then :
                     getY(step(l)) == getY(l) - 1
-                
+         - else
+         	if getType(l) == STOPPER then :
+         		getY(step(l)) == getY(l) ^
+         		getX(step(l)) == getX(l)
+         - else 
+         	if getType(l) == BASHER:
+         		if not GameEng : isObstacle(getX(l), getY(l) + 1) :
+         			getType(step(l)) == FALLER
+         		else if getDirection(l) == RIGHT:
+         			if not (GameEng : getNature(getX(l) + 1, getY(l) == METAL)
+         			   	^ GameEng : getNature(getX(l) + 1, getY(l) - 1 == METAL)
+         			   	^ GameEng : getNature(getX(l) + 1, getY(l) - 2 == METAL)) :
+         			   	getX(step(l)) == getX(l) + 1
+         			   	^ GameEng : getNature(getX(step(l)), getY(step(l)) == EMPTY)
+         			   	^ GameEng : getNature(getX(step(l), getY(step(l) - 1) == EMPTY)
+         			   	^ GameEng : getNature(getX(step(l)), getY(step(l) - 2 ) == EMPTY)) 
+         			else :
+         				getType(step(l)) == WALKER
+         		else 
+         			if not (GameEng : getNature(getX(l) - 1, getY(l) == METAL)
+         			   	^ GameEng : getNature(getX(l) - 1, getY(l) - 1 == METAL)
+         			   	^ GameEng : getNature(getX(l) - 1, getY(l) - 2 == METAL)) :
+         			   	getX(step(l)) == getX(l) - 1
+         			   	^ GameEng : getNature(getX(step(l)), getY(step(l)) == EMPTY)
+         			   	^ GameEng : getNature(getX(step(l), getY(step(l) - 1) == EMPTY)
+         			   	^ GameEng : getNature(getX(step(l)), getY(step(l) - 2 ) == EMPTY)) 
+         			else :
+         				getType(step(l)) == WALKER
+         - else
+         	if getType(l) == BUILDER:
+         		
+         - else  
+         				
+         			   	
