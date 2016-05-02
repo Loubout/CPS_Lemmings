@@ -2,7 +2,7 @@ Service : Lemming
 
 Types : bool, int, enum Status{LIVING, DEAD, SAVED}, 
 				   enum Direction {RIGHT, LEFT}, 
-				   enum Type{WALKER, FALLER, DIGGER}
+				   enum Type{WALKER, FALLER, CLIMBER, DIGGER, STOPPER,  BASHER, BUILDER, MINER, FLOATER}
 				   enum Specialty{CLIMBER, DIGGER, STOPPER,	BASHER,	BUILDER, MINER, FLOATER, BOMBER}
 				   
 Observators:
@@ -15,7 +15,11 @@ Observators:
     getFallTime : [Lemming] -> int
         pre getFallTime(l) require getType(l) == FALLER
     getSpecials : [Lemming] -> Set<Specialty>    
-    getNbStep : [Lemming] -> int
+    hasSpecial : [Lemming] x Speciaty -> bool
+    getBombCounter : [Lemming] -> int
+    getNbBuild : [Lemming] -> int
+    getNbBash : [Lemming] -> int
+    getEngine : [Lemming] -> [GameEng]
 Constructors:
     init : Type x int -> [Lemming]
 Operators:
@@ -31,37 +35,82 @@ Observations:
         getDirection(init(t, x)) == RIGHT
         getNumero(init(t, x)) == x
         getSpecials(init(t,x)) == emptySet
-        getNbStep(init(t,x)) == 0
+        getBombCounter(init(t,x)) == 0
+        getNbBuild(init(t,x)) == 0
+        getNbBash(init(t,x)) == 0
     [transform]
     	getSpecials(transform(l, sp)) == getSpecials(l) + sp
-    [step]   
-        - if getType(l) == WALKER then :  
-            if  GameEng : isObstacle (getX(l),getY(l) + 1) == FALSE then :
-                getType(step(l)) == FALLER ^ getFallTime(step(l)) == 0
-            else if getDirection(l) == RIGHT ^ GameEng : isObstacle (getX(l) + 1,getY(l) - 1) then :
-                getDirection(step(l)) == LEFT
-            else if getDirection(l) == LEFT ^ GameEng : isObstacle (getX(l) - 1,getY(l) - 1) then :
-                getDirection(step(l)) == RIGHT
-            else if getDirection(l) == RIGHT ^ GameEng : isObstacle (getX(l) + 1,getY(l)) ^ GameEng : isObstacle (getX(l) + 1,getY(l) - 2) then :
-                getDirection(step(l)) == LEFT
-            else if getDirection(l) == LEFT ^ GameEng : isObstacle (getX(l) - 1,getY(l)) ^ GameEng : isObstacle (getX(l) - 1,getY(l) - 2) then :
-                getDirection(step(l)) == RIGHT
-            else if getDirection(l) == RIGHT ^ GameEng : isObstacle (getX(l) + 1,getY(l)) ^ GameEng : isObstacle (getX(l) + 1,getY(l) - 1) == FALSE ^ GameEng : isObstacle (getX(l) + 1,getY(l) - 2) == FALSE  then :
-                getY(step(l)) == getY(l) - 1 ^  getX(step(l)) == getX(l) + 1
-            else if getDirection(l) == LEFT ^ GameEng : isObstacle (getX(l) - 1,getY(l)) ^ GameEng : isObstacle (getX(l) - 1,getY(l) - 1) == FALSE ^ GameEng : isObstacle (getX(l) - 1,getY(l) - 2) == FALSE   then :
-                getY(step(l)) == getY(l) - 1 ^  getX(step(l)) == getX(l) - 1
-            else if getDirection(l) == RIGHT ^ GameEng : isObstacle (getX(l) + 1,getY(l)) == FALSE ^ GameEng : isObstacle (getX(l) + 1,getY(l) - 1) == FALSE then
-                getDirection(step(l))  == RIGHT ^ getX(step(l)) == getX(l) + 1
-            else if getDirection(l) == LEFT ^ GameEng : isObstacle (getX(l) - 1,getY(l)) == FALSE ^ GameEng : isObstacle (getX(l) - 1,getY(l) - 1) == FALSE then
-                getDirection(step(l))  == LEFT ^ getX(step(l)) == getX(l) - 1
+    [step]
+        - if BOMBER \belongs getSpecials(l) ^ getBombCounter(l) == 5  then :
+            getStatus(step(l)) == DEAD
+        - if BOMBER \belongs getSpecials(l) ^ getBombCounter(l) != 5 then : 
+            getBombCounter(step(l)) == getBombCounter(l) + 1
+        - if STOPPER \belongs getSpecials(l) ^ getType(l) != STOPPER then:
+            getType(l) = STOPPER
+        - if BUILDER \belongs getSpecials(l) ^ getType(l) != BUILDER then:
+            getType(l) = BUILDER
+        - if DIGGER \belongs getSpecials(l) ^ getType(l) != DIGGER then:
+            getType(l) = DIGGER
+        - if CLIMBER \belongs getSpecials(l) ^ getType(l) != CLIMBER then:
+            getType(l) = CLIMBER
+        - if FLOATER \belongs getSpecials(l) ^ getType(l) != FLOATER then:
+            getType(l) = FLOATER
+        - if BASHER \belongs getSpecials(l) ^ getType(l) != BASHER then:
+            getType(l) = BASHER
+        - if MINER \belongs getSpecials(l) ^ getType(l) != MINER then:
+            getType(l) = MINER
+            
+        -else
+            if getType(l) == WALKER then :
+                if CLIMBER \belongs getSpecials(l) then :
+                    if getDirection(l) == RIGHT ^ GameEng : isObastacle(getX(l)+1, getY(l)-1) ^ not GameEng : isObastacle(getX(l)+1, getY(l)-2) then:
+                        getX(step(l)) = getX(l) + 1
+                        ^ getY(step(l)) = getY(l) - 1
+                    else  if getDirection(l) == LEFT ^ GameEng : isObastacle(getX(l)-1, getY(l)-1) ^ not GameEng : isObastacle(getX(l)-1, getY(l)-2) then:
+                        getX(step(l)) = getX(l) - 1
+                        ^ getY(step(l)) = getY(l) - 1
+                
+                if  not GameEng : isObstacle(getEngine(l), getX(l),getY(l) + 1) then :
+                    getType(step(l)) == FALLER ^ getFallTime(step(l)) == 0
+                else if getDirection(l) == RIGHT ^ GameEng : isObstacle(getEngine(l), getX(l) + 1,getY(l) - 1) then :
+                    getDirection(step(l)) == LEFT
+                else if getDirection(l) == LEFT ^ GameEng : isObstacle(getEngine(l), getX(l) - 1,getY(l) - 1) then :
+                    getDirection(step(l)) == RIGHT
+                else if getDirection(l) == RIGHT ^ GameEng : isObstacle(getEngine(l), getX(l) + 1,getY(l)) ^ GameEng : isObstacle(getEngine(l), getX(l) + 1,getY(l) - 2) then :
+                    getDirection(step(l)) == LEFT
+                else if getDirection(l) == LEFT ^ GameEng : isObstacle(getEngine(l), getX(l) - 1,getY(l)) ^ GameEng : isObstacle(getEngine(l), getX(l) - 1,getY(l) - 2) then :
+                    getDirection(step(l)) == RIGHT
+                else if getDirection(l) == RIGHT ^ GameEng : isObstacle(getEngine(l), getX(l) + 1,getY(l)) ^ GameEng : isObstacle(getEngine(l), getX(l) + 1,getY(l) - 1) == FALSE ^ GameEng : isObstacle(getEngine(l), getX(l) + 1,getY(l) - 2) == FALSE  then :
+                    getY(step(l)) == getY(l) - 1 ^  getX(step(l)) == getX(l) + 1
+                else if getDirection(l) == LEFT ^ GameEng : isObstacle(getEngine(l), getX(l) - 1,getY(l)) ^ GameEng : isObstacle(getEngine(l), getX(l) - 1,getY(l) - 1) == FALSE ^ GameEng : isObstacle(getEngine(l), getX(l) - 1,getY(l) - 2) == FALSE   then :
+                    getY(step(l)) == getY(l) - 1 ^  getX(step(l)) == getX(l) - 1
+                else if getDirection(l) == RIGHT ^ GameEng : isObstacle(getEngine(l), getX(l) + 1,getY(l)) == FALSE ^ GameEng : isObstacle(getEngine(l), getX(l) + 1,getY(l) - 1) == FALSE then
+                    getDirection(step(l))  == RIGHT ^ getX(step(l)) == getX(l) + 1
+                else if getDirection(l) == LEFT ^ GameEng : isObstacle(getEngine(l), getX(l) - 1,getY(l)) == FALSE ^ GameEng : isObstacle(getEngine(l), getX(l) - 1,getY(l) - 1) == FALSE then
+                    getDirection(step(l))  == LEFT ^ getX(step(l)) == getX(l) - 1
         - else 
             if getType(l) == FALLER then :
-                if GameEng : isObstacle(getX(l), getY(l) + 1) ^ getFallTime(l) < 8 then:
+                if GameEng : isObstacle(getEngine(l), getX(l), getY(l) + 1) ^ getFallTime(l) < 8 then:
                     getType(step(l)) == WALKER  
-                else if GameEng : isObstacle(getX(l), getY(l) + 1) ^ getFallTime(l) >= 8 then:
+                     if CLIMBER \belongs getSpecials(l) then :
+                        if getDirection(l) == RIGHT then :
+                            getDirection(step(l) == LEFT
+                        else if getDirection(l) == LEFT then :
+                            getDirection(step(l) == RIGHT
+                        getFallTime(step(l) == 0)
+                else if GameEng : isObstacle(getEngine(l), getX(l), getY(l) + 1) ^ getFallTime(l) >= 8 then:
                     getStatus(step(l)) == DEAD
                 else 
                     getY(step(l)) == getY(l) + 1 ^ getFallTime(step(l)) == getFallTime(l) + 1
+        
+        - else 
+            if getType(l) == FLOATER then :
+                if not GameEng : isObstacle(getEngine(l), getX(l), getY(l) + 1) then:
+                    if getFallTime(l) % 2 == 0 then : 
+                        getY(step(l)) = getY(l) + 1
+                    getFallTime(step(l)) = getFallTime(l) + 1
+                else 
+                    getType(step(l)) = WALKER
         - else 
             if getType(l) == DIGGER then :
                 if Level : getNature(getX(l), getY(l) + 1) == EMPTY then :
@@ -76,47 +125,163 @@ Observations:
                         Level : remove(getX(l) + 1, getY(l) + 1)
          - else 
             if getType(l) == CLIMBER then :
-                if GameEng : isObstacle(getX(l)+1, getY(l)) ^ 
-                   GameEng : isObstacle(getX(l)+1, getY(l)-1) ^
-                   ! GameEng: isObstacle(getX(l), getY(l)-1) ^ 
-                   ! GameEng: isObstacle(getX(l), getY(l)-2) then :
-                    getY(step(l)) == getY(l) - 1
-                if GameEng : isObstacle(getX(l)-1, getY(l)) ^ 
-                   GameEng : isObstacle(getX(l)-1, getY(l)-1) ^
-                   ! GameEng: isObstacle(getX(l), getY(l)-1) ^ 
-                   ! GameEng: isObstacle(getX(l), getY(l)-2) then :
-                    getY(step(l)) == getY(l) - 1
+                if getDirection(l) == RIGHT:
+                    if GameEng : isObstacle(getEngine(l), getX(l)+1, getY(l)) ^ 
+                       GameEng : isObstacle(getEngine(l), getX(l)+1, getY(l)-1) ^
+                       ! GameEng: isObstacle(getEngine(l), getX(l), getY(l)-1) ^ 
+                       ! GameEng: isObstacle(getEngine(l), getX(l), getY(l)-2) then :
+                        getY(step(l)) == getY(l) - 1
+                else if getDirection(l) == LEFT:
+                    if GameEng : isObstacle(getEngine(l), getEngine(), getX(l)-1, getY(l)) ^ 
+                       GameEng : isObstacle(getEngine(l), getX(l)-1, getY(l)-1) ^
+                       ! GameEng: isObstacle(getEngine(l), getX(l), getY(l)-1) ^ 
+                       ! GameEng: isObstacle(getEngine(l), getX(l), getY(l)-2) then :
+                        getY(step(l)) == getY(l) - 1
+                else 
+                    getType(step(l)) == WALKER
          - else
          	if getType(l) == STOPPER then :
          		getY(step(l)) == getY(l) ^
          		getX(step(l)) == getX(l)
          - else 
          	if getType(l) == BASHER:
-         		if not GameEng : isObstacle(getX(l), getY(l) + 1) :
+         		if not GameEng : isObstacle(getEngine(l), getX(l), getY(l) + 1) :
          			getType(step(l)) == FALLER
          		else if getDirection(l) == RIGHT:
-         			if not (GameEng : getNature(getX(l) + 1, getY(l) == METAL)
+         			if (GameEng : getNature(getX(l) + 1, getY(l) == METAL)
          			   	^ GameEng : getNature(getX(l) + 1, getY(l) - 1 == METAL)
          			   	^ GameEng : getNature(getX(l) + 1, getY(l) - 2 == METAL)) :
-         			   	getX(step(l)) == getX(l) + 1
-         			   	^ GameEng : getNature(getX(step(l)), getY(step(l)) == EMPTY)
-         			   	^ GameEng : getNature(getX(step(l), getY(step(l) - 1) == EMPTY)
-         			   	^ GameEng : getNature(getX(step(l)), getY(step(l) - 2 ) == EMPTY)) 
+         			   	getType(step(l)) == WALKER
+         			else
+         			    if getnbBash(l) > 20
+             			    not BASHER \belongs getSpecials(step(l))
+             			    ^ getType(step(l)) == WALKER
+             			
+         			   	else if GameEng : isDirt(getEngine(l), getX(l), getY(l))
+         			   	        ^ GameEng : isDirt(getEngine(l), getX(l), getY(l)-1)
+         			   	        ^ GameEng : isDirt(getEngine(l), getX(l), getY(l)-2) then :
+         			   	    
+             			    Level : remove(getX(l), getY(l))
+             			   	^ Level : remove(getX(l), getY(l)-1)
+             			   	^ Level : remove(getX(l), getY(l)-2)
+             			   	^ getNbBash(step(l)) = getNbBash(l) + 1
+         			   	getX(step(l)) == getX(l) + 1 
          			else :
          				getType(step(l)) == WALKER
-         		else 
-         			if not (GameEng : getNature(getX(l) - 1, getY(l) == METAL)
-         			   	^ GameEng : getNature(getX(l) - 1, getY(l) - 1 == METAL)
-         			   	^ GameEng : getNature(getX(l) - 1, getY(l) - 2 == METAL)) :
-         			   	getX(step(l)) == getX(l) - 1
-         			   	^ GameEng : getNature(getX(step(l)), getY(step(l)) == EMPTY)
-         			   	^ GameEng : getNature(getX(step(l), getY(step(l) - 1) == EMPTY)
-         			   	^ GameEng : getNature(getX(step(l)), getY(step(l) - 2 ) == EMPTY)) 
-         			else :
-         				getType(step(l)) == WALKER
+         		else if getDirection(l) == RIGHT:
+                    if (GameEng : getNature(getX(l) - 1, getY(l) == METAL)
+                        ^ GameEng : getNature(getX(l) - 1, getY(l) - 1 == METAL)
+                        ^ GameEng : getNature(getX(l) - 1, getY(l) - 2 == METAL)) :
+                        getType(step(l)) == WALKER
+                    else
+                        if getnbBash(l) > 20
+                            not BASHER \belongs getSpecials(step(l))
+                            ^ getType(step(l)) == WALKER
+                        
+                        else if GameEng : isDirt(getEngine(l), getX(l), getY(l))
+                                ^ GameEng : isDirt(getEngine(l), getX(l), getY(l)-1)
+                                ^ GameEng : isDirt(getEngine(l), getX(l), getY(l)-2) then :
+                            
+                            Level : remove(getX(l), getY(l))
+                            ^ Level : remove(getX(l), getY(l)-1)
+                            ^ Level : remove(getX(l), getY(l)-2)
+                            ^ getNbBash(step(l)) = getNbBash(l) + 1
+                        getX(step(l)) == getX(l) - 1 
+                    else :
+                        getType(step(l)) == WALKER
          - else
          	if getType(l) == BUILDER:
-         		
-         - else  
-         				
-         			   	
+         		if not GameEng : isObstacle(getEngine(l), getX(l), getY(l) + 1) :
+                    getType(step(l)) == FALLER
+                else if getDirection(l) == RIGHT:
+                    if GameEng : getNbTurn % 3 == 0 :
+                        if not (GameEng : isObstacle(getEngine(l), getX(l)+1, getY(l))
+                                ^ GameEng : isObstacle(getEngine(l), getX(l)+2, getY(l))
+                                ^ GameEng : isObstacle(getEngine(l), getX(l)+3, getY(l))
+                                ^ GameEng : isObstacle(getEngine(l), getX(l)+1, getY(l)-1)
+                                ^ GameEng : isObstacle(getEngine(l), getX(l)+1, getY(l)-2)) then :
+                                if GameEng : isObstacle(getEngine(l), getX(l)+1, getY(l)-2) then: 
+                                    if getNbBuid(l) < 12:
+                                        Level : build(getX(l)+1, getY(l))
+                                        ^ Level : build(getX(l)+2, getY(l))
+                                        ^ Level : build(getX(l)+3, getY(l))
+                                        ^ not BUILDER \belongs getSpecials(step(l))
+                                        ^ getNbBuild(step(l)) = getNbBuild(l) + 3
+                                        ^ getType(step(l)) == WALKER
+                                    else
+                                        not BUILDER \belongs getSpecials(step(l))
+                                        ^ getType(l) == WALKER
+                        else
+                             if getNbBuid(l) < 12:
+                                         Level : build(getX(l)+1, getY(l))
+                                        ^ Level : build(getX(l)+2, getY(l))
+                                        ^ Level : build(getX(l)+3, getY(l))
+                                        ^ not BUILDER \belongs getSpecials(step(l))
+                                        ^ getNbBuild(step(l)) = getNbBuild(l) + 3
+                                        ^ getX(step(l)) = getX(l) + 2
+                                        ^ getY(step(l)) = getY(l) - 1
+                                    else
+                                        not BUILDER \belongs getSpecials(step(l))
+                                        ^ getType(step(l)) == WALKER               
+                       else 
+                            not BUILDER \belongs getSpecials(step(l))
+                            ^ getType(step(l)) == WALKER      
+                else if getDirection(l) == LEFT:
+                         if GameEng : getNbTurn % 3 == 0 :
+                        if not (GameEng : isObstacle(getEngine(l), getX(l)-1, getY(l))
+                                ^ GameEng : isObstacle(getEngine(l), getX(l)-2, getY(l))
+                                ^ GameEng : isObstacle(getEngine(l), getX(l)-3, getY(l))
+                                ^ GameEng : isObstacle(getEngine(l), getX(l)-1, getY(l)-1)
+                                ^ GameEng : isObstacle(getEngine(l), getX(l)-1, getY(l)-2)) then :
+                                if GameEng : isObstacle(getEngine(l), getX(l)-1, getY(l)-2) then: 
+                                    if getNbBuid(l) < 12:
+                                         Level : build(getX(l)-1, getY(l))
+                                        ^ Level : build(getX(l)-2, getY(l))
+                                        ^ Level : build(getX(l)-3, getY(l))
+                                        ^ not BUILDER \belongs getSpecials(step(l))
+                                        ^ getNbBuild(step(l)) = getNbBuild(l) + 3
+                                        ^ getType(step(step(l))) == WALKER
+                                    else
+                                        not BUILDER \belongs getSpecials(step(l))
+                                        ^ getType(step(step(l))) == WALKER
+                        else
+                             if getNbBuid(l) < 12:
+                                         Level : build(getX(l)+1, getY(l))
+                                        ^ Level : build(getX(l)+2, getY(l))
+                                        ^ Level : build(getX(l)+3, getY(l))
+                                        ^ not BUILDER \belongs getSpecials(step(l))
+                                        ^ getNbBuild(step(l)) = getNbBuild(l) + 3
+                                        ^ getX(step(l)) = getX(l) - 2
+                                        ^ getY(step(l)) = getY(l) - 1
+                                    else
+                                        not BUILDER \belongs getSpecials(step(l))
+                                        ^ getType(step(step(l))) == WALKER               
+                       else 
+                            not BUILDER \belongs getSpecials(step(l))
+                            ^ getType(step(l)) == WALKER
+        - else 
+            if getType(l) == MINER:
+                if not GameEng : isObstacle(getEngine(l), getX(l), getY(l) + 1) :		
+         	      getType(step(l)) == FALLER
+         	    else if getDirection(l) == RIGHT:
+         	      if (GameEng : getNature(getX(l)+1, getY(l)-1) == DIRT
+         	          ^ GameEng : getNature(getX(l)+1, getY(l)-2) == DIRT
+                      ^ GameEng : getNature(getX(l)+1, getY(l)-3) == DIRT) then:
+                      Level : remove(getX(l)+1, getY(l)-1)
+                      ^ Level : remove(getX(l)+1, getY(l)-2)
+                      ^ Level : remove(getX(l)+1, getY(l)-3)
+                      ^ getX(step(l)) = getX(l) + 1
+                      ^ getY(step(l)) = getY(l) - 1
+                  else 
+                    getType(step(l)) == WALKER
+             else if getDirection(l) == LEFT:
+                  if (GameEng : getNature(getX(l)-1, getY(l)-1) == DIRT
+                      ^ GameEng : getNature(getX(l)-1, getY(l)-2) == DIRT
+                      ^ GameEng : getNature(getX(l)-1, getY(l)-3) == DIRT):
+                      Level : remove(getX(l)-1, getY(l)-1)
+                      ^ Level : remove(getX(l)-1, getY(l)-2)
+                      ^ Level : remove(getX(l)-1, getY(l)-3)
+                      ^ getX(step(l)) = getX(l) - 1
+                      ^ getY(step(l)) = getY(l) + 1
+                  else 
+                    getType(step(l)) == WALKER

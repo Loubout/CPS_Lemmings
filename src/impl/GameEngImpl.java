@@ -64,7 +64,7 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 	}
 
 	@Override
-	public int getNbTours() {
+	public int getNbTurn() {
 		return this.nbTours;
 	}
 
@@ -162,7 +162,7 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 			}
 		}
 
-		if (getNbTours() % spawnSpeed == 0 && nbSpawned() < sizeColony){
+		if (getNbTurn() % spawnSpeed == 0 && nbSpawned() < sizeColony){
 			//System.out.println("SPAWN");
 			LemmingService lemmy = new LemmingImpl();
 			lemmy.bindEngine(this);

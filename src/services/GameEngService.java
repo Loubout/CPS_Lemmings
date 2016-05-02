@@ -14,7 +14,7 @@ public interface GameEngService extends RequireLevelService {
 	public boolean isObstacle(int x, int y);
 	public boolean gameOver();
 	public LevelService getLevel();
-	public int getNbTours();
+	public int getNbTurn();
 	//PRE	gameover()
 	public Double[] score();
 	public int nbSpawned();
@@ -66,6 +66,8 @@ public interface GameEngService extends RequireLevelService {
     //			nbSpawned(e, (nextTurn(e)) = nbSpawned(e) + 1
     //			getLemming(e, nbSpawned() + 1) = Lemming : init(FALLER, nbSpawned() +1)
 	//
-	//		\forAll i in getLemmingsNum(nextTurn(l)), getLemming(nextTurn(e), i) = Lemming : step(getLemming(e, i))
+	//		\forAll i in getLemmingsNum(nextTurn(l)) : 
+	//			getLemming(nextTurn(e), i) = Lemming : step(getLemming(e, i)) 
+	//			&& (!(getLemming(e, i).getSpecials().contains(Specialty.BOMBER) && getLemming(e, i).get 
 	public void nextTurn();
 }

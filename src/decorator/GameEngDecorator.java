@@ -38,8 +38,8 @@ public class GameEngDecorator implements GameEngService {
 		return delegate.getLevel();
 	}
 
-	public int getNbTours() {
-		return delegate.getNbTours();
+	public int getNbTurn() {
+		return delegate.getNbTurn();
 	}
 
 	public Double[] score() {

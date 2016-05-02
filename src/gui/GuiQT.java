@@ -216,7 +216,6 @@ public class GuiQT extends QMainWindow implements RequireGameEngineService, Requ
 						//						System.out.println("notify?");
 						paused = false;
 					} catch (InterruptedException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 				}

@@ -28,7 +28,7 @@ public class GameEngContract extends GameEngDecorator implements RequireLevelSer
 		
 		if (super.nbSpawned() > super.getSizeColony()) throw new InvariantError("Invariant Error : nbSpawned > getSizeColony()");
 		
-		if (super.getNbTours() < 0) throw new InvariantError("Invariant Error : nbTours < 0");
+		if (super.getNbTurn() < 0) throw new InvariantError("Invariant Error : nbTours < 0");
 		System.out.println("GameEng contract nb active : "+ super.nbActive());
 		System.out.println("GameEng contract nums size " + super.getLemmingsNum().size());
 		if (super.nbActive() != getLemmingsNum().size()) throw new InvariantError("Invariant Error : nbActive should be equal to |getLummingsNum()|");
@@ -61,7 +61,7 @@ public class GameEngContract extends GameEngDecorator implements RequireLevelSer
 			throw new PostconditionError("The score should be (0,0) after initialization");
 		if(super.gameOver()) 
 			throw new PostconditionError("Game shouldn't be over after initialization");
-		if(super.getNbTours() != 0) 
+		if(super.getNbTurn() != 0) 
 			throw new PostconditionError("the number of turn should be 0 after initialization");
 		if(super.nbSpawned() != 0) 
 			throw new PostconditionError("the number of spawned lemmings should be 0 after initialization");
@@ -131,9 +131,9 @@ public class GameEngContract extends GameEngDecorator implements RequireLevelSer
 	}
 
 	@Override
-	public int getNbTours() {
+	public int getNbTurn() {
 		// TODO Auto-generated method stub
-		return super.getNbTours();
+		return super.getNbTurn();
 	}
 
 	@Override
