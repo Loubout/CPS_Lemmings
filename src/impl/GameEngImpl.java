@@ -108,7 +108,9 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 
 	@Override
 	public boolean lemmingExist(int i) {
-		// TODO Auto-generated method stub
+		for (LemmingService lem: this.lemmings){
+			if (lem.getNumber() == i) return true; 
+		}
 		return false;
 	}
 
@@ -122,16 +124,10 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 
 	@Override
 	public boolean isActive(int i) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		return this.lemmings.get(i).getStatus() == Status.LIVING;
 	}
-
-	@Override
-	public Status getStatus(int i) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	
 	@Override
 	public void init(int size, int speed) {
 		this.sizeColony = size;

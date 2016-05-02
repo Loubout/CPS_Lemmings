@@ -180,16 +180,7 @@ public class GameEngContract extends GameEngDecorator implements RequireLevelSer
 
 	@Override
 	public boolean isActive(int i) {
-		// TODO Auto-generated method stub
 		return super.isActive(i);
 	}
-
-	@Override
-	public Status getStatus(int i) {
-		// TODO Auto-generated method stub
-		return super.getStatus(i);
-	}
-
-
 
 }

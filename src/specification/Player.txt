@@ -5,16 +5,19 @@ Observators :
 	getSpecials : [Player] -> Set<Specialty>
 	getJetons : [Player] -> Map<Class, int>
 	getNbJetonsFor : [Player] x Class -> int
-
+	getEngine : [Player] -> GameEngine
 Constructors :
-	init : int x int x int x int .. -> [Level]
-		pre init(j1, j2 ... jn ) require j1, j2 ... jn > 0
+	init : Map<Specialty, int> -> [Level]
+		pre init(map) require \forall val in map val >= 0
 Operators : 
 	transform : [Player] x [Lemming] x Specialty  -> [Player]
-		pre transform(p, lem, sp) require Lemming : getStatus(lem) == LIVING
+		pre transform(p, lem, sp) require Lemming : getStatus(lem) == LIVING ^ getNbJetonsFor(p, sp) > 0
 Observations : 
 	[invariants]
-		\forall c in getClasses getNbJetonsFor(c) > 0
+		\forall c in getClasses getNbJetonsFor(c) >= 0
+	[init] 
+		\forall sp in getSpecials(init(map)) :  getNbJetonsFor(init(map), sp)) == getValue(map, sp)  
 	[transform]
 		getNbJetonsFor(transform(p, eng, c, i)) == getNbJetonsFor(p) - 1
-		\forall d in (gcetClasses(p) - {c}) getNbJetonsFor(transform(p, eng, c, i)) == getNbJetonsFor(p, d)
+		\forall d in (getSpecials(p) - {c}) getNbJetonsFor(transform(p, eng, c, i)) == getNbJetonsFor(p, d)
+		

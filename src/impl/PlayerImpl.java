@@ -10,7 +10,6 @@ import services.PlayerService;
 import services.RequireGameEngineService;
 
 public class PlayerImpl implements PlayerService, RequireGameEngineService{
-
 	private GameEngService eng;
 	private HashMap<Specialty, Integer> chips;
 	
@@ -35,13 +34,18 @@ public class PlayerImpl implements PlayerService, RequireGameEngineService{
 	}
 
 	@Override
-	public void init() {
-		chips = new HashMap<Specialty, Integer>();
+	public void init(HashMap<Specialty, Integer> chipsMap) {
+		this.chips = chipsMap;
 	}
 		
 	// unlimited transform for now
 	@Override
 	public void transformLemming(LemmingService lemmy, Specialty sp) {
 		lemmy.transform(sp);	
+	}
+
+	@Override
+	public GameEngService getEngine() {
+		return eng;
 	}
 }

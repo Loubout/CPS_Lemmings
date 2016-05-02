@@ -12,10 +12,8 @@ public class LemmingContract extends LemmingDecorator{
 
 	public LemmingContract(LemmingService delegate) {
 		super(delegate);
-		// TODO Auto-generated constructor stub
 	}
 
-	
 	public void checkInvariant(){
 		/*	INVARIANTS
 		 * 	getGameEng().getLevel().getNature(getX(),getY()-1) = Nature.EMPTY
@@ -30,7 +28,7 @@ public class LemmingContract extends LemmingDecorator{
 		super.init(type, num);
 		
 		if (super.getType() != type) throw new PostconditionError("type should be t");
-		if (super.getType() != type) throw new PostconditionError("leemmings should spawn with direction == right");
+		if (super.getType() != type) throw new PostconditionError("lemmings should spawn with direction == right");
 		if (super.getNumber() != num) throw new PostconditionError("number at initialization is wrong");
 		if(super.getBombCounter() != 0) throw new PostconditionError("number of lemming steps should be 0 after init");
 		
@@ -58,11 +56,10 @@ public class LemmingContract extends LemmingDecorator{
 		Nature pre_belowleft = super.getGameEng().getLevel().getNature(super.getX()-1, super.getY() + 1);
 		Nature pre_belowright = super.getGameEng().getLevel().getNature(super.getX()+1, super.getY() + 1);
 		
+		
 		Direction pre_dir = super.getDirection();
-		
-		
-		super.step();
-		
+	
+		super.step();	
 		this.checkInvariant();
 		
 		// POST CONDITION
@@ -87,7 +84,6 @@ public class LemmingContract extends LemmingDecorator{
 					throw new PostconditionError("error while walking towards right");
 				if (pre_dir == Direction.LEFT && pre_left == Nature.EMPTY && pre_aboveleft == Nature.EMPTY && (super.getDirection() != Direction.LEFT || super.getX() != pre_x -1 ))
 					throw new PostconditionError("error while walking towards left");
-				
 				break;
 			case FALLER:
 				if (pre_below != Nature.EMPTY && pre_fallltime < 8 && super.getType() != Type.WALKER)
@@ -96,7 +92,6 @@ public class LemmingContract extends LemmingDecorator{
 					throw new PostconditionError("faller should have died");
 				if (pre_below == Nature.EMPTY && super.getFallTime() != pre_fallltime + 1)
 					throw new PostconditionError("faller falltime should increase");
-				
 				break;
 			case DIGGER:
 				if(pre_below == Nature.EMPTY && super.getType()!=Type.FALLER) 
@@ -116,7 +111,6 @@ public class LemmingContract extends LemmingDecorator{
 
 	@Override
 	public Direction getDirection() {
-		// TODO Auto-generated method stub
 		return super.getDirection();
 	}
 
