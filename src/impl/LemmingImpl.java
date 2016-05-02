@@ -254,8 +254,8 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 	private void climb(){
 		if(this.dir == Direction.RIGHT
 				&& eng.isObstacle(x+1, y) && eng.isObstacle(x+1, y-1)
-				&& (eng.getLevel().getNature(x, y - 1) == Nature.EMPTY 
-				&& eng.getLevel().getNature(x, y - 2) == Nature.EMPTY)){
+				&& (!eng.isObstacle(x, y-1) 
+				&& !eng.isObstacle(x, y-2))){
 			this.y --;
 			System.out.println("CLIMB RIGHT");
 			//			}else if(!eng.isObstacle(x+1, y-1) 
