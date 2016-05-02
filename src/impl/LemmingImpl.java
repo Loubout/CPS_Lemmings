@@ -104,7 +104,7 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 	private void setStatus(Status status) {
 		this.status = status;
 	}
-	
+
 	/**
 	 * 
 	 */
@@ -117,7 +117,12 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 			this.setType(Type.BUILDER);
 		}else if(this.specials.contains(Specialty.DIGGER)){
 			this.setType(Type.DIGGER);
-		}else if(this.specials.contains(Specialty.CLIMBER) && this.type == Type.WALKER ){
+		}else if(this.specials.contains(Specialty.CLIMBER)
+				&& this.type == Type.WALKER 
+				&& ((this.dir == Direction.RIGHT && eng.isObstacle(x+1, y) && eng.isObstacle(x+1, y-1)
+				&& !eng.isObstacle(x, y-1))
+				|| (this.dir == Direction.LEFT && eng.isObstacle(x-1, y) && eng.isObstacle(x-1, y-1)
+				&& !eng.isObstacle(x, y-1)))){
 			this.setType(Type.CLIMBER);
 		}else if(this.specials.contains(Specialty.FLOATER)){
 			this.setType(Type.FLOATER);
@@ -132,46 +137,46 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 		switch (this.type) {
 
 		case FALLER:
-				this.fall();
+			this.fall();
 			break;
 
 		case FLOATER:
 			this.goFloat();
 			break;
-			
+
 		case WALKER:
-				this.walk();
+			this.walk();
 			break;
 
 		case CLIMBER:
 			this.climb();
 			break;
-			
+
 		case DIGGER:
-				this.dig();
+			this.dig();
 			break;
 
 		case STOPPER:
 			break;
 
 		case BASHER:
-				this.bash();
+			this.bash();
 			break;
-			
+
 		case BUILDER:
-				this.build();
+			this.build();
 			break;
-			
+
 		case MINER:
-				this.mine();
+			this.mine();
 			break;
-		
+
 		default:
 			break;
 
 		}
 	}
-	
+
 	private void fall(){
 		if (!eng.isObstacle(x , y + 1)){
 			this.y = y + 1; //tomber d'une case
@@ -181,7 +186,6 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 				System.out.println("DEATH FALL");
 				this.setStatus(Status.DEAD);
 			}else{ // SURVIVES
-
 				this.setType(Type.WALKER);
 				if (specials.contains(Specialty.CLIMBER)){ // avoiding climber going up again
 					if(this.dir == Direction.RIGHT && eng.isObstacle(x+1, y))
@@ -193,7 +197,7 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 			}
 		}
 	}
-	
+
 	private void goFloat(){
 		if (!eng.isObstacle(x , y + 1)){
 			if(this.getFallTime() % 2 == 0) 
@@ -207,11 +211,23 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 	}
 
 	private void walk(){
-		if (eng.getLevel().getNature(x, y + 1) == Nature.EMPTY){ // turn into faller
+		if (this.specials.contains(Specialty.CLIMBER)){
+			if (this.dir == Direction.RIGHT && eng.isObstacle(x+1, y) && !eng.isObstacle(x+1, y-1) && !eng.isObstacle(x+1, y-2)){
+				this.y--;
+				this.x++;
+				return;
+			}else if (this.dir == Direction.LEFT && eng.isObstacle(x-1, y) && !eng.isObstacle(x-1, y-1) && !eng.isObstacle(x-1, y-2)){
+				this.y--;
+				this.x--;
+				return;
+			}
+		}
+
+
+		if (!eng.isObstacle(x, y+1)){ // turn into faller
 			this.setType(Type.FALLER);
-			this.fall();
 		}else if (this.dir == Direction.RIGHT){
-			if(eng.isObstacle(x+1, y-1) ){
+			if(eng.isObstacle(x+1, y-1)){
 				this.dir = Direction.LEFT;
 			}else if ((eng.isObstacle(x+1, y) && eng.isObstacle(x+1, y-2))){
 				this.dir = Direction.LEFT;
@@ -219,7 +235,6 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 				this.y--;
 				this.x++;
 			}else if (!eng.isObstacle(x+1, y) && !eng.isObstacle(x+1, y-1)){
-
 				this.x++;	
 			}
 		}else{ // LEFT DIRECTION CASE
@@ -235,37 +250,47 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 			}
 		}
 	}
-	
+
 	private void climb(){
-		if(this.dir == Direction.RIGHT 
-				&& (eng.isObstacle(x+1, y) && eng.isObstacle(x+1, y+1))
+		if(this.dir == Direction.RIGHT
+				&& eng.isObstacle(x+1, y) && eng.isObstacle(x+1, y-1)
 				&& (eng.getLevel().getNature(x, y - 1) == Nature.EMPTY 
 				&& eng.getLevel().getNature(x, y - 2) == Nature.EMPTY)){
 			this.y --;
-			
-			if(eng.isObstacle(x+1, y+1) 
-					&& eng.getLevel().getNature(x+1, y)==Nature.EMPTY 
-					&& eng.getLevel().getNature(x+1, y-1)==Nature.EMPTY) 
-				x++;
-			
-		}else if(this.dir == Direction.LEFT
-				&&(eng.isObstacle(x-1, y) && eng.isObstacle(x-1, y+1))
+			System.out.println("CLIMB RIGHT");
+			//			}else if(!eng.isObstacle(x+1, y-1) 
+			//					&& eng.getLevel().getNature(x+1, y)==Nature.EMPTY 
+			//					&& eng.getLevel().getNature(x+1, y-1)==Nature.EMPTY) {
+			//				this.setType(Type.WALKER);
+			//				this.walk();
+			//			}
+			//				x++;
+
+		}else if (this.dir == Direction.LEFT
+				&& (eng.isObstacle(x-1, y) && eng.isObstacle(x-1, y-1))
 				&& (eng.getLevel().getNature(x, y - 1) == Nature.EMPTY 
 				&& eng.getLevel().getNature(x, y - 2) == Nature.EMPTY)){
 			this.y --;
-			
-			if(eng.isObstacle(x-1, y+1) 
-					&& eng.getLevel().getNature(x-1, y)==Nature.EMPTY 
-					&& eng.getLevel().getNature(x-1, y-1)==Nature.EMPTY) 
-				x--;
-		
+			System.out.println("CLIMB LEFT");
+			//			}else if(!eng.isObstacle(x-1, y-1) 
+			//					&& !eng.isObstacle(x-1, y-2)==Nature.EMPTY 
+			//					&& eng.getLevel().getNature(x-1, y-1)==Nature.EMPTY) {
+			//				this.setType(Type.WALKER);
+			//				this.walk();
+			//			}
+		}else if (this.eng.isObstacle(x, y - 1)){
+			this.setType(Type.FALLER);
 		}else{
+			System.out.println("climb to walk");
 			this.setType(Type.WALKER);
 			this.walk(); //if can't climb just walk
 		}
-
 	}
-	
+
+
+
+
+
 	private void dig(){
 		if(eng.getLevel().getNature(x, y + 1) == Nature.EMPTY){
 			this.specials.remove(Specialty.DIGGER);//if fall not a digger anymore
@@ -286,7 +311,7 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 			this.walk();
 		}
 	}
-	
+
 	private void bash(){
 		if(!eng.isObstacle(x, y+1)){
 			this.setType(Type.FALLER);
@@ -339,7 +364,7 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 			}
 		}
 	}
-	
+
 	private void build(){
 		if(!eng.isObstacle(x, y+1)){
 			this.setType(Type.FALLER);
@@ -438,7 +463,7 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 			}
 		}
 	}
-	
+
 	private void mine(){
 		if(!eng.isObstacle(x, y+1)){
 			this.setType(Type.FALLER);
@@ -471,7 +496,7 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 			}
 		}
 	}
-	
+
 	private void activateBomber(){		
 		if(this.getBombCounter() == 5){
 			if(eng.getLevel().getNature(x, y+1) == Nature.DIRT) 
@@ -502,7 +527,7 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 				this.getGameEng().getLevel().remove(x+2, y);
 			if(eng.getLevel().getNature(x+1, y+1) == Nature.DIRT) 
 				this.getGameEng().getLevel().remove(x+1, y+1);
-			
+
 			this.setStatus(Status.DEAD);
 		}
 		this.incrementBombCounter();

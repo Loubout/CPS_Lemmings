@@ -5,7 +5,7 @@ import java.util.Set;
 
 import enumeration.Specialty;
 
-public interface PlayerService {
+public interface PlayerService extends RequireGameEngineService{
 	
 	public Set<Specialty> getAvailableClasses();
 	

@@ -18,12 +18,16 @@ import impl.PlayerImpl;
 import services.GameEngService;
 import services.LemmingService;
 import services.LevelService;
+import services.PlayerService;
+import services.RequireGameEngineService;
+import services.RequireLevelService;
+import services.RequirePlayerService;
 
-public class GuiQT extends QMainWindow{
+public class GuiQT extends QMainWindow implements RequireGameEngineService, RequireLevelService, RequirePlayerService{
 
-	private GameEngImpl gameEng;
+	private GameEngService gameEng;
 	private LevelService level;
-	private PlayerImpl player;
+	private PlayerService player;
 	private Grid w;
 
 	public Signal0 repaintSig = new Signal0();
@@ -37,7 +41,7 @@ public class GuiQT extends QMainWindow{
 		QWidget mainWidget = new QWidget();
 		mainWidget.resize(1600, 1600);
 
-		//		DisplayImpl display = new DisplayImpl();
+		
 		gameEng = new GameEngImpl();
 		level = new LevelImpl();
 		player = new PlayerImpl();
@@ -45,7 +49,7 @@ public class GuiQT extends QMainWindow{
 		player.bindEngine(gameEng);
 		
 		level.init(60, 20);
-		gameEng.init(5, 2);
+		gameEng.init(2, 2);
 		gameEng.bindLevel(level);
 
 		w = new Grid(mainWidget, pauseSig);
@@ -78,12 +82,6 @@ public class GuiQT extends QMainWindow{
 
 		// class pick buttons
 		QButtonGroup specialsButtonGroup = new QButtonGroup();
-		//  FLOATER
-		//  DIGGER,
-		//	STOPPER,
-		//	BASHER,
-		//	BUILDER,
-		//	MINER
 		QPushButton floaterButton = new QPushButton(mainWidget);
 		QPushButton diggerButton = new QPushButton(mainWidget);
 		QPushButton stopperButton = new QPushButton(mainWidget);
@@ -284,5 +282,22 @@ public class GuiQT extends QMainWindow{
 		app.resize(1024, 1980);
 		QApplication.execStatic();
 		QApplication.shutdown();
+	}
+
+	@Override
+	public void bindPlayer(PlayerService p) {
+		this.player = p;
+		
+	}
+
+	@Override
+	public void bindLevel(LevelService level) {
+		this.level = level;
+		
+	}
+
+	@Override
+	public void bindEngine(GameEngService eng) {
+		this.gameEng = eng;
 	}
 }

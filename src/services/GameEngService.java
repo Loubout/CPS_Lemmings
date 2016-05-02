@@ -4,7 +4,7 @@ import java.util.Set;
 
 import enumeration.Status;
 
-public interface GameEngService {
+public interface GameEngService extends RequireLevelService {
 	
 	/*Observators*/
 	public int getSizeColony();
