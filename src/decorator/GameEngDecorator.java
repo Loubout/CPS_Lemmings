@@ -74,9 +74,6 @@ public class GameEngDecorator implements GameEngService {
 		return delegate.isActive(i);
 	}
 
-	public Status getStatus(int i) {
-		return delegate.getStatus(i);
-	}
 
 	public void init(int size, int speed) {
 		delegate.init(size, speed);

@@ -30,8 +30,7 @@ public interface GameEngService extends RequireLevelService {
 	public LemmingService getLemming(int i);
 	//PRE 1 < i < nbActive()
 	public boolean isActive(int i);
-	//PRE 1 < i < nbSpawned()
-	public Status getStatus(int i);
+
 	
 	/*	INVARIANTS
 	*	nbSpawned() <= getSizeColony()

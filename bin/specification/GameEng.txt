@@ -26,8 +26,6 @@ Observators :
     	pre getLemmingAtPosition(e, x, y) require isThereLemming(e, x, y)
     active: [GameEng] x int  -> bool
         pre active(e, n) require 1 < n =< nbActif
-    status: [GameEng] x int -> Status   
-        pre status(e, n) require 1 < n =< nbSpawned
     
     
 Constructors :
@@ -37,7 +35,6 @@ Constructors :
 Operators :
     nextTurn : [GameEng] ->  [GameEng]
         pre nextTurn(e) require not gameOver(e)
-    
 Observations :
     [invariants]
         nbSpawned(e) =< sizeColony(e)
