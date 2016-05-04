@@ -96,6 +96,8 @@ public class GameEngContract extends GameEngDecorator implements RequireLevelSer
 		//		\forAll i in getLemmingsNum(nextTurn(l)), getLemming(nextTurn(e), i) = Lemming : step(getLemming(e, i))
 		//POST A REECRIRE 
 		
+		
+		
 	}
 	
 	@Override
