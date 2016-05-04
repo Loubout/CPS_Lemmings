@@ -30,25 +30,21 @@ public class LevelContract extends LevelDecorator{
 
 	@Override
 	public int getWidth() {
-		// TODO Auto-generated method stub
 		return super.getWidth();
 	}
 
 	@Override
 	public int getHeight() {
-		// TODO Auto-generated method stub
 		return super.getHeight();
 	}
 
 	@Override
 	public Nature getNature(int x, int y) {
-		// TODO Auto-generated method stub
 		return super.getNature(x, y);
 	}
 
 	@Override
 	public boolean editing() {
-		// TODO Auto-generated method stub
 		return super.editing();
 	}
 
@@ -102,25 +98,25 @@ public class LevelContract extends LevelDecorator{
 		//		0 < x < getWidth() - 1
 		//POST	getNature(setNature(x,y,n)) == n
 		//		\forall (i, j) (i != x || j != y) ^ 0 < i < width ^ 0 < j < height, getNature(setNature(x ,y ,n), i, j) == getNature(l, i, j)
-		
+		System.out.println("SET NATURE CONTRACT");
 		
 		int[] cellNatureX_atpre = new int[10];
 		int[] cellNatureY_atpre = new int[10];
 		Nature[] cellNature_atpre = new Nature[10];
 		int i = 0;
+		Random r = new Random();
 		while (i < 10){
-			Random r = new Random();
 			int xr = r.nextInt(super.getWidth()-1);
 			int yr = r.nextInt(super.getHeight()-1);
 			if (xr == x || yr == y) continue;
-			
 			cellNatureX_atpre[i] = xr;
 			cellNatureY_atpre[i] = yr;
 			cellNature_atpre[i] = super.getNature(xr, yr);
+			i++;
 		}
 		
 		
-		if(super.editing()) throw new PreconditionError("Level should be in editing mode");
+		if(!super.editing()) throw new PreconditionError("Level should be in editing mode");
 		if(x<0 || x>super.getWidth()-2) throw new PreconditionError("x should be beetween 0 and width");
 		if(y<0 || y>super.getHeight()-2) throw new PreconditionError("y should be beetween 0 and height");
 		
@@ -200,14 +196,14 @@ public class LevelContract extends LevelDecorator{
 		int[] cellNatureY_atpre = new int[10];
 		Nature[] cellNature_atpre = new Nature[10];
 		int i = 0;
+		Random r = new Random();
 		while (i < 10){
-			Random r = new Random();
 			int xr = r.nextInt(super.getWidth()-1);
 			int yr = r.nextInt(super.getHeight()-1);
-			
 			cellNatureX_atpre[i] = xr;
 			cellNatureY_atpre[i] = yr;
 			cellNature_atpre[i] = super.getNature(xr, yr);
+			i++;
 		}
 		
 		if(super.editing()) throw new PreconditionError("game mode should not be in editing mode before remove op");
@@ -238,14 +234,15 @@ public class LevelContract extends LevelDecorator{
 		int[] cellNatureY_atpre = new int[10];
 		Nature[] cellNature_atpre = new Nature[10];
 		int i = 0;
+		Random r = new Random();
 		while (i < 10){
-			Random r = new Random();
 			int xr = r.nextInt(super.getWidth()-1);
 			int yr = r.nextInt(super.getHeight()-1);
 			
 			cellNatureX_atpre[i] = xr;
 			cellNatureY_atpre[i] = yr;
 			cellNature_atpre[i] = super.getNature(xr, yr);
+			i++;
 		}
 		
 		if(super.editing()) throw new PreconditionError("game mode should not be in editing mode before remove op");

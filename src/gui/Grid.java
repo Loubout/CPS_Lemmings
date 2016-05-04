@@ -139,6 +139,12 @@ public class Grid extends QWidget{
 			case MINER:
 				painter.drawText(lemmy.getX()*tileSize + 2, lemmy.getY()*tileSize, "M");
 				break;	
+			case DIGGER:
+				painter.drawText(lemmy.getX()*tileSize + 2, lemmy.getY()*tileSize, "D");
+				break;
+			case BUILDER:
+				painter.drawText(lemmy.getX()*tileSize + 2, lemmy.getY()*tileSize, "B");
+				break;
 			default:
 				break;
 			}
@@ -153,11 +159,11 @@ public class Grid extends QWidget{
 		System.out.println(e.button().toString());
 		int coordX = e.x() / tileSize;
 		int coordY = e.y() / tileSize;
-		//int coordY = (tileSize * eng.getLevel().getHeight() - e.y()) / tileSize;
 		System.out.println("result : " + coordX + "," + coordY);
 
 		if (eng.getLevel().editing()){
 			if (e.button() == Qt.MouseButton.LeftButton){
+				System.out.println("level click edit");
 				// edit this tile
 				Nature next = null;
 				switch (eng.getLevel().getNature(coordX, coordY)){
@@ -171,7 +177,9 @@ public class Grid extends QWidget{
 					next = Nature.EMPTY;
 					break;
 				}
+				System.out.println("pre eng set nature " + eng.getLevel());
 				eng.getLevel().setNature(coordX, coordY, next);
+				System.out.println("post eng set nature");
 			}else if (e.button() == Qt.MouseButton.RightButton){
 				System.out.println("rightbutton click");
 				if (coordX == entranceX && coordY == entranceY){ // entrance bcomes exit

@@ -11,7 +11,6 @@ import com.trolltech.qt.gui.QApplication;
 import contract.GameEngContract;
 import contract.LevelContract;
 import contract.PlayerContract;
-import decorator.LevelDecorator;
 import enumeration.Specialty;
 import services.GameEngService;
 import services.LevelService;
@@ -45,7 +44,7 @@ public class LemmingsTestGUIAvecContrat {
 
 		player.init(chips);
 		contract_level.init(60, 40);
-		contract_eng.init(10, 2);
+		contract_eng.init(1, 1);
 
 		// END INIT PHASE
 		
@@ -61,7 +60,6 @@ public class LemmingsTestGUIAvecContrat {
 		gui.bindEngine(contract_eng);
 		gui.bindLevel(contract_level);
 		gui.bindPlayer(player);
-
 		gui.show();
 		gui.resize(1024, 1980);
 		QApplication.execStatic();

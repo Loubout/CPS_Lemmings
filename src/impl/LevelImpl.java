@@ -79,12 +79,6 @@ public class LevelImpl implements LevelService {
 			matLevel[0][j] = Nature.METAL;
 			matLevel[width - 1][j] = Nature.METAL;
 		}
-
-		// THIS SHOULDNT BE HERE 
-		//		this.entranceX = 1;
-		//		this.entranceY = height - 2;
-		//		this.exitX = width - 2;
-		//		this.exitY = height - 2;
 	}
 
 	@Override
@@ -94,8 +88,6 @@ public class LevelImpl implements LevelService {
 
 	@Override
 	public void goPlay(int x1, int y1, int x2, int y2) {
-		editing = true; //on est en mode editing en entrée de jeu
-		
 		this.entranceX = x1;
 		this.entranceY = y1;
 		this.exitX = x2;

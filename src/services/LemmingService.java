@@ -21,6 +21,9 @@ public interface LemmingService {
 	public Set<Specialty> getSpecials();
 	public boolean hasSpecial(Specialty sp);
 	public int getBombCounter();
+	public int getNbBash();
+	public int getNbBuild();
+	
 
 	/*	INVARIANTS
 	 * 	getGameEng().getLevel().getNature(getX(),getY()-1) = Nature.EMPTY

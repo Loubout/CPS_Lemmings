@@ -138,28 +138,21 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 		//lemmings.add(new LemmingImpl().lemmyStopper()); //pour tester le stopper
 	}
 	
-	
-	
 
-	
-	
 	@Override
 	public void nextTurn() {
-		//System.out.println("NEXT TURN nbTours ="+nbTours);
-		//System.out.println(getLemmingsNum());
 
 		Set<Integer> nums = getLemmingsNum();
 		for (Integer i : nums){
 			LemmingService lemmy = 	getLemming(i);
 			lemmy.step(); // INDEX IN ARRAYLIST NOT THE SAME AS LEMMING ID
 			if (lemmy.getX() == getLevel().getExitX() && lemmy.getY() == getLevel().getExitY()){
-				//lemmings.remove(lemmy);	
+				lemmings.remove(lemmy);
 				nbSaved += 1;
 			}
 		}
 
 		if (getNbTurn() % spawnSpeed == 0 && nbSpawned() < sizeColony){
-			//System.out.println("SPAWN");
 			LemmingService lemmy = new LemmingImpl();
 			lemmy.bindEngine(this);
 			lemmy.init(nbSpawned() + 1);
@@ -175,8 +168,12 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 				this.lemmings.remove(lemmy);
 			}
 		}
+		
 		// test for game over
-		if (nbSpawned() == sizeColony && nbActive() == 0) this.gameOver = true;
+		if (nbSpawned() == sizeColony && nbActive() == 0){
+			this.gameOver = true;
+			System.out.println("GAME OVER");
+		}
 	}
 
 	@Override
@@ -196,5 +193,17 @@ public class GameEngImpl implements RequireLevelService, GameEngService {
 			if (lemmy.getX() == x && lemmy.getY() == y) return lemmy;
 		}
 		return null;
+	}
+
+
+	@Override
+	public boolean isDirt(int x, int y) {
+		return getLevel().getNature(x, y) == Nature.DIRT;
+	}
+
+
+	@Override
+	public boolean isMetal(int x, int y) {
+		return getLevel().getNature(x, y) == Nature.METAL;
 	}
 }

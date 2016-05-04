@@ -185,6 +185,13 @@ public class LemmingContract extends LemmingDecorator{
 		return super.getGameEng();
 	}
 
+	public int getNbBash() {
+		return super.getNbBash();
+	}
+	
+	public int getNbBuild() {
+		return super.getNbBuild();
+	}
 	
 	@Override
 	public void bindEngine(GameEngService eng) {

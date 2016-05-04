@@ -10,6 +10,8 @@ public interface GameEngService extends RequireLevelService {
 	//PRE	0 < x < getLevel().getWidth()
 	// 		0 < y < getLevel().getHeight()
 	public boolean isObstacle(int x, int y);
+	public boolean isDirt(int x, int y);
+	public boolean isMetal(int x, int y);
 	public boolean gameOver();
 	public LevelService getLevel();
 	public int getNbTurn();
@@ -54,7 +56,7 @@ public interface GameEngService extends RequireLevelService {
 	
 	/*Operators*/	
 		
-	// A REECRIRE BRAH
+	
 	//PRE	!gameOver()
 	//POST	if ( (getSpawnedSpeed(e) - timeSinceLastSpawn()) > 0) 
 	//			timeSinceLastSpawn(e) = timeSinceLastSpawn() + 1

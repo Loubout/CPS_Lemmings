@@ -88,4 +88,15 @@ public class LemmingDecorator implements LemmingService {
 		return delegate.hasSpecial(sp);
 	}
 
+	@Override
+	public int getNbBash() {
+		return delegate.getNbBash();
+		
+	}
+
+	@Override
+	public int getNbBuild() {
+		return delegate.getNbBuild();
+	}
+
 }

@@ -96,4 +96,14 @@ public class GameEngDecorator implements GameEngService, RequireLevelService{
 	public LemmingService getLemmingAtPosition(int x, int y) {
 		return delegate.getLemmingAtPosition(x, y);
 	}
+
+	@Override
+	public boolean isDirt(int x, int y) {
+		return delegate.isDirt(x, y);
+	}
+
+	@Override
+	public boolean isMetal(int x, int y) {
+		return delegate.isMetal(x, y);
+	}
 }

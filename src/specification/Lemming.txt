@@ -51,8 +51,9 @@ Observations:
             getStatus(step(l)) == DEAD
         - else if BOMBER \belongs getSpecials(l) ^ getBombCounter(l) != 5 then : 
             getBombCounter(step(l)) == getBombCounter(l) + 1
-            
-            
+        
+        
+           
         - else if STOPPER \belongs getSpecials(l) ^ getType(l) != STOPPER then:
             getType(step(l)) = STOPPER
         - else if BUILDER \belongs getSpecials(l) ^ getType(l) != BUILDER then:
@@ -120,9 +121,9 @@ Observations:
                     getType(step(l)) = WALKER
         - else 
             if getType(l) == DIGGER then :
-                if Level : getNature(getX(l), getY(l) + 1) == EMPTY then :
+                if not GameEng : isObstacle(getEng(l), getX(l), getY(l) + 1) then :
                     getType(step(l)) == FALLER 
-                if Level : getNature(getX(l), getY(l) + 1) == METAL then :
+                if GameEng : isMetal(getEng(l), getX(l), getY(l) + 1) == METAL then :
                     getType(step(l)) == WALKER
                 
          - else 
@@ -198,11 +199,7 @@ Observations:
                                 ^ GameEng : isObstacle(getEngine(l), getX(l)+1, getY(l)-1)
                                 ^ GameEng : isObstacle(getEngine(l), getX(l)+1, getY(l)-2)) then :
                                 if GameEng : isObstacle(getEngine(l), getX(l)+1, getY(l)-2) then: 
-                                    if getNbBuid(l) < 12:
-                                        Level : build(getX(l)+1, getY(l))
-                                        ^ Level : build(getX(l)+2, getY(l))
-                                        ^ Level : build(getX(l)+3, getY(l))
-                                        ^ not BUILDER \belongs getSpecials(step(l))
+                                        not BUILDER \belongs getSpecials(step(l))
                                         ^ getNbBuild(step(l)) = getNbBuild(l) + 3
                                         ^ getType(step(l)) == WALKER
                                     else
@@ -210,11 +207,7 @@ Observations:
                                         ^ getType(l) == WALKER
                         else
                              if getNbBuid(l) < 12:
-                                         Level : build(getX(l)+1, getY(l))
-                                        ^ Level : build(getX(l)+2, getY(l))
-                                        ^ Level : build(getX(l)+3, getY(l))
-                                        ^ not BUILDER \belongs getSpecials(step(l))
-                                        ^ getNbBuild(step(l)) = getNbBuild(l) + 3
+                                        getNbBuild(step(l)) = getNbBuild(l) + 3
                                         ^ getX(step(l)) = getX(l) + 2
                                         ^ getY(step(l)) = getY(l) - 1
                                     else

@@ -42,117 +42,7 @@ public class GuiQT extends QMainWindow implements RequireGameEngineService, Requ
 		mainWidget.resize(1600, 1600);
 
 
-		//		gameEng = new GameEngImpl();
-		//		level = new LevelImpl();
-		//		player = new PlayerImpl();
-		//	
-		//		player.bindEngine(gameEng);
-		//		
-		//		level.init(60, 20);
-		//		gameEng.init(2, 2);
-		//		gameEng.bindLevel(level);
-
-		//		w = new Grid(mainWidget, pauseSig);
-		//		w.resize(1024, 1024);
-
-//		QPushButton playBtn = new QPushButton(mainWidget);
-//		playBtn.setText("ready");
-//		playBtn.clicked.connect(this, "play()");
-//
-//
-//		QPushButton launchBtn = new QPushButton(mainWidget);
-//		launchBtn.setText("GAME");
-//		launchBtn.clicked.connect(this, "game()");
-//
-//		QPushButton transformBtn = new QPushButton(mainWidget);
-//		transformBtn.setText("transform");
-//		transformBtn.clicked.connect(this, "transform()");
-
-		//		// main layout
-		//		QVBoxLayout vlayout = new QVBoxLayout();
-		//		vlayout.addWidget(w);
-		//
-		//		// buttons line
-		//		QHBoxLayout hlayout = new QHBoxLayout();
-		//		hlayout.addWidget(playBtn);
-		//		hlayout.addWidget(launchBtn);
-		//		hlayout.addWidget(transformBtn);
-		//
-		//		vlayout.addLayout(hlayout);
-		//
-		//		// class pick buttons
-		//		QButtonGroup specialsButtonGroup = new QButtonGroup();
-		//		QPushButton floaterButton = new QPushButton(mainWidget);
-		//		QPushButton diggerButton = new QPushButton(mainWidget);
-		//		QPushButton stopperButton = new QPushButton(mainWidget);
-		//		QPushButton basherButton = new QPushButton(mainWidget);
-		//		QPushButton builderButton = new QPushButton(mainWidget);
-		//		QPushButton minerButton = new QPushButton(mainWidget);
-		//		QPushButton climberButton = new QPushButton(mainWidget);
-		//		QPushButton bomberButton = new QPushButton(mainWidget);
-		//
-		//		specialsButtonGroup.addButton(floaterButton);
-		//		specialsButtonGroup.addButton(diggerButton);
-		//		specialsButtonGroup.addButton(stopperButton);
-		//		specialsButtonGroup.addButton(basherButton);
-		//		specialsButtonGroup.addButton(builderButton);
-		//		specialsButtonGroup.addButton(minerButton);
-		//		specialsButtonGroup.addButton(climberButton);
-		//		specialsButtonGroup.addButton(bomberButton);
-		//
-		//		floaterButton.setText("Floater");
-		//		diggerButton.setText("Digger");
-		//		stopperButton.setText("Stopper");
-		//		basherButton.setText("Basher");
-		//		builderButton.setText("Builder");
-		//		minerButton.setText("Miner");
-		//		climberButton.setText("Climber");
-		//		bomberButton.setText("Bomber");
-		//
-		//		QSignalMapper classMapper = new QSignalMapper(this);
-		//		classMapper.setMapping(floaterButton, "floater");
-		//		classMapper.setMapping(diggerButton, "digger");
-		//		classMapper.setMapping(stopperButton, "stopper");
-		//		classMapper.setMapping(basherButton, "basher");
-		//		classMapper.setMapping(builderButton, "builder");
-		//		classMapper.setMapping(minerButton, "miner");
-		//		classMapper.setMapping(climberButton, "climber");
-		//		classMapper.setMapping(bomberButton, "bomber");
-		//
-		//		classMapper.mappedString.connect(this, "setLemmingClass(String)");
-		//
-		//
-		//		floaterButton.clicked.connect(classMapper, "map()");
-		//		diggerButton.clicked.connect(classMapper, "map()");
-		//		stopperButton.clicked.connect(classMapper, "map()");
-		//		basherButton.clicked.connect(classMapper, "map()");
-		//		builderButton.clicked.connect(classMapper, "map()");
-		//		minerButton.clicked.connect(classMapper, "map()");
-		//		climberButton.clicked.connect(classMapper, "map()");
-		//		bomberButton.clicked.connect(classMapper, "map()");
-		//
-		//
-		//		QHBoxLayout specialsButtonLayout = new QHBoxLayout();
-		//
-		//		specialsButtonLayout.addWidget(floaterButton);
-		//		specialsButtonLayout.addWidget(diggerButton);
-		//		specialsButtonLayout.addWidget(stopperButton);
-		//		specialsButtonLayout.addWidget(basherButton);
-		//		specialsButtonLayout.addWidget(builderButton);
-		//		specialsButtonLayout.addWidget(minerButton);
-		//		specialsButtonLayout.addWidget(climberButton);
-		//		specialsButtonLayout.addWidget(bomberButton);
-		//
-		//
-		//
-		//		vlayout.addLayout(specialsButtonLayout);
-		//		mainWidget.setLayout(vlayout);
-		//		this.setCentralWidget(mainWidget);
-		//		this.repaintSig.connect(this.w, "repaint()");
-		//
-		//		w.bindEngine(gameEng);
-		//
-		//		mainWidget.show();
+	
 	}
 
 	public void setLemmingClass(String name){
@@ -183,7 +73,6 @@ public class GuiQT extends QMainWindow implements RequireGameEngineService, Requ
 		case "bomber":
 			player.transformLemming(lemmy, Specialty.BOMBER);
 			break;
-
 		}
 		pauseSig.emit(false);
 	}

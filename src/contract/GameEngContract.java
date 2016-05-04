@@ -1,12 +1,11 @@
 package contract;
 
-import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.Set;
 
 import decorator.GameEngDecorator;
-import enumeration.Specialty;
-import enumeration.Status;
+import enumeration.Type;
 import services.GameEngService;
 import services.LemmingService;
 import services.LevelService;
@@ -32,8 +31,6 @@ public class GameEngContract extends GameEngDecorator implements RequireLevelSer
 		if (super.nbSpawned() > super.getSizeColony()) throw new InvariantError("Invariant Error : nbSpawned > getSizeColony()");
 
 		if (super.getNbTurn() < 0) throw new InvariantError("Invariant Error : nbTours < 0");
-		System.out.println("GameEng contract nb active : "+ super.nbActive());
-		System.out.println("GameEng contract nums size " + super.getLemmingsNum().size());
 		if (super.nbActive() != getLemmingsNum().size()) throw new InvariantError("Invariant Error : nbActive should be equal to |getLummingsNum()|");
 
 
@@ -85,14 +82,19 @@ public class GameEngContract extends GameEngDecorator implements RequireLevelSer
 		if(super.gameOver()) throw new PreconditionError("Game should not be over ");
 
 		int nbSpawned_pre = super.nbSpawned();
-		
-		checkInvariant();
-		super.nextTurn();
-		
-		// snapshot of Lemming id and specialty
-		//HashMap<Integer, Specialty> 
-		
+		int nbTurn_pre = super.getNbTurn();
 
+		HashMap<Integer, Type> typeMap_pre = new HashMap<Integer, Type>();
+
+
+		for (int i : getLemmingsNum()){
+			LemmingService lemmy = getLemming(i);
+			typeMap_pre.put(i, lemmy.getType());
+		}
+
+		checkInvariant();
+
+		super.nextTurn();
 
 		checkInvariant();
 
@@ -103,22 +105,41 @@ public class GameEngContract extends GameEngDecorator implements RequireLevelSer
 		//POST A REECRIRE 
 		for (int i : getLemmingsNum()){
 			LemmingService lemmy = getLemming(i);
-			if (lemmy.hasSpecial(Specialty.BOMBER)
+			if(typeMap_pre.get(i) == Type.DIGGER){
+				if (isObstacle(lemmy.getX(), lemmy.getY()) 
+						|| !(!isDirt(lemmy.getX()-1, lemmy.getY()) || !isObstacle(lemmy.getX()-1, lemmy.getY()))
+						|| !(!isDirt(lemmy.getX()+1, lemmy.getY()) || !isObstacle(lemmy.getX()+1, lemmy.getY()))){
+					throw new PostconditionError("Cells should have been digged");
+				}
+			}
+			if(typeMap_pre.get(i) == Type.BUILDER){
+				System.out.println("BUILDER CONTRACT");
+				if(nbTurn_pre % 3 == 0 && lemmy.getNbBuild() <= 12 && !(isDirt(lemmy.getX() - 1 , lemmy.getY() + 1) 
+						&& isDirt(lemmy.getX() , lemmy.getY() + 1) 
+						&& isDirt(lemmy.getX() + 1 , lemmy.getY() + 1))){
+					throw new PostconditionError("three cells row under the lemming should have been built into dirt");
+				}
+			}
+
+			if ((typeMap_pre.get(i) == Type.BASHER)){
+				System.out.println("BASHER CONTRACT");
+				if(isObstacle(lemmy.getX(), lemmy.getY() - 1) 
+						|| isObstacle(lemmy.getX(), lemmy.getY() - 2) 
+						|| isObstacle(lemmy.getX(), lemmy.getY() - 3)){
+					throw new PostconditionError("three cells column at lemming position should have bashed");
+				}
+			}
 		}
-		
-		if (super.getNbTurn() % super.getSpawnSpeed() == 0 && super.nbSpawned() < super.getSizeColony() 
-			&& !(super.nbSpawned() == nbSpawned_pre +1) && lemmingExist(super.nbSpawned())){	
+
+		if (nbTurn_pre % super.getSpawnSpeed() == 0 && nbSpawned_pre < super.getSizeColony() 
+				&& !(super.nbSpawned() == nbSpawned_pre +1 && lemmingExist(super.nbSpawned()))){	
 			throw new PostconditionError("A new lemming should have spawned at turn : " + super.getNbTurn());
 		}
-		if (super.getNbTurn() % super.getSpawnSpeed() != 0 || super.nbSpawned() >= super.getSizeColony()
-			&& !(super.nbSpawned() == nbSpawned_pre)){
+
+		if ( (nbTurn_pre % super.getSpawnSpeed() != 0 || nbSpawned_pre >= super.getSizeColony())
+				&& !(super.nbSpawned() == nbSpawned_pre)){
 			throw new PostconditionError("Incorrect change in nbSpawned at turn : " + super.getNbTurn());
 		}
-			 
-			 
-			
-
-
 	}
 
 	@Override

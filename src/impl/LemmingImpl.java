@@ -24,8 +24,8 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 	private int fallTime;
 	private Set<Specialty> specials;
 	private int bombCounter;
-	private int nbBash = 0;
-	private int nbBuild = 0;
+	private int nbBash;
+	private int nbBuild;
 
 
 	@Override
@@ -86,6 +86,8 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 		this.specials = new HashSet<Specialty>();
 
 		this.bombCounter = 0;
+		this.nbBash = 0;
+		this.nbBuild = 0;
 	}
 
 	private void setType(Type t){
@@ -277,11 +279,13 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 	}
 
 	private void dig(){
+		System.out.println("DIG CALL LEMMING IMPL");
 		if(!eng.isObstacle(x, y+1)){
 			this.specials.remove(Specialty.DIGGER);//if fall not a digger anymore
 			this.setType(Type.FALLER);
 			this.fall();
 		}else if(eng.getLevel().getNature(x, y + 1) == Nature.DIRT){
+			System.out.println("DIG DOWN");
 			this.getGameEng().getLevel().remove(x, y + 1);//down
 			if(eng.getLevel().getNature(x - 1, y + 1) == Nature.DIRT){//down left
 				this.getGameEng().getLevel().remove(x - 1, y + 1);
@@ -290,6 +294,7 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 				this.getGameEng().getLevel().remove(x + 1, y + 1);
 			}
 			this.y = this.y + 1;
+			System.out.println("END DIG DOWN");
 		}else{
 			this.specials.remove(Specialty.DIGGER);//if walk not a digger anymore
 			this.setType(Type.WALKER);
@@ -382,9 +387,9 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 						}
 					}else{
 						if(this.nbBuild < 12){
-							eng.getLevel().setNature(x+1, y, Nature.DIRT);
-							eng.getLevel().setNature(x+2, y, Nature.DIRT);
-							eng.getLevel().setNature(x+3, y, Nature.DIRT);
+							eng.getLevel().build(x+1, y);
+							eng.getLevel().build(x+2, y);
+							eng.getLevel().build(x+3, y);
 							this.nbBuild += 3;
 							this.x += 2;
 							this.y--;
@@ -401,7 +406,6 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 				}
 			}
 		}else if(this.dir == Direction.LEFT){
-
 			if(eng.getNbTurn()%3 == 0){
 				if(!eng.isObstacle(x-1, y)
 						&& !eng.isObstacle(x-2, y)
@@ -539,5 +543,15 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 	@Override
 	public boolean hasSpecial(Specialty sp) {
 		return specials.contains(sp);
+	}
+
+	@Override
+	public int getNbBash() {
+		return nbBash;
+	}
+
+	@Override
+	public int getNbBuild() {
+		return nbBuild;
 	}
 }
