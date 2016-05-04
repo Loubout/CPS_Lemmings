@@ -17,7 +17,7 @@ import services.LemmingService;
 
 public class Grid extends QWidget{
 	private QWidget parent;
-	private GameEngService eng;
+	private GameEngService eng = null;
 	private int tileSize = 16;
 
 	int entranceX = -1;
@@ -43,6 +43,8 @@ public class Grid extends QWidget{
 	}
 
 	protected void paintEvent(QPaintEvent e){
+		if (this.eng == null) return;
+		
 		QPainter painter = new QPainter(this);
 
 		QPen p = new QPen();
@@ -52,9 +54,8 @@ public class Grid extends QWidget{
 		QColor empty = QColor.white;
 		QColor metal = QColor.gray;
 
-
-
 		// drawing level
+		
 		for (int i = 0; i < eng.getLevel().getWidth(); i++){
 			for (int j = 0; j < eng.getLevel().getHeight(); j++){
 				switch(eng.getLevel().getNature(i, j)){
