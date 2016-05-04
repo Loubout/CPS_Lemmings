@@ -42,6 +42,7 @@ public class PlayerImpl implements PlayerService, RequireGameEngineService{
 	@Override
 	public void transformLemming(LemmingService lemmy, Specialty sp) {
 		lemmy.transform(sp);	
+		chips.put(sp, chips.get(sp) - 1);
 	}
 
 	@Override

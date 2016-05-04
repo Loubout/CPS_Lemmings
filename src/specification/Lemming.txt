@@ -11,15 +11,21 @@ Observators:
     getType : [Lemming] -> Type
     getStatus : [Lemming] -> Status
     getX : [Lemming] -> int
+    	pre require getStatus(l) == LIVING
     getY : [Lemming] -> int
+    	pre require getStatus(l) == LIVING
     getFallTime : [Lemming] -> int
-        pre getFallTime(l) require getType(l) == FALLER
+        pre getFallTime(l) require getType(l) == FALLER ^ getStatus(l) == LIVING
     getSpecials : [Lemming] -> Set<Specialty>    
     hasSpecial : [Lemming] x Speciaty -> bool
     getBombCounter : [Lemming] -> int
+    	pre getBombCounter(l) require hasSpecial(l, BOMBER)
     getNbBuild : [Lemming] -> int
+    	pre getNbBuild(l) require getType(l) == BUILDER
     getNbBash : [Lemming] -> int
+    	pre getNbBash(l) require getType(l) == BASHER
     getEngine : [Lemming] -> [GameEng]
+    
 Constructors:
     init : Type x int -> [Lemming]
 Operators:

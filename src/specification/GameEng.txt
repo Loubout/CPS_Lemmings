@@ -10,7 +10,6 @@ Observators :
         pre isObstacle(e, x, y) require 0 < x < Level : width(getLevel(e)) ^ 0 < y < Level : height(getLevel(e))
     isDirt : [GameEng] x int x int -> bool
         pre isDirt(e, x, y) require 0 < x < Level : width(getLevel(e)) ^ 0 < y < Level : height(getLevel(e)
-   
     gameOver: [GameEng] -> bool
     getLevel: [GameEng] -> Level
     nbTours: [GameEng] -> int

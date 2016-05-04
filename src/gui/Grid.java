@@ -196,6 +196,7 @@ public class Grid extends QWidget{
 			// lemming selection
 			if (eng.isThereLemming(coordX, coordY)){
 				this.selectedLemming = eng.getLemmingAtPosition(coordX, coordY);
+				this.repaint();
 				pauseSignal.emit(true); 
 			}else{
 				this.selectedLemming = null;

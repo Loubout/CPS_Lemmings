@@ -8,11 +8,7 @@ import java.util.HashMap;
 import services.GameEngService;
 import services.LevelService;
 import services.PlayerService;
-
 import com.trolltech.qt.gui.QApplication;
-
-import contract.GameEngContract;
-import contract.LevelContract;
 import contract.PlayerContract;
 import enumeration.Specialty;
 import gui.GuiQT;
@@ -43,7 +39,7 @@ public class LemmingsTestGUISansContrat {
 
 		player.init(chips);
 		level.init(60, 40);
-		eng.init(10, 2);
+		eng.init(6, 3);
 
 		// END INIT PHASE
 		
