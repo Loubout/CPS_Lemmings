@@ -1,0 +1,13 @@
+Couverture des préconditions
+
+init
+
+Test1.1 : cas positif CPS_Lemmings::testInitPre1
+    -condition initiale:
+    -opérations: L1.1 = init(5,2) 
+    -oracle: pas d'exception
+    
+Test1.2 : cas negatif CPS_Lemmings::testInitPre2
+    -condition initiale:
+    -opérations: L1.1 = init(5,-2) 
+    -oracle: exception

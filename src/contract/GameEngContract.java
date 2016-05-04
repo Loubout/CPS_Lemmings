@@ -13,7 +13,6 @@ import services.RequireLevelService;
 
 public class GameEngContract extends GameEngDecorator implements RequireLevelService {
 
-
 	public GameEngContract(GameEngService delegate) {
 		super(delegate);
 	}

@@ -164,6 +164,11 @@ public class LevelContract extends LevelDecorator{
 			i++;
 		}
 		
+		if(x1<0 || x1>super.getWidth()-2) throw new PreconditionError("entrance should be beetween 0 and width");
+		if(y1<0 || y1>super.getHeight()-2) throw new PreconditionError("entrance should be beetween 0 and height");
+		if(x2<0 || x2>super.getWidth()-2) throw new PreconditionError("exit should be beetween 0 and width");
+		if(y2<0 || y2>super.getHeight()-2) throw new PreconditionError("exit should be beetween 0 and height");
+		
 		if(!super.editing()) throw new PreconditionError("We should be in editing before calling goPlay op");
 		
 		checkInvariant();
@@ -200,6 +205,12 @@ public class LevelContract extends LevelDecorator{
 		while (i < 10){
 			int xr = r.nextInt(super.getWidth()-1);
 			int yr = r.nextInt(super.getHeight()-1);
+			//rajout : il faut que la case qu'on remove change de nature 
+			//donc faut pas la mettre dans le tableau
+			while(xr == x || yr==y){
+				xr = r.nextInt(super.getWidth()-1);
+				yr = r.nextInt(super.getHeight()-1);
+			}
 			cellNatureX_atpre[i] = xr;
 			cellNatureY_atpre[i] = yr;
 			cellNature_atpre[i] = super.getNature(xr, yr);
@@ -238,7 +249,12 @@ public class LevelContract extends LevelDecorator{
 		while (i < 10){
 			int xr = r.nextInt(super.getWidth()-1);
 			int yr = r.nextInt(super.getHeight()-1);
-			
+			//rajout : il faut que la case qu'on remove change de nature 
+			//donc faut pas la mettre dans le tableau
+			while(xr == x || yr==y){
+				xr = r.nextInt(super.getWidth()-1);
+				yr = r.nextInt(super.getHeight()-1);
+			}
 			cellNatureX_atpre[i] = xr;
 			cellNatureY_atpre[i] = yr;
 			cellNature_atpre[i] = super.getNature(xr, yr);

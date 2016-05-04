@@ -1,0 +1,81 @@
+Couverture des préconditions
+
+init
+
+Test1.1 : cas positif CPS_Lemmings::testInitPre1
+    -condition initiale:
+    -opérations: L1.1 = init(10,10) 
+    -oracle: pas d'exception
+    
+Test1.2 : cas negatif CPS_Lemmings::testInitPre2
+    -condition initiale:
+    -opérations: L1.1 = init(10,-10) 
+    -oracle: exception
+
+setNature
+
+Test2.1 : cas positif CPS_Lemmings::testSetNaturePre1
+    -condition initiale: L0 = init(10,10)
+    -opérations: L1.1 = setNature(5,5,DIRT) 
+    -oracle: pas d'exception
+    
+Test2.2 : cas negatif CPS_Lemmings::testSetNaturePre2
+    -condition initiale: L0 = init(10,10)
+    -opérations: L1.1 = setNature(-5,5,DIRT) 
+    -oracle: exception
+
+goPlay
+
+Test3.1 : cas positif CPS_Lemmings::testGoPlayPre1
+    -condition initiale: L0 = init(10,10)
+    -opérations: L1.1 = goPlay(5,5,8,9) 
+    -oracle: pas d'exception
+
+Test3.1 : cas negatif CPS_Lemmings::testGoPlayPre2
+    -condition initiale: L0 = init(10,10)
+    -opérations: L1.1 = goPlay(-5,5,8,2) 
+    -oracle: exception
+
+remove
+
+Test4.1 : cas positif CPS_Lemmings::testRemovePre1
+    -condition initiale: L0 = init(10,10), setNature(5,5,DIRT)
+    -opérations: L1.1 = remove(5,5) 
+    -oracle: pas d'exception
+
+Test4.1 : cas negatif CPS_Lemmings::testRemovePre2
+    -condition initiale: L0 = init(10,10), setNature(5,5,DIRT)
+    -opérations: L1.1 = remove(5,6) 
+    -oracle: exception
+    
+build
+
+Test5.1 : cas positif CPS_Lemmings::testBuildPre1
+    -condition initiale: L0 = init(10,10)
+    -opérations: L1.1 = build(5,5) 
+    -oracle: pas d'exception
+
+Test5.1 : cas negatif CPS_Lemmings::testBuildPre2
+    -condition initiale: L0 = init(10,10)
+    -opérations: L1.1 = build(-2,6) 
+    -oracle: exception
+
+Tests de transitions
+goPlay
+
+Test6.1 : cas positif CPS_Lemmings::testGoPlayPre1
+    -condition initiale: L0 = init(10,10)
+    -opérations: L1 = goPlay(5,5,8,9) 
+    -oracle: 
+        - getEntranceX(L1) = 5
+        - getEntranceY(L1) = 5
+        - getExitX(L1) = 8
+        - getExitY(L1) = 9
+
+Test6.1 : cas negatif CPS_Lemmings::testGoPlayPre2
+    -condition initiale: L0 = init(10,10)
+    -opérations: L1.1 = goPlay(-5,5,8,2) 
+    -oracle: exception
+
+Couverture des postconditions
+
