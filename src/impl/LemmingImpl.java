@@ -535,4 +535,9 @@ public class LemmingImpl implements RequireGameEngineService, LemmingService{
 	public void transform(Specialty sp) {
 		this.specials.add(sp);
 	}
+
+	@Override
+	public boolean hasSpecial(Specialty sp) {
+		return specials.contains(sp);
+	}
 }

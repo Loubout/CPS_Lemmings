@@ -1,0 +1,12 @@
+Service : Gui
+Types : bool, int
+
+Observators:
+
+
+Constructors :
+	init : 
+	
+Operators :
+
+Observations :

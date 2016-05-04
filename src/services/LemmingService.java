@@ -19,6 +19,7 @@ public interface LemmingService {
 	public int getFallTime();
 	public GameEngService getGameEng();
 	public Set<Specialty> getSpecials();
+	public boolean hasSpecial(Specialty sp);
 	public int getBombCounter();
 
 	/*	INVARIANTS

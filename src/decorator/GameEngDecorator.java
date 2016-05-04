@@ -9,15 +9,13 @@ import services.LevelService;
 import services.RequireLevelService;
 
 public class GameEngDecorator implements GameEngService, RequireLevelService{
-	
-	
+		
 	public GameEngDecorator(GameEngService delegate) {
 		this.delegate = delegate;
 	}
 
 	private GameEngService delegate;
 
-	
 	public int getSizeColony() {
 		return delegate.getSizeColony();
 	}
@@ -25,7 +23,6 @@ public class GameEngDecorator implements GameEngService, RequireLevelService{
 	public int getSpawnSpeed() {
 		return delegate.getSpawnSpeed();
 	}
-
 
 	public boolean isObstacle(int x, int y) {
 		return delegate.isObstacle(x, y);
@@ -42,6 +39,8 @@ public class GameEngDecorator implements GameEngService, RequireLevelService{
 	public int getNbTurn() {
 		return delegate.getNbTurn();
 	}
+	
+	
 
 	public Double[] score() {
 		return delegate.score();

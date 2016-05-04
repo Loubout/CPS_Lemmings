@@ -2,8 +2,6 @@ package services;
 
 import java.util.Set;
 
-import enumeration.Status;
-
 public interface GameEngService extends RequireLevelService {
 	
 	/*Observators*/

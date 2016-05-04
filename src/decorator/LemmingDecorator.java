@@ -83,4 +83,9 @@ public class LemmingDecorator implements LemmingService {
 		
 	}
 
+	@Override
+	public boolean hasSpecial(Specialty sp) {
+		return delegate.hasSpecial(sp);
+	}
+
 }

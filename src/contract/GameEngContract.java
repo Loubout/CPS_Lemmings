@@ -1,8 +1,11 @@
 package contract;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Set;
 
 import decorator.GameEngDecorator;
+import enumeration.Specialty;
 import enumeration.Status;
 import services.GameEngService;
 import services.LemmingService;
@@ -11,40 +14,40 @@ import services.RequireLevelService;
 
 public class GameEngContract extends GameEngDecorator implements RequireLevelService {
 
-	
+
 	public GameEngContract(GameEngService delegate) {
 		super(delegate);
 	}
-	
-	
+
+
 	public void checkInvariant(){
 		/*	INVARIANTS
-		*	nbSpawned() <= getSizeColony()
-		*	nbTours() >= 0
-		*	nbActifs() =min= getLemmingsNum().size()
-	    *   lemmingExist(n) =min= n \belongsto getLemmingsNum()
-	    *   gameOver() =min= (nbSpawned() == getSizeColony()) && (nbActive() == 0)
-		*/
-		
+		 *	nbSpawned() <= getSizeColony()
+		 *	nbTours() >= 0
+		 *	nbActifs() =min= getLemmingsNum().size()
+		 *   lemmingExist(n) =min= n \belongsto getLemmingsNum()
+		 *   gameOver() =min= (nbSpawned() == getSizeColony()) && (nbActive() == 0)
+		 */
+
 		if (super.nbSpawned() > super.getSizeColony()) throw new InvariantError("Invariant Error : nbSpawned > getSizeColony()");
-		
+
 		if (super.getNbTurn() < 0) throw new InvariantError("Invariant Error : nbTours < 0");
 		System.out.println("GameEng contract nb active : "+ super.nbActive());
 		System.out.println("GameEng contract nums size " + super.getLemmingsNum().size());
 		if (super.nbActive() != getLemmingsNum().size()) throw new InvariantError("Invariant Error : nbActive should be equal to |getLummingsNum()|");
-		
-		
+
+
 		// sup bro lemming exist
-//		Random rd = new Random();
-//		for(int i = 0; i < 5; i++){
-//			int randLemming = rd.nextInt(super.nbActive());
-//			if (isActive(randLemming) != getLemmingsNum().
-//		}
-		
+		//		Random rd = new Random();
+		//		for(int i = 0; i < 5; i++){
+		//			int randLemming = rd.nextInt(super.nbActive());
+		//			if (isActive(randLemming) != getLemmingsNum().
+		//		}
+
 		if (super.gameOver() != (super.nbSpawned() == super.getSizeColony() && nbActive() == 0)) throw new InvariantError("Invariant Error : Game should be over"); 	
 
 	}
-	
+
 
 	@Override
 	public void init(int size, int speed) {
@@ -73,33 +76,51 @@ public class GameEngContract extends GameEngDecorator implements RequireLevelSer
 			throw new PostconditionError("Lemmings list should be empty after initialization");
 
 	}
-	
+
 
 
 
 	@Override
 	public void nextTurn() {
 		if(super.gameOver()) throw new PreconditionError("Game should not be over ");
+
+		int nbSpawned_pre = super.nbSpawned();
 		
 		checkInvariant();
 		super.nextTurn();
+		
+		// snapshot of Lemming id and specialty
+		//HashMap<Integer, Specialty> 
+		
+
+
 		checkInvariant();
-//		if (super.getNbTours() % super.getSpawnSpeed())
-		
-		//POST	if ( (getSpawnedSpeed(e) - timeSinceLastSpawn()) > 0) 
-		//			timeSinceLastSpawn(e) = timeSinceLastSpawn() + 1
-		//		else 
-		//			timeSinceLastSpawn(e, nextTurn(e)) = 0 
-	    //			nbSpawned(e, (nextTurn(e)) = nbSpawned(e) + 1
-	    //			getLemming(e, nbSpawned() + 1) = Lemming : init(FALLER, nbSpawned() +1)
-		//
-		//		\forAll i in getLemmingsNum(nextTurn(l)), getLemming(nextTurn(e), i) = Lemming : step(getLemming(e, i))
+
+
+		//POST	
+
+		//			\forAll i in getLemmingsNum(nextTurn(l)), getLemming(nextTurn(e), i) = Lemming : step(getLemming(e, i))
 		//POST A REECRIRE 
+		for (int i : getLemmingsNum()){
+			LemmingService lemmy = getLemming(i);
+			if (lemmy.hasSpecial(Specialty.BOMBER)
+		}
 		
-		
-		
+		if (super.getNbTurn() % super.getSpawnSpeed() == 0 && super.nbSpawned() < super.getSizeColony() 
+			&& !(super.nbSpawned() == nbSpawned_pre +1) && lemmingExist(super.nbSpawned())){	
+			throw new PostconditionError("A new lemming should have spawned at turn : " + super.getNbTurn());
+		}
+		if (super.getNbTurn() % super.getSpawnSpeed() != 0 || super.nbSpawned() >= super.getSizeColony()
+			&& !(super.nbSpawned() == nbSpawned_pre)){
+			throw new PostconditionError("Incorrect change in nbSpawned at turn : " + super.getNbTurn());
+		}
+			 
+			 
+			
+
+
 	}
-	
+
 	@Override
 	public int getSizeColony() {
 		// TODO Auto-generated method stub
@@ -112,7 +133,7 @@ public class GameEngContract extends GameEngDecorator implements RequireLevelSer
 		return super.getSpawnSpeed();
 	}
 
-	
+
 	@Override
 	public boolean isObstacle(int x, int y) {
 		//PRE	0 < x < getLevel().getWidth()

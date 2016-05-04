@@ -5,14 +5,13 @@ Types : bool, int, enum Nature{EMPTY, DIRT, METAL},
 Observators :
     const sizeColony : [GameEng] -> int
     const spawnSpeed : [GameEng] -> int
-    timeSinceLastSpawn: [GameEng] -> int
     isObstacle: [GameEng] x int x int -> bool
         pre isObstacle(e, x, y) require 0 < x < Level : width(getLevel(e)) ^ 0 < y < Level : height(getLevel(e))
     isDirt : [GameEng] x int x int -> bool
         pre isDirt(e, x, y) require 0 < x < Level : width(getLevel(e)) ^ 0 < y < Level : height(getLevel(e)
     gameOver: [GameEng] -> bool
     getLevel: [GameEng] -> Level
-    nbTours: [GameEng] -> int
+    nbTurn: [GameEng] -> int
     score: [GameEng] -> (int, int)
         pre score(e) require gameOver(e)
     nbSpawned: [GameEng -> int
@@ -62,60 +61,60 @@ Observations :
         \forall n in getLemmingsNum(e) getLemming(nexTurn(e), n) == Lemming : step(getLemming(e, n))
                                        ^ ((Lemming : hasSpecial(getLemming(e, n), BOMBER ^ Lemming : getBombCounter(getLemming(e, n)) == 5) =>
                                              isDirt(e, getLemmingX(e, n), getLemmingY(e, n)+1) 
-                                                => Level : remove(getX(l), getY(l)+1)
+                                             	=> not isObstacle(nextTurn(e), getLemmingX(e, n), getLemmingY(e, n)+1)
                                              ^ isDirt(e, getLemmingX(e, n)-1, getLemmingY(e, n)+1) 
-                                                => Level : remove(getX(l)-1, getY(l)+1)
+                                               not isObstacle(nextTurn(e), getLemmingX(e, n)-1, getLemmingY(e, n)+1)
                                              ^ isDirt(e, getLemmingX(e, n)-1, getLemmingY(e, n)) 
-                                                => Level : remove(getX(l)-1, getY(l))
+                                                not isObstacle(nextTurn(e), getLemmingX(e, n)-1, getLemmingY(e, n))
                                              ^ isDirt(e, getLemmingX(e, n)-2, getLemmingY(e, n)) 
-                                                 => Level : remove(getX(l)-2, getY(l))
+                                                 not isObstacle(nextTurn(e), getLemmingX(e, n)-2, getLemmingY(e, n))
                                              ^ isDirt(e, getLemmingX(e, n)-1, getLemmingY(e, n)-1) 
-                                                => Level : remove(getX(l)-1, getY(l)-1)
+                                                not isObstacle(nextTurn(e), getLemmingX(e, n)-1, getLemmingY(e, n)-1)
                                              ^ isDirt(e, getLemmingX(e, n)-2, getLemmingY(e, n)-1) 
-                                                => Level : remove(getX(l)-2, getY(l)-1)
+                                                not isObstacle(nextTurn(e), getLemmingX(e, n)-2, getLemmingY(e, n)-1)
                                              ^ isDirt(e, getLemmingX(e, n)-1, getLemmingY(e, n)-2) 
-                                                 => Level : remove(getX(l)-1, getY(l)-1)
+                                                 not isObstacle(nextTurn(e), getLemmingX(e, n)-1, getLemmingY(e, n)-2)
                                              ^ isDirt(e, getLemmingX(e, n), getLemmingY(e, n)-2) 
-                                                => Level : remove(getX(l), getY(l)-2)
+                                                not isObstacle(nextTurn(e), getLemmingX(e, n), getLemmingY(e, n)-2)
                                              ^ isDirt(e, getLemmingX(e, n)+1, getLemmingY(e, n)-2) 
-                                                => Level : remove(getX(l)+1, getY(l)-2)
+                                                not isObstacle(nextTurn(e), getLemmingX(e, n)+1, getLemmingY(e, n)-2)
                                              ^ isDirt(e, getLemmingX(e, n)+1, getLemmingY(e, n)-1) 
-                                                => Level : remove(getX(l)+1, getY(l)-1)
+                                                not isObstacle(nextTurn(e), getLemmingX(e, n)+1, getLemmingY(e, n)-1)
                                              ^ isDirt(e, getLemmingX(e, n)+2, getLemmingY(e, n)-1) 
-                                                => Level : remove(getX(l)+2, getY(l)-1)
+                                                not isObstacle(nextTurn(e), getLemmingX(e, n)+2, getLemmingY(e, n)-1)
                                              ^ isDirt(e, getLemmingX(e, n)+1, getLemmingY(e, n)) 
-                                                => Level : remove(getX(l)+1, getY(l))
+                                                not isObstacle(nextTurn(e), getLemmingX(e, n)+1, getLemmingY(e, n))
                                              ^ isDirt(e, getLemmingX(e, n)+2, getLemmingY(e, n)) 
-                                                => Level : remove(getX(l)+2, getY(l))
+                                                not isObstacle(nextTurn(e), getLemmingX(e, n)+2, getLemmingY(e, n))
                                              ^ isDirt(e, getLemmingX(e, n)+1, getLemmingY(e, n)+1) 
-                                                => Level : remove(getX(l)+1, getY(l)+1)                                               
-                                        ^ (Lemming : getType(step(getLemming(e, n)) == DIGGER =>
-                                            Level : remove(getX(l), getY(l)+1)
-                                            ^ isDirt(e, getLemmingX(e, n)-1, getLemmingY(e, n)+1) 
-                                                => Level : remove(getX(l)-1, getY(l)+1)
-                                            ^ isDirt(e, getLemmingX(e, n)+1, getLemmingY(e, n)+1) 
-                                                => Level : remove(getX(l)+1, getY(l)+1)
+                                                not isObstacle(nextTurn(e), getLemmingX(e, n)+1, getLemmingY(e, n)+1)
+                                                            
+                                           (Lemming : getType(step(getLemming(e, n)) == DIGGER =>
+                                            ^ not isObstacle(nextTurn(e), getLemmingX(e, n), getLemmingY(e, n)+1
+                                           	^ (not isDirt(e, getLemmingX(e, n)-1, getLemmingY(e, n)+1) || not isObstacle(nextTurn(e), getLemmingX(e, n)-1, getLemmingY(e, n)+1)
+                                           	^ (not isDirt(e, getLemmingX(e, n)+ 1, getLemmingY(e, n)+1) || not isObstacle(nextTurn(e), getLemmingX(e, n)+1, getLemmingY(e, n)+1)
+                                           	                                                                 
                                         ^ (Lemming : getType(step(getLemming(e, n)) ==  BASHER =>
                                             (Lemming : getDirection(getLemming(e,n)) == RIGHT =>
-                                                Level : remove(getX(l)+1, getY(l))
-                                                ^Level : remove(getX(l)+1, getY(l)-1)
-                                                ^Level : remove(getX(l)+1, getY(l)-2)
+                                                not (isObstacle(nextTurn(e), getLemmingX(e,n)+1, getLemmingY(e, n))
+                                                	|| isObstacle(nextTurn(e), getLemmingX(e,n)+1, getLemmingY(e, n)-1)
+                                                	|| isObstacle(nextTurn(e), getLemmingX(e,n)+1, getLemmingY(e, n)-2)
                                             (Lemming : getDirection(getLemming(e,n)) == LEFT =>
-                                                Level : remove(getX(l)-1, getY(l))
-                                                ^Level : remove(getX(l)-1, getY(l)-1)
-                                                ^Level : remove(getX(l)-1, getY(l)-2)
+                                                not (isObstacle(nextTurn(e), getLemmingX(e,n)-1, getLemmingY(e, n))
+                                                	|| isObstacle(nextTurn(e), getLemmingX(e,n)-1, getLemmingY(e, n)-1)
+                                                	|| isObstacle(nextTurn(e), getLemmingX(e,n)-1, getLemmingY(e, n)-2)
                                         ^ (Lemming : getType(step(getLemming(e, n)) ==  BUILDER =>
                                              (Lemming : getDirection(getLemming(e,n)) == RIGHT =>
-                                                Level : build(getX(l)+1, getY(l))
-                                                ^Level : build(getX(l)+2, getY(l))
-                                                ^Level : build(getX(l)+3, getY(l))
+                                                isDirt(nextTurn(e), getLemmingX(e, n) + 1, getLemmingY(e, n)) 
+                                                ^ isDirt(nextTurn(e), getLemmingX(e, n) + 2, getLemmingY(e, n))
+                                                ^ isDirt(nextTurn(e), getLemmingX(e, n) + 3, getLemmingY(e, n))
                                             (Lemming : getDirection(getLemming(e,n)) == LEFT =>
-                                                Level : build(getX(l)-1, getY(l))
-                                                ^Level : build(getX(l)-2, getY(l))
-                                                ^Level : build(getX(l)-3, getY(l))
-                                       
-            timeSinceLastSpawn(nextTurn(e)) = timeSinceLastSpawn(e) + 1
-        else 
-            timeSinceLastSpawn(nextTurn(e)) = 0 
-            ^ nbSpawned((nextTurn(e)) = nbSpawned(e) + 1
-            ^ getLemming(e, nbSpawned(e) + 1) == Lemming : init(FALLER, nbSpawned(e) +1)
+                                                 isDirt(nextTurn(e), getLemmingX(e, n) - 1, getLemmingY(e, n)) 
+                                                ^ isDirt(nextTurn(e), getLemmingX(e, n) - 2, getLemmingY(e, n))
+                                                ^ isDirt(nextTurn(e), getLemmingX(e, n) - 3, getLemmingY(e, n))
+                                        ^ (Lemming : getType(step(getLemming(e, n)) ==  MINER =>
+                                                
+        if  (nbTurn(e) % spawnSpeed(e) == 0 ^ nbSpawned(e) < sizeColony(e)) then :                               
+            nbSpawned((nextTurn(e)) = nbSpawned(e) + 1
+            getLemming(e, nbSpawned(e) + 1) == Lemming : init(FALLER, nbSpawned(e) +1) 
+            
