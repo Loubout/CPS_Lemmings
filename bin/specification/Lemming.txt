@@ -45,20 +45,20 @@ Observations:
             getStatus(step(l)) == DEAD
         - if BOMBER \belongs getSpecials(l) ^ getBombCounter(l) != 5 then : 
             getBombCounter(step(l)) == getBombCounter(l) + 1
-        - if STOPPER \belongs getSpecials(l) ^ getType(l) != STOPPER then:
-            getType(l) = STOPPER
-        - if BUILDER \belongs getSpecials(l) ^ getType(l) != BUILDER then:
-            getType(l) = BUILDER
-        - if DIGGER \belongs getSpecials(l) ^ getType(l) != DIGGER then:
-            getType(l) = DIGGER
-        - if CLIMBER \belongs getSpecials(l) ^ getType(l) != CLIMBER then:
-            getType(l) = CLIMBER
-        - if FLOATER \belongs getSpecials(l) ^ getType(l) != FLOATER then:
-            getType(l) = FLOATER
-        - if BASHER \belongs getSpecials(l) ^ getType(l) != BASHER then:
-            getType(l) = BASHER
-        - if MINER \belongs getSpecials(l) ^ getType(l) != MINER then:
-            getType(l) = MINER
+        - else if STOPPER \belongs getSpecials(l) ^ getType(l) != STOPPER then:
+            getType(step(l)) = STOPPER
+        - else if BUILDER \belongs getSpecials(l) ^ getType(l) != BUILDER then:
+            getType(step(l)) = BUILDER
+        - else if DIGGER \belongs getSpecials(l) ^ getType(l) != DIGGER then:
+            getType(step(l)) = DIGGER
+        - else if CLIMBER \belongs getSpecials(l) ^ getType(l) != CLIMBER then:
+            getType(step(l)) = CLIMBER
+        - else if FLOATER \belongs getSpecials(l) ^ getType(l) != FLOATER then:
+            getType(step(l)) = FLOATER
+        - else if BASHER \belongs getSpecials(l) ^ getType(l) != BASHER then:
+            getType(step(l)) = BASHER
+        - else if MINER \belongs getSpecials(l) ^ getType(l) != MINER then:
+            getType(step(l)) = MINER
             
         -else
             if getType(l) == WALKER then :
